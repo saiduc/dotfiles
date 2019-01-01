@@ -51,7 +51,13 @@ Then copy the theme file to the /.oh-my-zsh/themes directory:
 ```
 cp ./zsh/dracula.zsh-theme ~/.oh-my-zsh/themes/
 ```
-You will also need to change your default shell to zsh in whichever way is appropriate for your OS.
+You will also need to change your default shell to zsh:
+```
+sudo chsh -s $(which zsh) USERNAME
+```
+Then log out and log back into your account.
+
+Note that to use the .zshrc file fromt this repo, you will have to edit line 5 to point to the right path for your oh-my-zsh installation.
 
 
 ## Acknowledgements
