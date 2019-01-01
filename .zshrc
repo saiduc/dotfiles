@@ -64,6 +64,8 @@ ZSH_THEME="dracula"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  pip
+  python
 )
 
 source $ZSH/oh-my-zsh.sh
