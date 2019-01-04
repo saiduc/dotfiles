@@ -57,7 +57,7 @@ sudo chsh -s $(which zsh) USERNAME
 ```
 Then log out and log back into your account.
 
-Note that to use the .zshrc file fromt this repo, you will have to edit line 5 to point to the right path for your oh-my-zsh installation.
+Note that to use the .zshrc file from this repo, you will have to edit line 5 to point to the right path for your oh-my-zsh installation.
 
 
 ## Acknowledgements
