@@ -17,6 +17,7 @@ Then use Vim command:
 ```
 :PluginInstall
 ```
+The dracula theme might not work since a recent update has been causing some problems. If this is the case, copy the dracula.vim file to vim folder: ~/.vim/bundle/vim/colors
 
 ### Terminal.app
 
