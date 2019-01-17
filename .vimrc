@@ -51,5 +51,5 @@ let g:lightline = {
       \ }
 
 colorscheme dracula		" set vim theme
-highlight LineNr ctermfg=green
+highlight LineNr ctermfg=green	" set line number colour
 " =============================================================================
