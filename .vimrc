@@ -16,7 +16,7 @@ set number                              " line number
 set encoding=utf-8                      " required
 set cursorline                          " highlights current line
 set wildmenu                            " autocompletion of commands
-set backspace=indent,eol,start	        " backspace over autoindent
+set backspace=indent,eol,start          " backspace over autoindent
 set laststatus=2                        " persistent status line
 set mouse=a                             " mouse use in all modes
 set showmatch                           " shows paired parentheses on mouse hover
