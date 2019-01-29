@@ -118,5 +118,5 @@ colorscheme dracula                     " set vim theme
 highlight LineNr ctermfg=Grey           " set line number colour
 set guifont=Monaco:h14
 " for some reason, for markdown files, need to reload theme for syntax highlighting
-autocmd BufNewFile,BufRead *.md :colorscheme dracula 
+autocmd FileType markdown :colorscheme dracula 
 " =============================================================================
