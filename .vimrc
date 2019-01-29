@@ -34,7 +34,7 @@ au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set expandtab
     \ set autoindent
     \ set fileformat=unix
-set updatetime=100                      " sets refresh rate for vim to 100ms
+set updatetime=50                       " sets refresh rate for vim to 100ms
 " =============================================================================
 
 
@@ -56,8 +56,9 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'yggdroot/indentline'
 Plugin 'tpope/vim-commentary'
 Plugin 'jiangmiao/auto-pairs'
-Plugin 'davidhalter/jedi-vim'
-
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'JamshedVesuna/vim-markdown-preview'
+Plugin 'gabrielelana/vim-markdown'
 
 call vundle#end()                       " required
 " =============================================================================
@@ -67,12 +68,17 @@ call vundle#end()                       " required
 "                                PLUGIN CONFIGS
 " =============================================================================
 filetype plugin indent on               " loads plugins and turns on autoindent
-let g:jedi#force_py_version = 3
 let g:autopep8_max_line_length=79       " max length for python
 let g:autopep8_disable_show_diff=1      " disable diff window
 let g:autopep8_on_save=1                " autopep8 on save
-let g:gitgutter_sign_added="+"
-let g:gitgutter_sign_removed="-"
+let g:gitgutter_sign_added="+"          " git diff sign +
+let g:gitgutter_sign_removed="-"        " git diff sign -
+let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_max_num_candidates=10
+let g:ycm_max_num_identifier_candidates=10
+let vim_markdown_preview_github=1
+let vim_markdown_preview_browser="Google Chrome"
+let vim_markdown_preview_hotkey='<>'
 " =============================================================================
 
 
@@ -135,6 +141,7 @@ function! SaveAndExecutePython3()
     " make the buffer non modifiable
     setlocal readonly
     setlocal nomodifiable
+    :$
 	
 	" Go back to the original window
     exe l:currentWindow . "wincmd w"
@@ -191,18 +198,22 @@ function! SaveAndExecutePython2()
     %delete _
 
     " add the console output
-    silent execute ".!python2 " . shellescape(s:current_buffer_file_path, 1)
+    silent execute ".!python " . shellescape(s:current_buffer_file_path, 1)
 
     " make the buffer non modifiable
     setlocal readonly
     setlocal nomodifiable
+    :$
 	
 	" Go back to the original window
     exe l:currentWindow . "wincmd w"
 
 endfunction
 
-"  =============================================================================
+" Markdown
+autocmd BufNewFile,BufRead *.md  noremap <C-b> :call Vim_Markdown_Preview()<CR>
+
+" =============================================================================
 
 " =============================================================================
 "                                 KEYBINDINGS
@@ -212,15 +223,15 @@ nnoremap <C-K> <C-W><C-K>               " ctrl+k to move to split window above
 nnoremap <C-L> <C-W><C-L>               " ctrl+l to move to split window right
 nnoremap <C-H> <C-W><C-H>               " crtl+h to move to split window left
 nnoremap <space> za                     " space to fold code
-nnoremap <C-m> :resize -2<CR>           " ctrl-n to decrease horizontal split size
-nnoremap <C-n> :resize +2<CR>           " ctrl-m to increase horizontal split size
-nnoremap <c-o> :NERDTreeTabsToggle<CR>  " ctrl-o to toggle NERDTree 
+nnoremap <C-m> :resize +2<CR>           " ctrl-n to decrease horizontal split size
+nnoremap <C-n> :resize -2<CR>           " ctrl-m to increase horizontal split size
+nnoremap <C-o> :NERDTreeTabsToggle<CR>  " ctrl-o to toggle NERDTree 
 
 " =============================================================================
 
 
 " =============================================================================
-"                                   COLOURS
+"                                  APPEARANCE 
 " =============================================================================
 " set lightline colours
 let g:lightline = {
@@ -228,5 +239,8 @@ let g:lightline = {
       \ }
 
 colorscheme dracula                     " set vim theme
-highlight LineNr ctermfg=green          " set line number colour
+highlight LineNr ctermfg=Grey          " set line number colour
+set guifont=Monaco:h14
+" for some reason, for markdown files, need to reload theme for syntax highlighting
+autocmd BufNewFile,BufRead *.md :colorscheme dracula 
 " =============================================================================
