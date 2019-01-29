@@ -59,7 +59,6 @@ Plugin 'tpope/vim-commentary'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'JamshedVesuna/vim-markdown-preview'
-" Plugin 'gabrielelana/vim-markdown'
 Plugin 'thinca/vim-quickrun'
 Plugin 'Vimjas/vim-python-pep8-indent'
 
@@ -98,11 +97,12 @@ nnoremap <space> za                     " space to fold code
 nnoremap <leader>' :vertical resize +4<CR> " leader+' to increase vert size
 nnoremap <leader>; :vertical resize -4<CR> " leader+; to decrease vert size
 nnoremap <C-o> :NERDTreeTabsToggle<CR>  " ctrl-o to toggle NERDTree 
-nnoremap <leader>s :set ft=             " quick change syntax
+nnoremap <leader>s :set ft=
 nnoremap <C-b> :QuickRun<CR>            " ctrl+b to quickrun 
 " Replacing default quickrun options with personal preferences
-autocmd BufNewFile,BufRead *.py nnoremap <C-b> :QuickRun python3<CR>
-autocmd BufNewFile,BufRead *.md nnoremap <C-b> :call Vim_Markdown_Preview()<CR>
+" autocmd BufNewFile,BufRead *.py nnoremap <C-b> :QuickRun python3<CR>
+autocmd FileType python nnoremap <C-b> :QuickRun python3<CR>
+autocmd FileType markdown nnoremap <C-b> :call Vim_Markdown_Preview()<CR>
 " =============================================================================
 
 
