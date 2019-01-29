@@ -25,7 +25,7 @@ set splitright                          " sets default vertical split right
 set foldmethod=indent                   " enables folding of classes and methods
 set foldlevel=99                        " sets max foldlevel
 set cc=81                               " shows ruler line at 80 chars
-autocmd FileType python set cc=80       " shows ruler line at 79 chars for python
+autocmd BufNewFile,BufRead *.py set cc=80 " shows ruler line at 79 chars for python
 au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set tabstop=4
     \ set softtabstop=4
@@ -35,6 +35,7 @@ au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set autoindent
     \ set fileformat=unix
 set updatetime=50                       " sets refresh rate for vim to 100ms
+set shortmess+=I                        " disables vim splash screen
 " =============================================================================
 
 
@@ -59,6 +60,7 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'gabrielelana/vim-markdown'
+Plugin 'thinca/vim-quickrun'
 
 call vundle#end()                       " required
 " =============================================================================
@@ -79,211 +81,7 @@ let g:ycm_max_num_identifier_candidates=10
 let vim_markdown_preview_github=1
 let vim_markdown_preview_browser="Google Chrome"
 let vim_markdown_preview_hotkey='<>'
-" =============================================================================
-
-
-" ============================================================================= 
-"				BUILD SCRIPTS
-" =============================================================================
-"  Python 3:
-autocmd FileType python noremap <silent> <C-b> :call SaveAndExecutePython3()<CR>
-autocmd FileType python vnoremap <silent> <C-b> :<C-u>call SaveAndExecutePython3()<CR>
-
-function! SaveAndExecutePython3()
-
-    " Save the window where you are currently
-    let l:currentWindow=winnr()
-
-    " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
-
-    " save and reload current file
-    silent execute "update | edit"
-
-    " get file path of current file
-    let s:current_buffer_file_path = expand("%")
-
-    let s:output_buffer_name = "Python 3"
-    let s:output_buffer_filetype = "output"
-
-    " reuse existing buffer window if it exists otherwise create a new one
-    if !exists("s:buf_nr") || !bufexists(s:buf_nr)
-        silent execute 'botright new ' . s:output_buffer_name
-        let s:buf_nr = bufnr('%')
-    elseif bufwinnr(s:buf_nr) == -1
-        silent execute 'botright new'
-        silent execute s:buf_nr . 'buffer'
-    elseif bufwinnr(s:buf_nr) != bufwinnr('%')
-        silent execute bufwinnr(s:buf_nr) . 'wincmd w'
-    endif
-
-    silent execute "setlocal filetype=" . s:output_buffer_filetype
-    setlocal bufhidden=delete
-    setlocal buftype=nofile
-    setlocal noswapfile
-    setlocal nobuflisted
-    setlocal winfixheight
-    setlocal cursorline " make it easy to distinguish
-    setlocal nonumber
-    setlocal norelativenumber
-    setlocal showbreak=""
-    setlocal laststatus=0 " turns off lightline for buffer
-    setlocal cc=0 " disables ruler for buffer
-    resize 10
-
-    " clear the buffer
-    setlocal noreadonly
-    setlocal modifiable
-    %delete _
-
-    " add the console output
-    silent execute ".!python3 " . shellescape(s:current_buffer_file_path, 1)
-
-    " make the buffer non modifiable
-    setlocal readonly
-    setlocal nomodifiable
-    :$
-	
-    " Go back to the original window
-    exe l:currentWindow . "wincmd w"
-
-endfunction
-
-
-" Python 2
-autocmd FileType python noremap <silent> <C-d> :call SaveAndExecutePython2()<CR>
-autocmd FileType python vnoremap <silent> <C-d> :<C-u>call SaveAndExecutePython2()<CR>
-
-function! SaveAndExecutePython2()
-
-    " Save the window where you are currently
-    let l:currentWindow=winnr()
-
-    " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
-
-    " save and reload current file
-    silent execute "update | edit"
-
-    " get file path of current file
-    let s:current_buffer_file_path = expand("%")
-
-    let s:output_buffer_name = "Python 2"
-    let s:output_buffer_filetype = "output"
-
-    " reuse existing buffer window if it exists otherwise create a new one
-    if !exists("s:buf_nr") || !bufexists(s:buf_nr)
-        silent execute 'botright new ' . s:output_buffer_name
-        let s:buf_nr = bufnr('%')
-    elseif bufwinnr(s:buf_nr) == -1
-        silent execute 'botright new'
-        silent execute s:buf_nr . 'buffer'
-    elseif bufwinnr(s:buf_nr) != bufwinnr('%')
-        silent execute bufwinnr(s:buf_nr) . 'wincmd w'
-    endif
-
-    silent execute "setlocal filetype=" . s:output_buffer_filetype
-    setlocal bufhidden=delete
-    setlocal buftype=nofile
-    setlocal noswapfile
-    setlocal nobuflisted
-    setlocal winfixheight
-    setlocal cursorline " make it easy to distinguish
-    setlocal nonumber
-    setlocal norelativenumber
-    setlocal showbreak=""
-    setlocal laststatus=0 " turns off lightline for buffer
-    setlocal cc=0 " disables ruler for buffer
-    resize 10
-
-    " clear the buffer
-    setlocal noreadonly
-    setlocal modifiable
-    %delete _
-
-    " add the console output
-    silent execute ".!python " . shellescape(s:current_buffer_file_path, 1)
-
-    " make the buffer non modifiable
-    setlocal readonly
-    setlocal nomodifiable
-    :$
-	
-    " Go back to the original window
-    exe l:currentWindow . "wincmd w"
-
-endfunction
-
-
-" Markdown
-autocmd BufNewFile,BufRead *.md  noremap <C-b> :call Vim_Markdown_Preview()<CR>
-autocmd BufNewFile,BufRead *.md  vnoremap <C-b> :call Vim_Markdown_Preview()<CR>
-
-
-" C++
-autocmd FileType cpp noremap <silent> <C-b> :call SaveBuildAndExecuteCPP()<CR>
-autocmd FileType cpp vnoremap <silent> <C-b> :<C-u>call SaveBuildAndExecuteCPP()<CR>
-
-function! SaveBuildAndExecuteCPP()
-
-    " Save the window where you are currently
-    let l:currentWindow=winnr()
-
-    " SOURCE [reusable window]: https://github.com/fatih/vim-go/blob/master/autoload/go/ui.vim
-
-    " save and reload current file
-    silent execute "update | edit"
-
-    " build current file
-    silent execute "!g++ % -o tmpbuild"
-
-    let s:output_buffer_name = "CPP"
-    let s:output_buffer_filetype = "output"
-
-    " reuse existing buffer window if it exists otherwise create a new one
-    if !exists("s:buf_nr") || !bufexists(s:buf_nr)
-        silent execute 'botright new ' . s:output_buffer_name
-        let s:buf_nr = bufnr('%')
-    elseif bufwinnr(s:buf_nr) == -1
-        silent execute 'botright new'
-        silent execute s:buf_nr . 'buffer'
-    elseif bufwinnr(s:buf_nr) != bufwinnr('%')
-        silent execute bufwinnr(s:buf_nr) . 'wincmd w'
-    endif
-
-    silent execute "setlocal filetype=" . s:output_buffer_filetype
-    setlocal bufhidden=delete
-    setlocal buftype=nofile
-    setlocal noswapfile
-    setlocal nobuflisted
-    setlocal winfixheight
-    setlocal cursorline " make it easy to distinguish
-    setlocal nonumber
-    setlocal norelativenumber
-    setlocal showbreak=""
-    setlocal laststatus=0 " turns off lightline for buffer
-    setlocal cc=0 " disables ruler for buffer
-    resize 10
-
-    " clear the buffer
-    setlocal noreadonly
-    setlocal modifiable
-    %delete _
-
-    " add the console output
-    execute ".!./" . shellescape("tmpbuild", 1) 
-
-    " make the buffer non modifiable
-    setlocal readonly
-    setlocal nomodifiable
-    :$
-    
-    " Delete tmpbuild file
-    silent execute "!rm tmpbuild"
-    
-    
-    " Go back to the original window
-    exe l:currentWindow . "wincmd w"
-
-endfunction
+let g:nerdtree_tabs_open_on_gui_startup = 0
 " =============================================================================
 
 
@@ -296,10 +94,14 @@ nnoremap <C-K> <C-W><C-K>               " ctrl+k to move to split window above
 nnoremap <C-L> <C-W><C-L>               " ctrl+l to move to split window right
 nnoremap <C-H> <C-W><C-H>               " crtl+h to move to split window left
 nnoremap <space> za                     " space to fold code
-nnoremap <C-m> :resize +2<CR>           " ctrl-n to decrease horizontal split size
-nnoremap <C-n> :resize -2<CR>           " ctrl-m to increase horizontal split size
+nnoremap <leader>' :vertical resize +4<CR> " leader+' to increase vert size
+nnoremap <leader>; :vertical resize -4<CR> " leader+; to decrease vert size
 nnoremap <C-o> :NERDTreeTabsToggle<CR>  " ctrl-o to toggle NERDTree 
-nnoremap <leader>s :set ft=
+nnoremap <leader>s :set ft=             " quick change syntax
+nnoremap <C-b> :QuickRun<CR>            " ctrl+b to quickrun 
+" Replacing default quickrun options with personal preferences
+autocmd BufNewFile,BufRead *.py nnoremap <C-b> :QuickRun python3<CR>
+autocmd BufNewFile,BufRead *.md nnoremap <C-b> :call Vim_Markdown_Preview()<CR>
 " =============================================================================
 
 
