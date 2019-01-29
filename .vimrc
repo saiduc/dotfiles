@@ -128,6 +128,7 @@ function! SaveAndExecutePython3()
     setlocal norelativenumber
     setlocal showbreak=""
     setlocal laststatus=0 " turns off lightline for buffer
+    setlocal cc=0 " disables ruler for buffer
     resize 10
 
     " clear the buffer
@@ -190,6 +191,7 @@ function! SaveAndExecutePython2()
     setlocal norelativenumber
     setlocal showbreak=""
     setlocal laststatus=0 " turns off lightline for buffer
+    setlocal cc=0 " disables ruler for buffer
     resize 10
 
     " clear the buffer
@@ -239,7 +241,7 @@ let g:lightline = {
       \ }
 
 colorscheme dracula                     " set vim theme
-highlight LineNr ctermfg=Grey          " set line number colour
+highlight LineNr ctermfg=Grey           " set line number colour
 set guifont=Monaco:h14
 " for some reason, for markdown files, need to reload theme for syntax highlighting
 autocmd BufNewFile,BufRead *.md :colorscheme dracula 
