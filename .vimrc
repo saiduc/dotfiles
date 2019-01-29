@@ -59,8 +59,9 @@ Plugin 'tpope/vim-commentary'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'JamshedVesuna/vim-markdown-preview'
-Plugin 'gabrielelana/vim-markdown'
+" Plugin 'gabrielelana/vim-markdown'
 Plugin 'thinca/vim-quickrun'
+Plugin 'Vimjas/vim-python-pep8-indent'
 
 call vundle#end()                       " required
 " =============================================================================
