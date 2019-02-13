@@ -38,7 +38,8 @@ set updatetime=50                       " sets refresh rate for vim to 100ms
 set shortmess+=I                        " disables vim splash screen
 let g:tex_flavor = "latex"              " sets default tex to latex
 set noshowmode                          " disables showing of commands
-
+set cmdheight=2                         " so echodoc displays prperly
+set termguicolors                       " makes some themes work in terminal
 " =============================================================================
 
 
@@ -56,7 +57,6 @@ Plugin 'tell-k/vim-autopep8'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'yggdroot/indentline'
 Plugin 'tpope/vim-commentary'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'Valloric/YouCompleteMe'
@@ -65,6 +65,8 @@ Plugin 'thinca/vim-quickrun'
 Plugin 'Vimjas/vim-python-pep8-indent'
 Plugin 'lervag/vimtex'
 Plugin 'Shougo/echodoc'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'yggdroot/indentline'
 
 call vundle#end()                       " required
 " =============================================================================
@@ -93,6 +95,8 @@ let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
 let g:ycm_add_preview_to_completeopt=0
 set completeopt-=preview
 let g:echodoc#enable_at_startup=1
+let g:SimpylFold_fold_import=0
+let g:vimtex_viewer_method='skim'
 " =============================================================================
 
 
@@ -108,11 +112,13 @@ nnoremap <space> za                     " space to fold code
 nnoremap <leader>' :vertical resize +4<CR> " leader+' to increase vert size
 nnoremap <leader>; :vertical resize -4<CR> " leader+; to decrease vert size
 nnoremap <C-o> :NERDTreeTabsToggle<CR>  " ctrl-o to toggle NERDTree 
-nnoremap <leader>s :set ft=
+nnoremap <leader>s :set ft=             " set filetype quickly with leader s
 nnoremap <C-b> :QuickRun<CR>            " ctrl+b to quickrun 
+nnoremap <leader>c :q<CR>               " closes buffer
 " Replacing default quickrun options with personal preferences
 autocmd FileType python nnoremap <C-b> :QuickRun python3<CR>
 autocmd FileType markdown nnoremap <C-b> :call Vim_Markdown_Preview()<CR>
+autocmd FileType tex nnoremap <C-b> :VimtexCompile<CR> 
 " =============================================================================
 
 
@@ -125,7 +131,7 @@ let g:lightline = {
       \ }
 
 colorscheme dracula                     " set vim theme
-highlight LineNr ctermfg=Grey           " set line number colour
+highlight LineNr ctermfg=green           " set line number colour
 set guifont=Monaco:h14
 " for some reason, for markdown files, need to reload theme for syntax highlighting
 autocmd BufNewFile,BufRead *.md :colorscheme dracula 
