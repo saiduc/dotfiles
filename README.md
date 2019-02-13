@@ -17,13 +17,9 @@ Then use Vim command:
 ```
 :PluginInstall
 ```
-I use the dracula theme for Vim which needs to be downloaded separately. This can be done with:
+I use the dracula theme for Vim which needs to be downloaded separately. Unfortunately, the latest version of the dracula theme is broken so use the file in this repository. Copy the theme into the necessary folder:
 ```
-git clone https://github.com/dracula/vim.git
-```
-Then copy the theme into the necessary folder
-```
-cp ./vim/colors/dracula.vim ~/.vim/colors/
+cp ./dotfiles/dracula.vim ~/.vim/colors/
 ```
 ### Z Shell
 
