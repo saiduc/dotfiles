@@ -17,23 +17,15 @@ Then use Vim command:
 ```
 :PluginInstall
 ```
-The dracula theme might not work since a recent update has been causing some problems. If this is the case, copy the dracula.vim file to vim folder: ~/.vim/bundle/vim/colors
-
-### Terminal.app
-
-I use Dracula theme in Terminal.app on mac which can be downloaded by:
+I use the dracula theme for Vim which needs to be downloaded separately. This can be done with:
 ```
-git clone https://github.com/dracula/terminal-app.git
+git clone https://github.com/dracula/vim.git
 ```
-
-The theme is activated by:
-1) Terminal > Settings Tab
-2) Click "Gear" icon
-3) Click Import...
-4) Select the Dracula.terminal file
-5) Click Default
-
-### zsh Shell
+Then copy the theme into the necessary folder
+```
+cp ./vim/colors/dracula.vim ~/.vim/colors/
+```
+### Z Shell
 
 To get set up with zsh you will need to install an up-to-date version of zsh in whichever way is easiest.
 For macs with homebrew installed:
@@ -60,6 +52,11 @@ Then log out and log back into your account.
 
 Note that to use the .zshrc file from this repo, you will have to edit line 5 to point to the right path for your oh-my-zsh installation.
 
+### Bash Shell
+
+You don't really need to do anything to set up bash if you want to use it. I recommend using the zsh shell but if you really need bash, it has been set up to look pretty similar to the dracula theme in oh-my-zsh, including showing git status.
+
+The .bash_profile file does nothing except load the .bashrc file.
 
 ## Acknowledgements
 
