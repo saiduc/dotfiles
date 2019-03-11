@@ -17,10 +17,6 @@ Then use Vim command:
 ```
 :PluginInstall
 ```
-I use the dracula theme for Vim which needs to be downloaded separately. Unfortunately, the latest version of the dracula theme is broken so use the file in this repository. Copy the theme into the necessary folder:
-```
-cp ./dotfiles/dracula.vim ~/.vim/colors/
-```
 ### Z Shell
 
 To get set up with zsh you will need to install an up-to-date version of zsh in whichever way is easiest.
