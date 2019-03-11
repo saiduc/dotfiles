@@ -36,7 +36,6 @@ au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set fileformat=unix
 set updatetime=50                       " sets refresh rate for vim to 100ms
 set shortmess+=I                        " disables vim splash screen
-let g:tex_flavor = "latex"              " sets default tex to latex
 set noshowmode                          " disables showing of commands
 set cmdheight=2                         " so echodoc displays prperly
 set termguicolors                       " makes some themes work in terminal
@@ -67,6 +66,7 @@ Plugin 'lervag/vimtex'
 Plugin 'Shougo/echodoc'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'yggdroot/indentline'
+Plugin 'dracula/vim'
 
 call vundle#end()                       " required
 " =============================================================================
@@ -91,12 +91,13 @@ let g:nerdtree_tabs_open_on_gui_startup=0
 if !exists('g:ycm_semantic_triggers')
     let g:ycm_semantic_triggers = {}
 endif
+let g:tex_flavor = "latex"              " sets default tex to latex
 let g:ycm_semantic_triggers.tex = g:vimtex#re#youcompleteme
-let g:ycm_add_preview_to_completeopt=0
-set completeopt-=preview
-let g:echodoc#enable_at_startup=1
+let g:ycm_add_preview_to_completeopt=0  " disables ycm preview buffer
+set completeopt-=preview                " disables ycm preview buffer
+let g:echodoc#enable_at_startup=1       " enables at startup
 let g:SimpylFold_fold_import=0
-let g:vimtex_viewer_method='skim'
+let g:vimtex_viewer_method='skim'       " Default pdf viewer skim
 " =============================================================================
 
 
@@ -104,15 +105,15 @@ let g:vimtex_viewer_method='skim'
 "                                 KEYBINDINGS
 " =============================================================================
 let mapleader=","                       " mapleader is ,
-nnoremap <C-J> <C-W><C-J>               " ctrl+j to move to split window below
-nnoremap <C-K> <C-W><C-K>               " ctrl+k to move to split window above
-nnoremap <C-L> <C-W><C-L>               " ctrl+l to move to split window right
-nnoremap <C-H> <C-W><C-H>               " crtl+h to move to split window left
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 nnoremap <space> za                     " space to fold code
 nnoremap <leader>' :vertical resize +4<CR> " leader+' to increase vert size
 nnoremap <leader>; :vertical resize -4<CR> " leader+; to decrease vert size
 nnoremap <C-o> :NERDTreeTabsToggle<CR>  " ctrl-o to toggle NERDTree 
-nnoremap <leader>s :set ft=             " set filetype quickly with leader s
+nnoremap <leader>s :set ft=
 nnoremap <C-b> :QuickRun<CR>            " ctrl+b to quickrun 
 nnoremap <leader>c :q<CR>               " closes buffer
 " Replacing default quickrun options with personal preferences
@@ -131,8 +132,8 @@ let g:lightline = {
       \ }
 
 colorscheme dracula                     " set vim theme
-highlight LineNr ctermfg=green           " set line number colour
+highlight LineNr ctermfg=green          " set line number colour
 set guifont=Monaco:h14
-" for some reason, for markdown files, need to reload theme for syntax highlighting
-autocmd BufNewFile,BufRead *.md :colorscheme dracula 
+" for some reason, need to reload theme for syntax highlighting
+autocmd BufNewFile,BufRead * :colorscheme dracula 
 " =============================================================================
