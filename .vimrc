@@ -50,6 +50,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " list required plugins here
+
 Plugin 'gmarik/Vundle.vim'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tell-k/vim-autopep8'
@@ -98,6 +99,7 @@ set completeopt-=preview                " disables ycm preview buffer
 let g:echodoc#enable_at_startup=1       " enables at startup
 let g:SimpylFold_fold_import=0
 let g:vimtex_viewer_method='skim'       " Default pdf viewer skim
+let g:dracula_italic = 0                " turns off weird highlighting dracula
 " =============================================================================
 
 
