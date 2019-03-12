@@ -1,3 +1,10 @@
+"   _____       _ _____             
+"  / ____|     (_)  __ \            
+" | (___   __ _ _| |  | |_   _  ___ 
+"  \___ \ / _` | | |  | | | | |/ __|
+"  ____) | (_| | | |__| | |_| | (__       Sai Pandian
+" |_____/ \__,_|_|_____/ \__,_|\___|      github.com/saiduc
+
 " ============================================================================= 
 "                                FOR NEW INSTALL
 " =============================================================================
@@ -24,8 +31,8 @@ set splitbelow                          " sets default horizontal split below
 set splitright                          " sets default vertical split right
 set foldmethod=indent                   " enables folding of classes and methods
 set foldlevel=99                        " sets max foldlevel
-set cc=81                               " shows ruler line at 80 chars
-autocmd FileType python set cc=80       " shows ruler line at 79 chars for python
+set cc=81                               " shows ruler line at 81 chars
+autocmd FileType python set cc=80       " shows ruler line at 80 chars for python
 au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set tabstop=4
     \ set softtabstop=4
@@ -50,9 +57,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " list required plugins here
-
 Plugin 'gmarik/Vundle.vim'
-Plugin 'itchyny/lightline.vim'
 Plugin 'tell-k/vim-autopep8'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -68,6 +73,7 @@ Plugin 'Shougo/echodoc'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'yggdroot/indentline'
 Plugin 'dracula/vim'
+Plugin 'itchyny/lightline.vim'
 
 call vundle#end()                       " required
 " =============================================================================
@@ -128,14 +134,11 @@ autocmd FileType tex nnoremap <C-b> :VimtexCompile<CR>
 " =============================================================================
 "                                  APPEARANCE 
 " =============================================================================
-" set lightline colours
 let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
+      \ 'colorscheme': 'dracula',
       \ }
 
 colorscheme dracula                     " set vim theme
-highlight LineNr ctermfg=green          " set line number colour
 set guifont=Monaco:h14
-" for some reason, need to reload theme for syntax highlighting
-autocmd BufNewFile,BufRead * :colorscheme dracula 
+
 " =============================================================================
