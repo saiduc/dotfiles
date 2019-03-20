@@ -74,6 +74,7 @@ Plugin 'tmhedberg/SimpylFold'
 Plugin 'yggdroot/indentline'
 Plugin 'dracula/vim'
 Plugin 'itchyny/lightline.vim'
+Plugin 'itchyny/vim-gitbranch'
 
 call vundle#end()                       " required
 " =============================================================================
@@ -136,6 +137,13 @@ autocmd FileType tex nnoremap <C-b> :VimtexCompile<CR>
 " =============================================================================
 let g:lightline = {
       \ 'colorscheme': 'dracula',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'gitbranch#name'
+      \ },
       \ }
 
 colorscheme dracula                     " set vim theme
