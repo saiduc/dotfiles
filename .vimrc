@@ -135,6 +135,7 @@ autocmd FileType tex nnoremap <C-b> :VimtexCompile<CR>
 " =============================================================================
 "                                  APPEARANCE 
 " =============================================================================
+" use 'colorscheme': 'Dracula' if lightline doesn't recognise 'dracula'
 let g:lightline = {
       \ 'colorscheme': 'dracula',
       \ 'active': {
