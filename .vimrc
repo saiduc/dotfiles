@@ -5,7 +5,7 @@
 "  ____) | (_| | | |__| | |_| | (__       Sai Pandian
 " |_____/ \__,_|_|_____/ \__,_|\___|      github.com/saiduc
 
-" ============================================================================= 
+" =============================================================================
 "                                FOR NEW INSTALL
 " =============================================================================
 " git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
@@ -33,6 +33,7 @@ set foldmethod=indent                   " enables folding of classes and methods
 set foldlevel=99                        " sets max foldlevel
 set cc=81                               " shows ruler line at 81 chars
 autocmd FileType python set cc=80       " shows ruler line at 80 chars for python
+autocmd FileType tex set textwidth=80   " sets hard wrap for latex files
 au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set tabstop=4
     \ set softtabstop=4
@@ -45,7 +46,7 @@ set updatetime=50                       " sets refresh rate for vim to 100ms
 set shortmess+=I                        " disables vim splash screen
 set noshowmode                          " disables showing of commands
 set cmdheight=2                         " so echodoc displays prperly
-set termguicolors                       " makes some themes work in terminal
+set autochdir                           " sets cwd to file directory
 " =============================================================================
 
 
@@ -107,6 +108,8 @@ let g:echodoc#enable_at_startup=1       " enables at startup
 let g:SimpylFold_fold_import=0
 let g:vimtex_viewer_method='skim'       " Default pdf viewer skim
 let g:dracula_italic = 0                " turns off weird highlighting dracula
+let g:indentLine_showFirstIndentLevel=1 " shows fist indent level
+let g:indentLine_faster=1               " supposedly better performance
 " =============================================================================
 
 
@@ -149,5 +152,5 @@ let g:lightline = {
 
 colorscheme dracula                     " set vim theme
 set guifont=Monaco:h14
-
+set termguicolors                       " makes some themes work in terminal
 " =============================================================================
