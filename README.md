@@ -6,16 +6,19 @@ Simple no-fuss dotfiles for easy setup of new machines.
 
 Should be able to clone this repo to the home directory of linux and mac machines and extract the necessary dotfiles.
 
-### Vim
+### Vim/Neovim
 
-Will need to use Vundle to install and manage plugins. Install Vundle by: 
+**Note: I no longer use Vim, I have moved to Neovim. So the .vimrc file is no longer maintained. Please use Neovim and the init.vim file**
+
+Will need to use VimPlug to install and manage plugins. Install VimPlug for Neovim by: 
 ```
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 
 Then use Vim command:
 ```
-:PluginInstall
+:PlugInstall
 ```
 ### Z Shell
 
