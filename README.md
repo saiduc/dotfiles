@@ -15,6 +15,7 @@ Will need to use VimPlug to install and manage plugins. Install VimPlug for Neov
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
+For OS X users, you can set files in Finder to open with TerminalVim.app, included in this repository. This will allow you to double-click a file and open it in a new iTerm window with vim.
 
 Then use Vim command:
 ```
