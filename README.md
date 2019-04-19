@@ -22,32 +22,11 @@ Then use Vim command:
 ```
 For OS X users, you can set files in Finder to open with TerminalVim.app, included in this repository. This will allow you to double-click a file and open it in a new iTerm window with vim.
 
-### Z Shell
-
-To get set up with zsh you will need to install an up-to-date version of zsh in whichever way is easiest.
-For macs with homebrew installed:
-```
-brew install zsh
-```
-You then need to grab oh-my-zsh:
-```
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-```
-To use the dracula theme with zsh, first download dracula:
-```
-git clone https://github.com/dracula/zsh.git
-```
-Then copy the theme file to the /.oh-my-zsh/themes directory:
-```
-cp ./zsh/dracula.zsh-theme ~/.oh-my-zsh/themes/
-```
-You will also need to change your default shell to zsh:
-```
-sudo chsh -s $(which zsh) USERNAME
-```
-Then log out and log back into your account.
-
-Note that to use the .zshrc file from this repo, you will have to edit line 5 to point to the right path for your oh-my-zsh installation.
+If you want Vim to properly work with Python the way I use it, it is recommended
+to make new virtual environments (in either virtualenv, pyenv or conda) for
+Python 2 and Python 3 and install pynvim and jedi in both using pip. Then,
+python completion should work correctly with deoplete, and should show correct
+completions for any new virtual environment you are in.
 
 ### Bash Shell
 
@@ -55,11 +34,9 @@ You don't really need to do anything to set up bash if you want to use it. I rec
 
 The .bash_profile file does nothing except load the .bashrc file.
 
+If you install conda, the bash_profile may be modified to add conda to the PATH. Try to keep the changes conda makes.
+
 ## Acknowledgements
 
 * Instructions on installing Dracula theme from https://www.draculatheme.com
 * Vim ideas from Real Python website https://www.realpython.com
-* oh-my-zsh is a fantastic bit of community software from https://github.com/robbyrussell/oh-my-zsh
-
-
-
