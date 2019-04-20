@@ -8,7 +8,7 @@
 " =============================================================================
 "                                   GENERAL
 " =============================================================================
-set nocompatible                        " required
+set nocompatible                        " ignore vi compatibility
 filetype off                            " required
 set number                              " line number	
 set encoding=utf-8                      " required
@@ -26,6 +26,8 @@ set foldlevel=99                        " sets max foldlevel
 set cc=81                               " shows ruler line at 81 chars
 autocmd FileType python set cc=80       " shows ruler line at 80 chars for python
 autocmd FileType tex set textwidth=80   " sets hard wrap for latex files
+autocmd FileType text set textwidth=80   " sets hard wrap for latex files
+autocmd FileType markdown set textwidth=80   " sets hard wrap for latex files
 au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set tabstop=4
     \ set softtabstop=4
@@ -34,11 +36,12 @@ au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
     \ set expandtab
     \ set autoindent
     \ set fileformat=unix
-set shortmess+=I                        " disables vim splash screen
 set noshowmode                          " disables showing of commands
 set autochdir                           " sets cwd to file directory
-let g:python3_host_prog='/usr/local/bin/python3'
 set cmdheight=2                         " so echodoc displays prperly
+" setting python locations for neovim
+let g:python_host_prog='/Users/saipandian/miniconda3/envs/Neovim2/bin/python'
+let g:python3_host_prog='/Users/saipandian/miniconda3/envs/Neovim3/bin/python'
 " =============================================================================
 
 
@@ -52,7 +55,6 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-commentary'
-Plug 'tell-k/vim-autopep8'
 Plug 'tmhedberg/SimpylFold'
 Plug 'itchyny/lightline.vim'
 Plug 'itchyny/vim-gitbranch'
@@ -82,10 +84,6 @@ call plug#end()
 filetype plugin indent on               " loads plugins and turns on autoindent
 syntax on                               " syntax highlighting	
 
-let g:autopep8_max_line_length=79       " max length for python
-let g:autopep8_disable_show_diff=1      " disable diff window
-let g:autopep8_on_save=1                " autopep8 on save
-
 let g:SimpylFold_fold_import=0          " fixes SimplyFold folding
 
 let g:indentLine_showFirstIndentLevel=1 " shows fist indent level
@@ -105,13 +103,13 @@ let g:deoplete#enable_at_startup=1      " start deoplete at startup
 call deoplete#custom#option({
     \ 'auto_refresh_delay': 1,
     \ 'auto_complete_delay': 0,
-    \ 'max_list': 10,
+    \ 'max_list': 20,
     \ })
 
 " deoplete-jedi stuff
 let g:deoplete#sources#jedi#statement_length=1
 let g:deoplete#sources#jedi#enable_typeinfo=1
-let g:deoplete#sources#jedi#python_path="python3"
+let g:deoplete#sources#jedi#python_path="python"
 let g:deoplete#sources#jedi#ignore_errors=0
 set completeopt-=preview
 let g:echodoc#enable_at_startup=1       " enables at startup
@@ -136,11 +134,10 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <space> za
 nnoremap <C-o> :NERDTreeTabsToggle<CR>
 nnoremap <leader>s :set ft=
-nnoremap <C-b> :QuickRun<CR> 
-autocmd FileType python nnoremap <C-b> :QuickRun python3<CR>
-autocmd FileType markdown nnoremap <C-b> :call Vim_Markdown_Preview()<CR>
+nnoremap <C-b> :QuickRun pythonw<CR> 
+let vim_markdown_preview_hotkey='<C-b>'
+nnoremap <C-q> :q<CR>
 " =============================================================================
-
 
 " =============================================================================
 "                                  APPEARANCE 
