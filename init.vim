@@ -9,7 +9,8 @@
 "                                   GENERAL
 " =============================================================================
 set nocompatible                        " ignore vi compatibility
-filetype off                            " required
+filetype plugin indent on               " loads plugins and turns on autoindent
+syntax on                               " syntax highlighting	
 set number                              " line number	
 set encoding=utf-8                      " required
 set cursorline                          " highlights current line
@@ -24,11 +25,12 @@ set splitright                          " sets default vertical split right
 set foldmethod=indent                   " enables folding of classes and methods
 set foldlevel=99                        " sets max foldlevel
 set cc=81                               " shows ruler line at 81 chars
-autocmd FileType python set cc=80       " shows ruler line at 80 chars for python
+set autoindent                          " sets automatic indentation
 autocmd FileType tex set textwidth=80   " sets hard wrap for latex files
 autocmd FileType text set textwidth=80   " sets hard wrap for latex files
 autocmd FileType markdown set textwidth=80   " sets hard wrap for latex files
 au BufNewFile,BufRead *.py              " sets indentation to pep8 standards
+    \ set cc=80
     \ set tabstop=4
     \ set softtabstop=4
     \ set shiftwidth=4
@@ -52,27 +54,20 @@ call plug#begin()
 
 " list required plugins here
 Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-commentary'
 Plug 'tmhedberg/SimpylFold'
 Plug 'itchyny/lightline.vim'
 Plug 'itchyny/vim-gitbranch'
-Plug 'yggdroot/indentline'
-Plug 'JamshedVesuna/vim-markdown-preview'
 Plug 'thinca/vim-quickrun'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lervag/vimtex'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'Shougo/deoplete.nvim'
 Plug 'deoplete-plugins/deoplete-jedi'
 Plug 'Shougo/echodoc'
-Plug 'ervandew/supertab'
+Plug 'tell-k/vim-autopep8'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 
 call plug#end()
 " =============================================================================
@@ -81,30 +76,23 @@ call plug#end()
 " =============================================================================
 "                                PLUGIN CONFIGS
 " =============================================================================
-filetype plugin indent on               " loads plugins and turns on autoindent
-syntax on                               " syntax highlighting	
+let g:netrw_banner = 0                  " Hide annoying 'help' banner
+let g:netrw_liststyle = 3               " Use tree view
 
 let g:SimpylFold_fold_import=0          " fixes SimplyFold folding
-
-let g:indentLine_showFirstIndentLevel=1 " shows fist indent level
-let g:indentLine_faster=1               " supposedly better performance
-
-let vim_markdown_preview_github=1       " defaults to github flavored md
-let vim_markdown_preview_browser="Google Chrome"
-let vim_markdown_preview_hotkey='<>'    " disables default hotkey
 
 let g:tex_flavor = "latex"              " makes default tex favour latex
 let g:vimtex_viewer_method='skim'       " open with skim pdf viewer
 
-let g:SuperTabDefaultCompletionType = "<c-n>"
-
 " deoplete stuff
-let g:deoplete#enable_at_startup=1      " start deoplete at startup
+let g:deoplete#enable_at_startup = 0    " lazy load deoplete
+autocmd InsertEnter * call deoplete#enable()
 call deoplete#custom#option({
     \ 'auto_refresh_delay': 1,
     \ 'auto_complete_delay': 0,
     \ 'max_list': 20,
     \ })
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " deoplete-jedi stuff
 let g:deoplete#sources#jedi#statement_length=1
@@ -117,9 +105,17 @@ let g:deoplete#sources#jedi#show_docstring=0
 
 " deoplete vimtex stuff
 call deoplete#custom#var('omni', 'input_patterns', {
-          \ 'tex': g:vimtex#re#deoplete
-          \})
+  \ 'tex': g:vimtex#re#deoplete
+  \})
 
+" ctrlp stuff
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.git$\|\.yardoc\|public$|log\|tmp$|Library$|\.cache$',
+  \ 'file': '\.so$\|\.dat$|\.DS_Store$'
+  \ }
+let g:ctrlp_working_path_mode = 'ca'
+let g:ctrlp_clear_cache_on_exit = 0     " keeps cache on exit to speed it up
+let g:ctrlp_show_hidden = 1             " shows hidden files
 " =============================================================================
 
 
@@ -131,12 +127,16 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+nnoremap <C-o> :NERDTreeToggle<CR>
 nnoremap <space> za
-nnoremap <C-o> :NERDTreeTabsToggle<CR>
 nnoremap <leader>s :set ft=
-nnoremap <C-b> :QuickRun pythonw<CR> 
-let vim_markdown_preview_hotkey='<C-b>'
+nnoremap <C-b> :QuickRun<CR>
+autocmd FileType python nnoremap <C-b> :QuickRun pythonw<CR>
+autocmd FileType markdown nnoremap <C-b> :!grip<CR>
 nnoremap <C-q> :q<CR>
+nnoremap <C-t> :vsplit term://zsh<CR>
+tnoremap <Esc> <C-\><C-n>
+tnoremap <C-b> <Up><CR>
 " =============================================================================
 
 " =============================================================================
@@ -153,6 +153,7 @@ let g:lightline = {
       \   'gitbranch': 'gitbranch#name'
       \ },
       \ }
+
 colorscheme dracula                     " set vim theme
 set termguicolors                       " makes some themes work in terminal
 " =============================================================================
