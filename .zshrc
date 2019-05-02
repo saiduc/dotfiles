@@ -7,7 +7,7 @@
 
 
 # =============================================================================
-#                                   PATHS
+#                         GENERAL SETTINGS AND PATHS
 # =============================================================================
 
 # If you come from bash you might have to change your $PATH.
@@ -18,6 +18,18 @@ export ZSH="/Users/saipandian/.oh-my-zsh"
 
 # Path to fzf installation
 export FZF_BASE="$HOME/.fzf"
+
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
+
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nvim'
+else
+  export EDITOR='nvim'
+fi
+
+ZSH_THEME="dracula"
+plugins=(zsh-syntax-highlighting)
+source $ZSH/oh-my-zsh.sh
 
 # Path to conda installation
 # >>> conda initialize >>>
@@ -34,24 +46,7 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-# =============================================================================
 
-
-# =============================================================================
-#                                 GENERAL
-# =============================================================================
-
-export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
-
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='nvim'
-fi
-
-ZSH_THEME="dracula"
-plugins=(zsh-syntax-highlighting)
-source $ZSH/oh-my-zsh.sh
 # =============================================================================
 
 
@@ -65,6 +60,7 @@ alias autopep8="/Users/saipandian/miniconda3/bin/autopep8"
 alias ca="conda activate"
 alias cde="conda deactivate"
 alias fv='nvim $(fzf)'
+
 # =============================================================================
 
 
@@ -85,4 +81,5 @@ function fda() {
   local dir
   dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
 }
+
 # =============================================================================
