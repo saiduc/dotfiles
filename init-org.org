@@ -1,12 +1,55 @@
 #+STARTIP: overview
 
-* Dracula Theme
+* Package Installation Setup
+  Here I set up the pacakge repositories we will be pulling from.
+  #+BEGIN_SRC emacs-lisp
+    (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
+    (package-initialize)
+    (require 'package)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+    (package-initialize)
+  #+END_SRC
+
+  If use-package isn't already installed, install it
+  #+BEGIN_SRC emacs-lisp
+    (unless (package-installed-p 'use-package)
+      (package-refresh-contents)
+      (package-install 'use-package))
+  #+END_SRC
+
+* General Tweaks to Emacs
+  #+BEGIN_SRC emacs-lisp
+    (setq gc-cons-threshold 100000000)
+    (set-frame-font "Monaco 14" nil t)
+    (show-paren-mode)
+    (setq make-backup-files nil)
+    (setq auto-save-default nil)
+
+    (setq scroll-margin 0
+	  scroll-conservatively 10000
+	  scroll-preserve-screen-position t
+	  auto-window-vscroll nil)
+
+    (global-display-line-numbers-mode)
+    (tool-bar-mode -1)
+    (scroll-bar-mode -1)
+    (set-default 'cursor-type 'bar)
+    (global-hl-line-mode t)
+    (setq ring-bell-function 'ignore)
+  #+END_SRC
+ 
+* Themes
   This is my preferred theme available at the [[https://draculatheme.com/][Dracula Theme Website]]
   #+BEGIN_SRC emacs-lisp
     (use-package dracula-theme
       :ensure t
       :config
       (load-theme 'dracula t))
+
+    ;; (use-package spacemacs-theme
+    ;;   :ensure t
+    ;;   :defer t
+    ;;   :init (load-theme 'spacemacs-dark t))
   #+END_SRC
   
 * Mode Line
@@ -103,21 +146,6 @@
     (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1)))
   #+END_SRC
 
-* File Explorer
-  I like a Sublime-style sidebar for files so I use neotree
-  #+BEGIN_SRC emacs-lisp
-    (use-package neotree
-      :ensure t)
-    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-    (setq neo-smart-open t)
-  #+END_SRC
-
-  Neotree requires some icons to work correctly
-  #+BEGIN_SRC emacs-lisp
-    (use-package all-the-icons
-      :ensure t)
-  #+END_SRC
-
 * Which Key 
   I use which key to show me possible keyboard shortcuts
   #+BEGIN_SRC emacs-lisp
@@ -132,6 +160,7 @@
   #+BEGIN_SRC emacs-lisp
     (use-package exec-path-from-shell
       :ensure t)
+    (setq exec-path-from-shell-check-startup-files nil)
     (when (memq window-system '(mac ns x))
       (exec-path-from-shell-initialize))
   #+END_SRC
@@ -158,25 +187,6 @@
     (add-hook 'ido-setup-hook 'ido-define-keys)
   #+END_SRC
   
-* General Tweaks to Emacs
-  #+BEGIN_SRC emacs-lisp
-    (show-paren-mode)
-    (setq make-backup-files nil)
-    (setq auto-save-default nil)
-
-    (setq scroll-margin 0
-	  scroll-conservatively 10000
-	  scroll-preserve-screen-position t
-	  auto-window-vscroll nil)
-
-    (global-display-line-numbers-mode)
-    (tool-bar-mode -1)
-    (scroll-bar-mode -1)
-    (set-default 'cursor-type 'bar)
-    (global-hl-line-mode t)
-    (setq ring-bell-function 'ignore)
-  #+END_SRC
- 
 * PDF Tools
   PDF Tools is a better way to view PDFs than Docview, but make sure you install the dependencies
   On Mac, it is brew install pdftools
@@ -220,6 +230,10 @@
     (remove-hook 'elpy-modules 'elpy-module-yasnippet)
     (remove-hook 'elpy-modules 'elpy-module-pyvenv)
     (remove-hook 'elpy-modules 'elpy-module-django)
+    (add-hook 'elpy-mode-hook
+	(lambda ()
+	(define-key elpy-mode-map (kbd "M-?") 'elpy-goto-definition)))
+
   #+END_SRC
   Elpy works faster and neater than Anaconda-mdoe but I seem to need to restart elpy-rpc everytime I change virtual environment
   
@@ -253,22 +267,44 @@
     (setq TeX-save-query nil)
     (setq TeX-PDF-mode t)
     (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+    ;; Turn on RefTeX in AUCTeX
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    ;; Activate nice interface between RefTeX and AUCTeX
+    (setq reftex-plug-into-AUCTeX t)
     (setq-default TeX-master t)
     (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
     (add-hook 'LaTeX-mode-hook 'visual-line-mode)
     (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
     (setq-default fill-column 80)
+    (setq TeX-source-correlate-method 'synctex)
+    (setq TeX-source-correlate-start-server t)
   #+END_SRC
   
   The completion is handled by Company-AucTeX
   #+BEGIN_SRC emacs-lisp
     (use-package company-auctex
       :ensure t)
-    (add-to-list 'load-path "path/to/company-auctex.el")
+    (use-package company-reftex
+      :ensure t)
+    ;; (add-to-list 'load-path "path/to/company-auctex.el")
     (require 'company-auctex)
     (company-auctex-init)
     (eval-after-load "company"
-     '(add-to-list 'company-backends 'company-auctex))
+      '(add-to-list 'company-backends 'company-auctex))
+    (eval-after-load "company"
+      '(add-to-list 'company-backends 'company-reftex-labels))
+    (eval-after-load "company"
+      '(add-to-list 'company-backends 'company-reftex-citations))
+    (push ".fbd_latexmk" company-files-exclusions)
+    (push ".aux" company-files-exclusions)
+    (push ".log" company-files-exclusions)
+    (push ".pdf" company-files-exclusions)
+    ;; (push ".bbl" company-files-exclusions)
+    (push ".bcf" company-files-exclusions)
+    (push ".gz" company-files-exclusions)
+    (push ".blg" company-files-exclusions)
+    (push ".fls" company-files-exclusions)
+    (setq company-dabbrev-other-buffers t)
   #+END_SRC
   
   Compile with Latexmk, since it works better
@@ -306,6 +342,22 @@
      '((python . t)))
   #+END_SRC
   
+  Allow export to beamer
+  #+BEGIN_SRC emacs-lisp
+    (require 'ox-latex)
+    (require 'ox-beamer)
+    (eval-after-load "ox-latex"
+      '(add-to-list 'org-latex-classes
+		    `("beamer"
+		      ,(concat "\\documentclass[presentation]{beamer}\n"
+			       "[DEFAULT-PACKAGES]"
+			       "[PACKAGES]"
+			       "[EXTRA]\n")
+		      ("\\section{%s}" . "\\section*{%s}")
+		      ("\\subsection{%s}" . "\\subsection*{%s}")
+		      ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+  #+END_SRC
+  
   This enables org bullets
   #+BEGIN_SRC emacs-lisp
     (use-package org-bullets
@@ -324,8 +376,11 @@
   #+BEGIN_SRC emacs-lisp
     (global-set-key (kbd "C-c t") 'ansi-term)
     (global-set-key (kbd "C-c e") 'eshell)
-    (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
-    (global-set-key (kbd "M-2") '(lambda () (interactive) (insert "€")))
+    ;; (setq ns-right-alternate-modifier (quote none))
+    ;; (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
+    ;; (global-set-key (kbd "M-2") '(lambda () (interactive) (insert "€")))
+    (define-key key-translation-map (kbd "M-3") (kbd "#"))
+    (define-key key-translation-map (kbd "M-2") (kbd "€"))
     (define-key evil-normal-state-map (kbd "g t") 'next-buffer)
     (define-key evil-motion-state-map (kbd "g t") 'next-buffer)
     (define-key evil-normal-state-map (kbd "g T") 'previous-buffer)
