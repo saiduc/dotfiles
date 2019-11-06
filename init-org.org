@@ -19,16 +19,14 @@
 
 * General Tweaks to Emacs
   #+BEGIN_SRC emacs-lisp
-    (setq gc-cons-threshold 100000000)
     (set-frame-font "Monaco 14" nil t)
     (show-paren-mode)
     (setq make-backup-files nil)
     (setq auto-save-default nil)
 
-    (setq scroll-margin 0
-	  scroll-conservatively 10000
-	  scroll-preserve-screen-position t
-	  auto-window-vscroll nil)
+    (setq scroll-conservatively 101) ;; move minimum when cursor exits view, instead of recentering
+    (setq mouse-wheel-scroll-amount '(1)) ;; mouse scroll moves 1 line at a time, instead of 5 lines
+    (setq mouse-wheel-progressive-speed nil) ;; on a long mouse scroll keep scrolling by 1 line
 
     (global-display-line-numbers-mode)
     (tool-bar-mode -1)
@@ -232,7 +230,9 @@
     (remove-hook 'elpy-modules 'elpy-module-django)
     (add-hook 'elpy-mode-hook
 	(lambda ()
-	(define-key elpy-mode-map (kbd "M-?") 'elpy-goto-definition)))
+	(define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition))
+	(define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark))
+
 
   #+END_SRC
   Elpy works faster and neater than Anaconda-mdoe but I seem to need to restart elpy-rpc everytime I change virtual environment
@@ -267,10 +267,6 @@
     (setq TeX-save-query nil)
     (setq TeX-PDF-mode t)
     (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-    ;; Turn on RefTeX in AUCTeX
-    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-    ;; Activate nice interface between RefTeX and AUCTeX
-    (setq reftex-plug-into-AUCTeX t)
     (setq-default TeX-master t)
     (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
     (add-hook 'LaTeX-mode-hook 'visual-line-mode)
@@ -305,6 +301,11 @@
     (push ".blg" company-files-exclusions)
     (push ".fls" company-files-exclusions)
     (setq company-dabbrev-other-buffers t)
+
+    ;; Turn on RefTeX in AUCTeX
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    ;; Activate nice interface between RefTeX and AUCTeX
+    (setq reftex-plug-into-AUCTeX t)
   #+END_SRC
   
   Compile with Latexmk, since it works better
