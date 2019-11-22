@@ -16,19 +16,8 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/saipandian/.oh-my-zsh"
 
-# Path to fzf installation
-export FZF_BASE="$HOME/.fzf"
-
-export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
-
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nvim'
-else
-  export EDITOR='nvim'
-fi
-
 ZSH_THEME="dracula"
-plugins=(zsh-syntax-highlighting)
+plugins=()
 source $ZSH/oh-my-zsh.sh
 
 # Path to conda installation
@@ -46,40 +35,9 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
-# =============================================================================
-
-
 # =============================================================================
 #                                 ALIASES
 # =============================================================================
 
-alias vim="nvim"
-alias python="pythonw"
-alias autopep8="/Users/saipandian/miniconda3/bin/autopep8"
 alias ca="conda activate"
 alias cde="conda deactivate"
-alias fv='nvim $(fzf)'
-
-# =============================================================================
-
-
-# =============================================================================
-#                               FUNCTIONS
-# =============================================================================
-
-# fzf cd to a directory
-function fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-}
-
-# fzf cd to a directory including hidden
-function fda() {
-  local dir
-  dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
-}
-
-# =============================================================================
