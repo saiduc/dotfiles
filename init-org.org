@@ -43,17 +43,17 @@
 * Themes
   This is my preferred theme available at the [[https://draculatheme.com/][Dracula Theme Website]] but I am using the atom theme for now as a nice change from dracula
   #+BEGIN_SRC emacs-lisp
-    ;; (use-package dracula-theme
-    ;;   :ensure t
-    ;;   :defer t
-    ;;   :init
-    ;;   (load-theme 'dracula t))
-
-    (use-package atom-one-dark-theme
+    (use-package dracula-theme
       :ensure t
       :defer t
       :init
-      (load-theme 'atom-one-dark t))
+      (load-theme 'dracula t))
+
+    ;; (use-package atom-one-dark-theme
+    ;;   :ensure t
+    ;;   :defer t
+    ;;   :init
+    ;;   (load-theme 'atom-one-dark t))
 
     ;; (use-package spacemacs-theme
     ;;   :ensure t
@@ -145,6 +145,7 @@
   #+BEGIN_SRC emacs-lisp
     (use-package company
       :ensure t
+      :defer t
       :init
       (global-company-mode)
       (push ".fbd_latexmk" company-files-exclusions)
@@ -193,22 +194,21 @@
 * Exec Path From Shell
   This simply gets the shell variable and path from default shell
   #+BEGIN_SRC emacs-lisp
-    ;; (use-package exec-path-from-shell
-    ;;   :ensure t
-    ;;   :defer t
-    ;;   :init
-    ;;   (setq exec-path-from-shell-arguments nil)
-    ;;   (setq exec-path-from-shell-check-startup-files nil)
-    ;;   (when (memq window-system '(mac ns x))
-    ;;     (exec-path-from-shell-initialize)))
-
     (use-package exec-path-from-shell
-      :if (memq window-system '(mac ns x))
       :ensure t
       :defer t
       :init
       (setq exec-path-from-shell-check-startup-files nil)
-      (exec-path-from-shell-initialize))
+      (when (memq window-system '(mac ns x))
+	(exec-path-from-shell-initialize)))
+
+    ;; (use-package exec-path-from-shell
+    ;;   :if (memq window-system '(mac ns x))
+    ;;   :ensure t
+    ;;   :defer t
+    ;;   :init
+    ;;   (setq exec-path-from-shell-check-startup-files nil)
+    ;;   (exec-path-from-shell-initialize))
   #+END_SRC
 
 * Smex & Ido
@@ -230,8 +230,8 @@
     (defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
     (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
     (defun ido-define-keys ()
-	(define-key ido-completion-map (kbd "C-j") 'ido-next-match)
-	(define-key ido-completion-map (kbd "C-k") 'ido-prev-match))
+    	  (define-key ido-completion-map (kbd "C-j") 'ido-next-match)
+    	  (define-key ido-completion-map (kbd "C-k") 'ido-prev-match))
     (add-hook 'ido-setup-hook 'ido-define-keys)
   #+END_SRC
 
@@ -341,9 +341,7 @@
       :ensure t
       :defer t
       :init
-      ;; (company-auctex-init))
-      (add-hook 'LaTeX-mode-hook 'company-auctex-init))
-
+      (company-auctex-init))
 
     (use-package company-reftex
       :ensure t
@@ -353,6 +351,7 @@
 	'(add-to-list 'company-backends 'company-reftex-labels))
       (eval-after-load "company"
 	'(add-to-list 'company-backends 'company-reftex-citations))
+      ;; (add-hook 'LaTeX-mode-hook (lambda () (turn-on-reftex)))
       (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
       (setq reftex-plug-into-AUCTeX t))
 
@@ -394,21 +393,21 @@
      '((python . t)))
   #+END_SRC
   
-  Allow export to beamer
-  #+BEGIN_SRC emacs-lisp
-    (use-package ox-beamer
-      :config
-      (eval-after-load "ox-latex"
-	'(add-to-list 'org-latex-classes
-		      `("beamer"
-			,(concat "\\documentclass[presentation]{beamer}\n"
-			       "[DEFAULT-PACKAGES]"
-			       "[PACKAGES]"
-			       "[EXTRA]\n")
-			("\\section{%s}" . "\\section*{%s}")
-			("\\subsection{%s}" . "\\subsection*{%s}")
-			("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
-  #+END_SRC
+  # Allow export to beamer
+  # #+BEGIN_SRC emacs-lisp
+  #   (use-package ox-beamer
+  #     :config
+  #     (eval-after-load "ox-latex"
+  # 	'(add-to-list 'org-latex-classes
+  # 		      `("beamer"
+  # 			,(concat "\\documentclass[presentation]{beamer}\n"
+  # 			       "[DEFAULT-PACKAGES]"
+  # 			       "[PACKAGES]"
+  # 			       "[EXTRA]\n")
+  # 			("\\section{%s}" . "\\section*{%s}")
+  # 			("\\subsection{%s}" . "\\subsection*{%s}")
+  # 			("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+  # #+END_SRC
   
 * General Key Bindings
   #+BEGIN_SRC emacs-lisp
