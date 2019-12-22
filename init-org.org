@@ -38,22 +38,28 @@
     (add-hook 'prog-mode-hook 'hs-minor-mode 1)
     (add-hook 'prog-mode-hook (lambda () (diminish 'hs-minor-mode)))
 
+    (setf (cdr (assq 'continuation fringe-indicator-alist))
+          '(nil nil) ;; no continuation indicators
+          ;; '(nil right-curly-arrow) ;; right indicator only
+          ;; '(left-curly-arrow nil) ;; left indicator only
+          ;; '(left-curly-arrow right-curly-arrow) ;; default
+          )
   #+END_SRC
 
 * Themes
   This is my preferred theme available at the [[https://draculatheme.com/][Dracula Theme Website]] but I am using the atom theme for now as a nice change from dracula
   #+BEGIN_SRC emacs-lisp
-    (use-package dracula-theme
-      :ensure t
-      :defer t
-      :init
-      (load-theme 'dracula t))
-
-    ;; (use-package atom-one-dark-theme
+    ;; (use-package dracula-theme
     ;;   :ensure t
     ;;   :defer t
     ;;   :init
-    ;;   (load-theme 'atom-one-dark t))
+    ;;   (load-theme 'dracula t))
+
+    (use-package atom-one-dark-theme
+      :ensure t
+      :defer t
+      :init
+      (load-theme 'atom-one-dark t))
 
     ;; (use-package spacemacs-theme
     ;;   :ensure t
@@ -339,19 +345,20 @@
   #+BEGIN_SRC emacs-lisp
     (use-package company-auctex
       :ensure t
-      :defer t
-      :init
-      (company-auctex-init))
+      :defer t)
+      ;; :init
+      ;; (company-auctex-init))
 
     (use-package company-reftex
       :ensure t
       :defer t
       :init
-      (eval-after-load "company"
-	'(add-to-list 'company-backends 'company-reftex-labels))
-      (eval-after-load "company"
-	'(add-to-list 'company-backends 'company-reftex-citations))
-      ;; (add-hook 'LaTeX-mode-hook (lambda () (turn-on-reftex)))
+      (add-hook 'LaTeX-mode-hook (lambda () 
+	(company-auctex-init)
+	(eval-after-load "company"
+	    '(add-to-list 'company-backends 'company-reftex-labels))
+	(eval-after-load "company"
+	    '(add-to-list 'company-backends 'company-reftex-citations))))
       (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
       (setq reftex-plug-into-AUCTeX t))
 

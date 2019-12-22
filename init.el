@@ -41,11 +41,6 @@
  ;; '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
  ;; '(company-tooltip-selection ((t (:background "darkgray" :foreground "white"))))
 )
-
-(add-hook 'emacs-startup-hook
-    (lambda () (setq gc-cons-threshold 16777216
-		     gc-cons-percentage 0.1)))
-)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -53,11 +48,11 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (auctex company which-key use-package spaceline smex pdf-tools iedit exec-path-from-shell evil-commentary evil-collection esup elpy ein diminish dashboard conda company-reftex company-auctex autopair auctex-latexmk atom-one-dark-theme)))
+    (ido-mode dracula-theme auctex company which-key use-package spaceline smex pdf-tools iedit exec-path-from-shell evil-commentary evil-collection esup elpy ein diminish dashboard conda company-reftex company-auctex autopair auctex-latexmk atom-one-dark-theme)))
  '(pdf-tools-handle-upgrades nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; --------------------------------------
+
+(add-hook 'emacs-startup-hook
+    (lambda () (setq gc-cons-threshold 16777216
+		     gc-cons-percentage 0.1)))
+)
