@@ -23,6 +23,13 @@
     (show-paren-mode)
     (setq make-backup-files nil)
     (setq auto-save-default nil)
+    
+    (winner-mode 1)
+
+    (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
+    (add-to-list 'default-frame-alist '(ns-appearance . dark))
+    (setq ns-use-proxy-icon nil)
+    (setq frame-title-format nil)
 
     (setq scroll-conservatively 101) ;; move minimum when cursor exits view, instead of recentering
     (setq mouse-wheel-scroll-amount '(1)) ;; mouse scroll moves 1 line at a time, instead of 5 lines
@@ -31,13 +38,19 @@
     (global-display-line-numbers-mode)
     (tool-bar-mode -1)
     (scroll-bar-mode -1)
-    ;; (set-default 'cursor-type 'bar)
+
     (global-hl-line-mode t)
     (setq ring-bell-function 'ignore)
 
+    (setq explicit-shell-file-name "/usr/local/bin/zsh")
     (add-hook 'prog-mode-hook 'hs-minor-mode 1)
     (add-hook 'prog-mode-hook (lambda () (diminish 'hs-minor-mode)))
+    (add-hook 'term-mode-hook (lambda() (display-line-numbers-mode -1)))
+    (add-hook 'eshell-mode-hook (lambda() (display-line-numbers-mode -1)))
 
+    (defalias 'ff 'find-file)
+    (server-mode 1)
+    
     (setf (cdr (assq 'continuation fringe-indicator-alist))
           '(nil nil) ;; no continuation indicators
           ;; '(nil right-curly-arrow) ;; right indicator only
@@ -49,17 +62,17 @@
 * Themes
   This is my preferred theme available at the [[https://draculatheme.com/][Dracula Theme Website]] but I am using the atom theme for now as a nice change from dracula
   #+BEGIN_SRC emacs-lisp
-    ;; (use-package dracula-theme
-    ;;   :ensure t
-    ;;   :defer t
-    ;;   :init
-    ;;   (load-theme 'dracula t))
-
-    (use-package atom-one-dark-theme
+    (use-package dracula-theme
       :ensure t
       :defer t
       :init
-      (load-theme 'atom-one-dark t))
+      (load-theme 'dracula t))
+
+    ;; (use-package atom-one-dark-theme
+    ;;   :ensure t
+    ;;   :defer t
+    ;;   :init
+    ;;   (load-theme 'atom-one-dark t))
 
     ;; (use-package spacemacs-theme
     ;;   :ensure t
@@ -70,18 +83,17 @@
 * Mode Line
   I use spaceline for my modeline
   #+BEGIN_SRC emacs-lisp
-    (use-package spaceline
-      :ensure t
-      :defer t
-      ;; :config
-      ;; (require 'spaceline-config)
-      :init
-      ;; (setq powerline-default-separator (quote arrow))
-      (spaceline-spacemacs-theme)
-      ;; (powerline-reset)
-      (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
+    ;; (use-package spaceline
+    ;;   :ensure t
+    ;;   :defer t
+    ;;   ;; :config
+    ;;   ;; (require 'spaceline-config)
+    ;;   :init
+    ;;   ;; (setq powerline-default-separator (quote arrow))
+    ;;   (spaceline-spacemacs-theme)
+    ;;   ;; (powerline-reset)
+    ;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
   #+END_SRC
-  
 * Autopair
   Autopair just autocloses brackets and quotations marks
   #+BEGIN_SRC emacs-lisp
@@ -124,10 +136,11 @@
       (evil-mode 1)
       (setq evil-insert-state-message nil)
       (setq evil-visual-state-message nil)
-      (setq evil-normal-state-tag "NORMAL")
-      (setq evil-insert-state-tag "INSERT")
-      (setq evil-visual-state-tag "VISUAL")
-      (setq evil-emacs-state-tag "EMACS"))
+      (setq evil-mode-line-format '(before . mode-line-front-space))
+      (setq evil-normal-state-tag " [ NORMAL ] ")
+      (setq evil-insert-state-tag " [ INSERT ] ")
+      (setq evil-visual-state-tag " [ VISUAL ] ")
+      (setq evil-emacs-state-tag " [ EMACS ] "))
   #+END_SRC
   
   Evil commentary is a port of vim's commentary
@@ -137,6 +150,14 @@
       :defer t
       :init
       (evil-commentary-mode 1))
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil-surround
+      :ensure t
+      :defer t
+      :init
+      (global-evil-surround-mode 1))
   #+END_SRC
 
 * Iedit
@@ -181,8 +202,11 @@
       :ensure t
       :defer t
       :init
-      (setq dashboard-startup-banner 'logo)
-      (setq dashboard-items '((recents . 15)))
+      (setq dashboard-startup-banner 2)
+      (setq dashboard-set-init-info t)
+      (setq dashboard-items '((recents  . 15)
+			      (agenda . 15)))
+      (setq dashboard-center-content t)
       (dashboard-setup-startup-hook)
       (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1))))
   #+END_SRC
@@ -230,15 +254,20 @@
   
   I make ido work vertically so it is easier to use
   #+BEGIN_SRC emacs-lisp
-    (setq ido-everywhere 1)
-    (ido-mode)
-    (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-    (defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
-    (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
-    (defun ido-define-keys ()
-    	  (define-key ido-completion-map (kbd "C-j") 'ido-next-match)
-    	  (define-key ido-completion-map (kbd "C-k") 'ido-prev-match))
-    (add-hook 'ido-setup-hook 'ido-define-keys)
+    (use-package ido-completing-read+
+      :ensure t
+      :defer t
+      :init
+      (ido-mode)
+      (ido-everywhere 1)
+      (ido-ubiquitous-mode)
+      (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+      (defun ido-disable-line-truncation () (set (make-local-variable 'truncate-lines) nil))
+      (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-truncation)
+      (defun ido-define-keys ()
+	  (define-key ido-completion-map (kbd "C-j") 'ido-next-match)
+	  (define-key ido-completion-map (kbd "C-k") 'ido-prev-match))
+      (add-hook 'ido-setup-hook 'ido-define-keys))
   #+END_SRC
 
 * Emacs Start Up Profiler
@@ -260,12 +289,27 @@
       (custom-set-variables
 	'(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
       (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
+      (setq pdf-view-use-scaling t)
       (setq mouse-wheel-follow-mouse t)
       (setq-default pdf-view-display-size 'fit-page)
       (add-hook 'pdf-view-mode-hook (lambda() (display-line-numbers-mode -1)))
       (add-hook 'pdf-view-mode-hook (lambda() (line-number-mode -1)))
+      (setq pdf-view-use-scaling t)
       :init
       (pdf-loader-install))
+  #+END_SRC
+
+* CSV Mode
+  Viewing CSVs is often useful
+  #+BEGIN_SRC emacs-lisp
+    (use-package csv-mode
+      :ensure t
+      :defer t
+      :init
+      (add-hook 'csv-mode-hook (lambda () (csv-header-line)
+                                          (csv-align-mode)
+					  (display-line-numbers-mode -1)
+					  (linum-mode 1))))
   #+END_SRC
 
 * Python Language Settings
@@ -276,19 +320,22 @@
       :defer t
       :init
       (advice-add 'python-mode :before 'elpy-enable)
+      ;; (setq elpy-rpc-python-command "python3")
       (setq elpy-disable-backend-error-display nil)
       (setq elpy-rpc-error-timeout 30)
       (setq elpy-rpc-timeout 30)
       :config
-      (remove-hook 'elpy-modules 'elpy-module-flymake)
+      ;; (remove-hook 'elpy-modules 'elpy-module-flymake)
       (remove-hook 'elpy-modules 'elpy-module-yasnippet)
       (remove-hook 'elpy-modules 'elpy-module-pyvenv)
       (remove-hook 'elpy-modules 'elpy-module-django)
-      (diminish 'highlight-indentation-mode)
       (add-hook 'elpy-mode-hook
 	  (lambda ()
 	  (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition))
 	  (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark))
+      (add-hook 'python-mode-hook 
+          (lambda ()
+	  (diminish 'highlight-indentation-mode)))
       (diminish 'hs-minor-mode))
   #+END_SRC
   Elpy works faster and neater than Anaconda-mode but I seem to need to restart elpy-rpc everytime I change virtual environment
@@ -312,7 +359,7 @@
     (use-package ein
       :ensure t
       :defer t
-      :config
+      :init
       (setq ein:use-auto-complete-superpack t)
       (setq ein:completion-backend 'ein:use-company-backend))
   #+END_SRC
@@ -383,12 +430,10 @@
   I use PDF tools to view PDFs, and we want it to auto update after compilation
   #+BEGIN_SRC emacs-lisp
     (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-	  TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-	  TeX-source-correlate-start-server t)
-
+    	  TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+    	  TeX-source-correlate-start-server t)
     (add-hook 'TeX-after-compilation-finished-functions
 	   #'TeX-revert-document-buffer)
-
     ;; (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   #+END_SRC
   
@@ -416,6 +461,11 @@
   # 			("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
   # #+END_SRC
   
+  #+BEGIN_SRC 
+    (setq org-src-fontify-natively t)
+    (setq org-src-window-setup 'current-window)
+  #+END_SRC
+  
 * General Key Bindings
   #+BEGIN_SRC emacs-lisp
     (global-set-key (kbd "C-c t") 'ansi-term)
@@ -423,6 +473,7 @@
     (global-set-key (kbd "C-x C-b") 'ibuffer)
     (define-key key-translation-map (kbd "M-3") (kbd "#"))
     (define-key key-translation-map (kbd "M-2") (kbd "€"))
+    (windmove-default-keybindings)
   #+END_SRC
 
 * Diminished Modes
@@ -432,6 +483,7 @@
       :ensure t
       :defer t
       :init
+      (diminish 'page-break-lines-mode)
       (diminish 'undo-tree-mode)
       (diminish 'hs-minor-mode)
       (diminish 'evil-commentary-mode)

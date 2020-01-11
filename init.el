@@ -34,12 +34,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- ;; '(company-preview ((t (:foreground "darkgray" :underline t))))
- ;; '(company-preview-common ((t (:inherit company-preview))))
- ;; '(company-tooltip ((t (:background "black" :foreground "white"))))
- ;; '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
- ;; '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
- ;; '(company-tooltip-selection ((t (:background "darkgray" :foreground "white"))))
+ '(company-preview ((t (:foreground "darkgray" :underline t))))
+ '(company-preview-common ((t (:inherit company-preview))))
+ '(company-tooltip ((t (:background "black" :foreground "white"))))
+ '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
+ '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
+ '(company-tooltip-selection ((t (:background "darkgray" :foreground "white"))))
 )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -49,10 +49,9 @@
  '(package-selected-packages
    (quote
     (ido-mode dracula-theme auctex company which-key use-package spaceline smex pdf-tools iedit exec-path-from-shell evil-commentary evil-collection esup elpy ein diminish dashboard conda company-reftex company-auctex autopair auctex-latexmk atom-one-dark-theme)))
- '(pdf-tools-handle-upgrades nil))
+ '(pdf-tools-handle-upgrades nil)))
 ;; --------------------------------------
 
 (add-hook 'emacs-startup-hook
     (lambda () (setq gc-cons-threshold 16777216
 		     gc-cons-percentage 0.1)))
-)
