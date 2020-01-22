@@ -6,9 +6,13 @@ Simple no-fuss dotfiles for easy setup of new machines.
 
 Should be able to clone this repo to the home directory of linux and mac machines and extract the necessary dotfiles.
 
-### Vim/Neovim
+### Emacs
 
-**Note: I no longer use Vim, I have moved to Neovim. So the .vimrc file is no longer maintained. Please use Neovim and the init.vim file**
+Just move the init.el file to your ~/.emacs.d directory and the init-org.org file to ~/.emacs.d/init/ directory. Then open the init-org.org file in emacs
+and run M-x org-babel-execute buffer. Then do C-u C-c C-v k to delete all the outputs of the previous command. Then save the file.
+This should install all the packages you need and set up your emacs properly. You might need to separately install the pdf-tools backend.
+
+### Neovim
 
 Will need to use VimPlug to install and manage plugins. Install VimPlug for Neovim by: 
 ```
@@ -20,18 +24,12 @@ Then use Vim command:
 ```
 :PlugInstall
 ```
-For OS X users, you can set files in Finder to open with TerminalVim.app, included in this repository. This will allow you to double-click a file and open it in a new iTerm window with vim.
 
 If you want Vim to properly work with Python the way I use it, it is recommended
 to make new virtual environments (in either virtualenv, pyenv or conda) for
 Python 2 and Python 3 and install pynvim and jedi in both using pip. Then,
 python completion should work correctly with deoplete, and should show correct
 completions for any new virtual environment you are in.
-
-### Emacs
-
-Just move the init.el file to your ~/.emacs.d directory and the init-org.org file to ~/.emacs.d/init/ directory. Then open the init-org.org file in emacs and save it.
-This should install all the packages you need and set up your emacs properly. You might need to separately install the pdf-tools backend.
 
 ### Bash Shell
 
