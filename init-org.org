@@ -41,6 +41,10 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 ;; disable some warnings when compiling init file
 (setq warning-minimum-level :error)
 
+;; allow y-or-n instead of yes-or-no
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+
 ;; scroll properly, not stupid emacs way
 (setq scroll-conservatively 101)
 (setq mouse-wheel-scroll-amount '(1))
@@ -56,7 +60,6 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 ;; show line number and highlight current line
 (global-display-line-numbers-mode)
 ;; (global-hl-line-mode t)
-;; (setq-default display-line-numbers-width 4)
 
 ;; turn off bell
 (setq ring-bell-function 'ignore)
@@ -143,32 +146,17 @@ This is my preferred theme available at the [[https://draculatheme.com/][Dracula
   :defer t
   :init
   (load-theme 'dracula t))
-
-;; (use-package atom-one-dark-theme
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (load-theme 'atom-one-dark t))
-
-;; (use-package spacemacs-theme
-;;   :ensure t
-;;   :defer t
-;;   :init (load-theme 'spacemacs-dark t))
 #+END_SRC
 
 * Mode Line
-I used to use spaceline for my modeline but disabled it...
+I use spaceline for the modeline
 #+BEGIN_SRC emacs-lisp
-;; (use-package spaceline
-;;   :ensure t
-;;   :defer t
-;;   ;; :config
-;;   ;; (require 'spaceline-config)
-;;   :init
-;;   ;; (setq powerline-default-separator (quote arrow))
-;;   (spaceline-spacemacs-theme)
-;;   ;; (powerline-reset)
-;;   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
+(use-package spaceline
+  :ensure t
+  :defer t
+  :init
+  (spaceline-spacemacs-theme)
+  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state))
 #+END_SRC
 
 * Autopair
@@ -195,6 +183,13 @@ Flashes cursor when moving between windows
   (beacon-mode 1))
 #+END_SRC
 
+* Magit
+Magit is a wonderful git frontend or emacs
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t
+  :defer t)
+#+END_SRC
 * Evil
 I am an ex-vim user so I use evil for my editing
 
@@ -219,10 +214,10 @@ Evil must be done after Evil collection
   (setq evil-insert-state-message nil)
   (setq evil-visual-state-message nil)
   (setq evil-mode-line-format '(before . mode-line-front-space))
-  (setq evil-normal-state-tag " [ NORMAL ] ")
-  (setq evil-insert-state-tag " [ INSERT ] ")
-  (setq evil-visual-state-tag " [ VISUAL ] ")
-  (setq evil-emacs-state-tag " [ EMACS ] ")
+  (setq evil-normal-state-tag "NORMAL")
+  (setq evil-insert-state-tag "INSERT")
+  (setq evil-visual-state-tag "VISUAL")
+  (setq evil-emacs-state-tag "EMACS")
   (evil-mode 1))
 #+END_SRC
 
@@ -244,18 +239,13 @@ Useful port of vim surround
   (global-evil-surround-mode 1))
 #+END_SRC
 
-Get nice org mode bindings, particularly useful in org agenda
+Provides evil mode bindings in magit
 #+BEGIN_SRC emacs-lisp
-(use-package evil-org
+(use-package evil-magit
   :ensure t
   :defer t
   :init
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook
-	    (lambda ()
-	      (evil-org-set-key-theme)))
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (add-hook 'magit-mode-hook (lambda () (evil-magit-init))))
 #+END_SRC
 
 * Iedit
@@ -306,7 +296,7 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-startup-banner 2)
   (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 15)
-                    (agenda . 15)))
+			  (bookmarks . 15)))
   (setq dashboard-center-content t)
   (dashboard-setup-startup-hook)
   (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1))))
@@ -423,7 +413,7 @@ Viewing CSVs is often useful
 Org mode seems to require an extra package after version 9.2 so ensure that it is loaded
 #+BEGIN_SRC emacs-lisp
 (when (version<= "9.2" (org-version))
-    (require 'org-tempo))
+  (require 'org-tempo))
 #+END_SRC
 
 This gets org mode working with python
@@ -442,6 +432,17 @@ This gets org mode working with python
   :hook
   (org-mode . org-bullets-mode))
 #+END_SRC
+
+Tell Org mode to make pdfs from latex with syntax highlighting for source blocks
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+end_src
 
 Allow export to beamer
 #+BEGIN_SRC emacs-lisp
@@ -640,6 +641,7 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'hs-minor-mode)
   (diminish 'evil-commentary-mode)
   (diminish 'eldoc-mode)
+  (diminish 'auto-revert-mode)
   (diminish 'autopair-mode)
   (diminish 'which-key-mode)
   (diminish 'company-mode)
