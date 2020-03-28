@@ -27,31 +27,26 @@
 
 (load-file "~/.emacs.d/init/init-org.elc")
 
-;; SET BY EMACS
-;; --------------------------------------
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-preview ((t (:foreground "darkgray" :underline t))))
- '(company-preview-common ((t (:inherit company-preview))))
- '(company-tooltip ((t (:background "black" :foreground "white"))))
- '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
- '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
- '(company-tooltip-selection ((t (:background "darkgray" :foreground "white"))))
+(add-hook 'emacs-startup-hook
+    (lambda () (setq gc-cons-threshold 16777216
+		     gc-cons-percentage 0.1)))
 )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   (quote
+    ("~/Documents/workstuff/University/Year 3/Semester 2/RevisionSchedule.org")))
  '(package-selected-packages
    (quote
-    (ido-mode dracula-theme auctex company which-key use-package spaceline smex pdf-tools iedit exec-path-from-shell evil-commentary evil-collection esup elpy ein diminish dashboard conda company-reftex company-auctex autopair auctex-latexmk atom-one-dark-theme)))
- '(pdf-tools-handle-upgrades nil)))
-;; --------------------------------------
-
-(add-hook 'emacs-startup-hook
-    (lambda () (setq gc-cons-threshold 16777216
-		     gc-cons-percentage 0.1)))
+    (dracula-theme autopair org yasnippet-snippets which-key vterm vimrc-mode use-package spaceline smex projectile pdf-tools org-bullets markdown-mode jupyter iedit flycheck exec-path-from-shell evil-surround evil-magit evil-commentary evil-collection esup elpy doom-themes diminish dashboard cython-mode csv-mode counsel conda company-reftex company-irony company-auctex beacon auto-package-update auctex-latexmk)))
+ '(pdf-tools-handle-upgrades nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ivy-current-match ((t (:background "#FF0000"))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
