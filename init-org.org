@@ -11,8 +11,7 @@
 
 * Setting up New Installation
 Execute the Package Installation section manually with C-c C-c in the src blocks.
-Then do C-u C-c-v-k to delete the outputs.
-Then save the file and let it compile into a .elc file.
+Then save the file and let it compile into a .elc file
 Then restart emacs and everything should be working!
 You might have to change the location of the specified miniconda...
 
@@ -24,8 +23,6 @@ Here I set up the pacakge repositories we will be pulling from.
 (package-initialize)
 #+END_SRC
 
-#+RESULTS:
-
 If use-package isn't already installed, install it
 #+BEGIN_SRC emacs-lisp
 (unless (package-installed-p 'use-package)
@@ -33,15 +30,10 @@ If use-package isn't already installed, install it
   (package-install 'use-package))
 #+END_SRC
 
-#+RESULTS:
-
 Here, I let emacs load the files for any manually added packages in the .emacs.d/lisp/ folder
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/lisp")
 #+END_SRC
-
-#+RESULTS:
-| ~/.emacs.d/lisp | /Users/saipandian/.emacs.d/elpa/use-package-20191126.2034 | /Users/saipandian/.emacs.d/elpa/bind-key-20191110.416 | /usr/local/share/emacs/site-lisp | /usr/local/share/emacs/site-lisp/cmake | /usr/local/share/emacs/site-lisp/git | /usr/local/share/emacs/site-lisp/libidn | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/vc | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/url | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/textmodes | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/progmodes | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/play | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/org | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/nxml | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/net | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/mh-e | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/mail | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/leim | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/language | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/international | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/image | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/gnus | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/eshell | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/erc | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/emulation | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/emacs-lisp | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/cedet | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/calendar | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/calc | /usr/local/Cellar/emacs-plus/26.3/share/emacs/26.3/lisp/obsolete |
 
 * General Tweaks to Emacs
 #+BEGIN_SRC emacs-lisp
@@ -49,9 +41,6 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 (setq inhibit-splash-screen t)
-
-;; allow undoing window actions
-(winner-mode 1)
 
 ;; disable emacs completion window
 (setq completion-auto-help 'lazy)
@@ -62,7 +51,6 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 ;; allow y-or-n instead of yes-or-no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-
 ;; scroll properly, not stupid emacs way
 (setq scroll-conservatively 101)
 (setq mouse-wheel-scroll-amount '(1))
@@ -71,25 +59,10 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 ;; disable tool bar and scroll bar and menu bar if not in mac
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(unless (memq window-system '(mac ns x))
-  (menu-bar-mode -1))
-
 
 ;; show line number and highlight current line
 (global-display-line-numbers-mode)
 ;; (global-hl-line-mode t)
-
-;; turn off bell
-(setq ring-bell-function 'ignore)
-
-;; set shell file for ansi-term and set alias for eshell
-;; (defvar my-term-shell "/usr/local/bin/fish")
-;; (defadvice ansi-term (before force-bash)
-;;   (interactive (list my-term-shell)))
-;; (ad-activate 'ansi-term)
-;; (setq explicit-shell-file-name "/usr/local/bin/fish")
-
-(defalias 'ff 'find-file)
 
 ;;  disable line number in terminals and turn on hs minor mode when programming
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))
@@ -99,12 +72,23 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 (add-hook 'eshell-mode-hook (lambda () (display-line-numbers-mode -1)))
 (add-hook 'help-mode-hook (lambda () (display-line-numbers-mode -1)))
 
+;; turn off bell
+(setq ring-bell-function 'ignore)
+
+(defalias 'ff 'find-file)
+
 ;; enable emacs server
 (server-mode 1)
 
 ;; turn off indicator for wrapping text
 (setf (cdr (assq 'continuation fringe-indicator-alist))
       '(nil nil))
+
+(setq-default message-log-max nil)
+(kill-buffer "*Messages*")
+
+;; make emacs open maximised
+(toggle-frame-maximized)
 #+END_SRC
 
 * MacOS Specific
@@ -113,10 +97,9 @@ not find the symlink. In this case, make a folder in /Applications called
 Emacs.app, then delete the folder. And then do the symlink, and this will let
 Alfred see it. It's a bit of a hack but it works.
 
-Keep this block in this file and don't move it to early-init.el because it is
-easier to keep track of if you leave macOS
 #+BEGIN_SRC emacs-lisp
 (set-frame-font "Inconsolata 16" nil t)
+;; (set-frame-font "Source Code Pro 14" nil t)
 
 ;; get pretty header bard in macOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
@@ -124,15 +107,8 @@ easier to keep track of if you leave macOS
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 
-;; make emacs open maximised
-(toggle-frame-maximized)
-
 ;; open new files from finder in already opened frame
 (setq ns-pop-up-frames nil)
-
-;; setting starting window position in macOS
-;; (when (window-system)
-;;   (set-frame-position (selected-frame) 525 245))
 
 ;; only hide emacs when x button pressed
 (defun handle-delete-frame-without-kill-emacs (event)
@@ -156,9 +132,25 @@ easier to keep track of if you leave macOS
               #'handle-delete-frame-without-kill-emacs))
 #+END_SRC
 
+* Themes
+I use Dracula theme
+#+begin_src emacs-lisp
+(use-package dracula-theme
+  :ensure t
+  :defer t
+  :init
+  (load-theme 'dracula t))
+#+end_src
+
 * Mode Line
 Spaceline is a pretty complete option
 #+BEGIN_SRC emacs-lisp
+(set-face-attribute 'mode-line nil
+                    :background "#353644"
+                    :foreground "white"
+                    :overline nil
+                    :underline nil)
+
 (use-package spaceline
   :ensure t
   :defer t
@@ -166,77 +158,9 @@ Spaceline is a pretty complete option
   (setq powerline-default-separator 'arrow)
   (spaceline-spacemacs-theme)
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  (setq auto-revert-check-vc-info t))
+  (setq auto-revert-check-vc-info t)
+  (powerline-reset))
 #+END_SRC
-
-Doom modeline is a more lightweight option
-#+begin_src emacs-lisp
-;; (use-package doom-modeline
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (setq inhibit-compacting-font-caches t)
-;;   (setq doom-modeline-project-detection 'projectile)
-;;   (setq doom-modeline-icon nil)
-;;   (setq doom-modeline-modal-icon nil)
-;;   (setq doom-modeline-height 1)
-;;   (setq doom-modeline-bar-width 1)
-;;   (doom-modeline-mode 1))
-#+end_src
-
-* Themes
-Some options for themes are below:
-#+begin_src emacs-lisp
-(use-package doom-themes
-  :ensure t
-  :defer t
-  :init
-  (load-theme 'doom-dracula t)
-  (doom-themes-org-config))
-#+end_src
-
-#+begin_src emacs-lisp
-;; (use-package spacemacs-theme
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (load-theme 'spacemacs-dark t))
-#+end_src
-
-#+begin_src emacs-lisp
-;; (use-package modus-vivendi-theme
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (load-theme 'modus-vivendi t))
-#+end_src
-
-#+begin_src emacs-lisp
-;; (use-package dracula-theme
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (load-theme 'dracula t))
-#+end_src
-
-This function disables previous theme before enabling new one. This prevents the
-clashing between themes you often see if you just load a new theme. It then
-refreshes spaceline and reapplies custom org faces.
-#+begin_src emacs-lisp
-(defun my/switch-theme (theme)
-  ;; This interactive call is taken from `load-theme'
-  (interactive
-   (list
-    (intern (completing-read "Load custom theme: "
-                             (mapcar 'symbol-name
-                                     (custom-available-themes))))))
-  (mapcar #'disable-theme custom-enabled-themes)
-  (load-theme theme t)
-  (spaceline-spacemacs-theme)
-  (set-face-attribute 'org-block nil :background
-		      (color-darken-name
-		       (face-attribute 'default :background) 3)))
-#+end_src
 
 * Autopair
 Autopair just autocloses brackets and quotations marks.
@@ -251,19 +175,8 @@ Make sure it doesn't autopair '<' in org mode, since that messed with snippets
                               (push ?< (getf autopair-dont-pair :everywhere)))))
 #+END_SRC
 
-* Beacon
-Flashes cursor when moving between windows
-#+BEGIN_SRC emacs-lisp
-(use-package beacon
-  :ensure t
-  :defer t
-  :init
-  (setq beacon-push-mark 15)
-  (beacon-mode 1))
-#+END_SRC
-
 * Magit
-Magit is a wonderful git frontend or emacs
+Magit is a wonderful git frontend for emacs
 #+BEGIN_SRC emacs-lisp
 (use-package magit
   :ensure t
@@ -347,6 +260,16 @@ Get evil bindings in org-agenda
     (evil-org-agenda-set-keys))
 #+END_SRC
 
+Evil numbers for incrementing and decrementing
+#+begin_src emacs-lisp
+(use-package evil-numbers
+  :ensure t
+  :defer t
+  :init
+  (define-key evil-normal-state-map (kbd "C-c C-=") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-c C--") 'evil-numbers/dec-at-pt))
+#+end_src
+
 * Iedit
 Iedit allows for multiple cursor-like functionality
 #+BEGIN_SRC emacs-lisp
@@ -367,12 +290,10 @@ I use company for all my autocompletion needs
   (push ".aux" company-files-exclusions)
   (push ".log" company-files-exclusions)
   (push ".pdf" company-files-exclusions)
-  ;; (push ".bbl" company-files-exclusions)
   (push ".bcf" company-files-exclusions)
   (push ".gz" company-files-exclusions)
   (push ".blg" company-files-exclusions)
   (push ".fls" company-files-exclusions)
-  ;; (setq company-dabbrev-other-buffers t)
   (delete 'company-dabbrev company-backends)
   (company-tng-configure-default)
   (setq company-idle-delay 0)
@@ -408,16 +329,6 @@ I use which key to show me possible keyboard shortcuts
   (which-key-mode))
 #+END_SRC
 
-* Vterm
-I use vterm as my terminal because it is a lot better than ansi-term You will
-need to have cmake installed for this, which can be done in mac with: brew
-install cmake
-#+begin_src emacs-lisp
-(use-package vterm
-  :ensure t
-  :defer t)
-#+end_src
-
 * Exec Path From Shell
 This simply gets the shell variable and path from default shell
 #+BEGIN_SRC emacs-lisp
@@ -430,53 +341,35 @@ This simply gets the shell variable and path from default shell
     (exec-path-from-shell-initialize)))
 #+END_SRC
 
-* Smex & Ido
-# Smex and Ido handle my command completions
-# #+BEGIN_SRC emacs-lisp
-# (use-package smex
-#   :ensure t
-#   :defer t
-#   :init
-#   (global-set-key (kbd "M-x") 'smex)
-#   (global-set-key (kbd "M-X") 'smex-major-mode-commands))
+* Vterm
+I use vterm as my terminal because it is a lot better than ansi-term. You will
+need to have some dependencies installed for this, which can be done in mac with: 
+brew install cmake libtool libvterm
+#+begin_src emacs-lisp
+(use-package vterm
+  :ensure t
+  :defer t)
+#+end_src
 
-# (ido-mode)
-# (ido-everywhere 1)
-# #+END_SRC
+* Perspective Mode
+I use this for managing workspaces inside Emacs. Might be redunant with tabs in
+Emacs 27
+#+begin_src emacs-lisp
+(use-package perspective
+  :ensure t
+  :defer t
+  :init
+  (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer)
+  (global-set-key (kbd "C-x k") 'persp-kill-buffer*)
+  (global-set-key (kbd "C-x C-k") 'persp-kill-buffer*)
+  (global-set-key (kbd "C-x x h") 'persp-prev)
+  (global-set-key (kbd "C-x x l") 'persp-next)
+  (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
+  (persp-mode 1))
+#+end_src
 
-# I make ido work vertically and navigate with vim keys
-# #+BEGIN_SRC emacs-lisp
-# (setq ido-decorations (quote ("\n-> " "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
-
-# (defun ido-define-keys ()
-#   (define-key ido-completion-map (kbd "C-j") 'ido-next-match)
-#   (define-key ido-completion-map (kbd "C-k") 'ido-prev-match))
-# (add-hook 'ido-setup-hook 'ido-define-keys)
-# #+END_SRC
-
-# I want to use ido to complete pretty much every list so:
-# #+BEGIN_SRC emacs-lisp
-# (defvar ido-enable-replace-completing-read t)
-# (defadvice completing-read
-#     (around use-ido-when-possible activate)
-#   (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
-#           (and (boundp 'ido-cur-list)
-#                ido-cur-list)) ; Avoid infinite loop from ido calling this
-#       ad-do-it
-#     (let ((allcomp (all-completions "" collection predicate)))
-#       (if allcomp
-#           (setq ad-return-value
-#                 (ido-completing-read prompt
-# 				     allcomp
-# 				     nil require-match initial-input hist def))
-#         ad-do-it))))
-# #+END_SRC
-
-* Ivy & Counsel
-I am considering using Ivy & Counsel
-They are slightly heavier than just ido-mode and smex but there may be some cool
-features only available with counsel. As of now, there aren't any
-counsel-specific things I use, but perhaps in the future.
+* Ivy, Counsel & Swiper
+Counsel and Ivy-mode for completion
 #+begin_src emacs-lisp
 (use-package smex
   :ensure t
@@ -487,15 +380,14 @@ counsel-specific things I use, but perhaps in the future.
   :defer t
   :init
   (global-set-key "\C-s" 'swiper)
-  ;; (setq counsel-async-filter-update-time 100000)
-  (setq counsel-fzf-cmd "ag --hidden --ignore .git -g '' | fzf -f \'%s\'")
+  (setq counsel-fzf-cmd "rg --files --no-ignore --hidden --follow --glob '!.git/*'")
   (counsel-mode 1))
 
 (use-package ivy
   :ensure t
   :defer t
   :init
-  (custom-set-faces '(ivy-current-match ((t (:background "#FF0000")))))
+  ;; (custom-set-faces '(ivy-current-match ((t (:background "#FF0000")))))
   (setq ivy-initial-inputs-alist nil)
   (setq enable-recursive-minibuffers t)
   (setq ivy-height 15)
@@ -519,10 +411,9 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 15)
 			    (projects . 5)
-			    (agenda . 5)
+			    ;; (agenda . 5)
 			    (bookmarks . 10)))
   (setq dashboard-center-content t)
-  ;; (setq dashboard-set-navigator t) 
   (dashboard-setup-startup-hook)
   (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1))))
 #+END_SRC
@@ -543,7 +434,7 @@ PDF Tools is a better way to view PDFs than Docview
   :defer t
   :config
   (custom-set-variables
-  '(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
+  '(pdf-tools-handle-upgrades nil))
   (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
   (setq pdf-view-use-scaling t)
   (setq mouse-wheel-follow-mouse t)
@@ -592,6 +483,7 @@ Viewing CSVs is often useful
 #+END_SRC
 
 * Markdown Mode
+Mode for editing markdown documents
 #+begin_src emacs-lisp
 (use-package markdown-mode
   :ensure t
@@ -599,14 +491,28 @@ Viewing CSVs is often useful
 #+end_src
 
 * Flycheck
+Flycheck is a general linting package that other linters can plug into.
+It seems to work better than Flymake out of the box, except in Python where Elpy
+mode's included Flymake works well
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure t
   :defer t
   :init
-  ;; (add-hook 'flycheck-mode-hook #'flycheck-virtualenv-setup)
-  ;; (add-hook 'prog-mode-hook 'flycheck-mode)
   (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+#+end_src
+
+* Flyspell
+On the go spell-checking in Emacs
+You will need to install aspell on your system for this to work. On MacOS:
+brew install aspell
+
+#+begin_src emacs-lisp
+(setq ispell-program-name "/usr/local/bin/aspell")
+(setq ispell-dictionary "british") 
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'text-mode-hook 'flyspell-mode)
 #+end_src
 
 * LaTeX
@@ -630,6 +536,7 @@ through use-package. Install it directly from Melpa instead
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'yas-minor-mode)
 (setq-default fill-column 80)
 (setq TeX-source-correlate-method 'synctex)
 (setq TeX-source-correlate-start-server t)
@@ -647,13 +554,13 @@ The completion is handled by Company-AucTeX
   :init
   ;; can probably move the hook into hook: in company-auctex usepackage
   (add-hook 'LaTeX-mode-hook (lambda ()
-  (company-auctex-init)
-  (eval-after-load "company"
-      '(add-to-list 'company-backends 'company-reftex-labels))
-  (eval-after-load "company"
-      '(add-to-list 'company-backends 'company-reftex-citations))))
-      (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-      (setq reftex-plug-into-AUCTeX t))
+			       (company-auctex-init)
+			       (eval-after-load "company"
+				 '(add-to-list 'company-backends 'company-reftex-labels))
+			       (eval-after-load "company"
+				 '(add-to-list 'company-backends 'company-reftex-citations))))
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t))
 #+END_SRC
 
 Compile with Latexmk, since it works better
@@ -668,21 +575,21 @@ Compile with Latexmk, since it works better
   (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 #+END_SRC
 
-I use PDF tools to view PDFs, and we want it to auto update after compilation
+I can use PDF tools or Skim.app to view PDFs. If PDF tools, then auto update
+buffer after compilation
 #+BEGIN_SRC emacs-lisp
 (setq TeX-view-program-selection '((output-pdf "PDF Viewer"))
   	;; TeX-view-program-list '(("PDF Viewer" TeX-pdf-tools-sync-view))
   	TeX-view-program-list '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b"))
   	TeX-source-correlate-start-server t)
-(add-hook 'TeX-after-compilation-finished-functions
- #'TeX-revert-document-buffer)
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
 (add-hook 'LaTeX-mode-hook 'flycheck-mode)
 #+END_SRC
 
 * Python
-Choice of Emacs-Jedi, Anaconda-mode, or Elpy I am using Elpy because it remains
-fast and is feature rich. You will need to make your own elpy virtual
-environment with conda, and point to it with the elpy-rpc-virtualenv-path variable
+I am using Elpy because it remains fast and is feature rich. You will need to
+make your own elpy virtual environment with conda, and point to it with the
+elpy-rpc-virtualenv-path variable
 #+BEGIN_SRC emacs-lisp
 (use-package elpy
   :ensure t
@@ -690,33 +597,22 @@ environment with conda, and point to it with the elpy-rpc-virtualenv-path variab
   :init
   (setq elpy-rpc-virtualenv-path "/Users/saipandian/miniconda3/envs/elpy")
   (advice-add 'python-mode :before 'elpy-enable)
-  (setq elpy-disable-backend-error-display nil)
   (setq elpy-rpc-error-timeout 30)
   (setq elpy-rpc-timeout 30)
   :config
-  ;; (add-hook 'elpy-mode-hook 'flycheck-mode)
-  ;; (setq elpy-syntax-check-command "epylint")
-  ;; (remove-hook 'elpy-modules 'elpy-module-flymake)
-  ;; (remove-hook 'elpy-modules 'elpy-module-yasnippet)
   (remove-hook 'elpy-modules 'elpy-module-pyvenv)
   (remove-hook 'elpy-modules 'elpy-module-django)
   (add-hook 'conda-postactivate-hook (lambda () (elpy-rpc-restart)))
-  ;; should be in bind:
-  (add-hook 'elpy-ve-mode-hook (lambda () (display-line-numbers-mode -1)))
-  (add-hook 'elpy-mode-hook
-	    (lambda ()
-	      (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
-	      (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)
-	      (define-key elpy-mode-map (kbd "C-c C-f") 'projectile-find-file)))
+  (add-hook 'elpy-mode-hook (lambda ()
+			      (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
+			      (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)))
   (add-hook 'python-mode-hook (lambda () (diminish 'highlight-indentation-mode)))
   (diminish 'hs-minor-mode))
 #+END_SRC
 
 Elpy works faster and neater than Anaconda-mode from my experience, especially
 when importing new modules. But supposedly Anaconda-mode is lighter. And so is
-Jedi, but neither offer as many features as Elpy. A language server might be
-cool but the python one is slow for large files and you have to install it in
-every virtual environment.
+Jedi, but neither offer as many features as Elpy. 
 
 Conda handles switching virtual environments
 #+BEGIN_SRC emacs-lisp
@@ -732,7 +628,8 @@ Conda handles switching virtual environments
 #+END_SRC
 
 * Cython
-Sometimes I use cython for the best of both C and Python
+Sometimes I use cython for the best of both C and Python and it is nice to have
+some syntax higlighting
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode
   :ensure t
@@ -742,8 +639,7 @@ Sometimes I use cython for the best of both C and Python
 #+END_SRC
 
 * Jupyter
-I use Emacs Jupyter for jupyter notebooks. I used to use ein, but it's a little
-slow and buggy
+I use Emacs Jupyter for jupyter notebooks
 #+BEGIN_SRC emacs-lisp
 (use-package jupyter
   :ensure t
@@ -767,8 +663,7 @@ slow and buggy
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, not available on
-melpa. If you don't have it, download it from: [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] and put it in
-.emacs.d/lisp/
+melpa. If you don't have it, download it from: [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] and put it in .emacs.d/lisp/
 #+BEGIN_SRC emacs-lisp
 (use-package ox-ipynb)
 #+END_SRC
@@ -782,43 +677,15 @@ Occasionally I have to edit a vimrc file so syntax highlighting is nice.
 #+end_src
 
 * C/C++
-I use irony mode for C and C++
-You will need to install libclang to get this to work properly
+You might need to install libclang for the completion to work properly
+On macOS, this is done with: brew install llvm
+But it should work fine even without this, provided xcode tools are installed
 
-On macOS, this is done with:
-brew --cc clang llvm
-Then, you will need to run (irony-install-server), then navigate to .emacs.d/irony/bin and run:
-install_name_tool -change @rpath/libclang.dylib /usr/local/opt/llvm/lib/libclang.dylib irony-server
-Then you can run the (irony-install-server) command again with the options:
--DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++
--DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang
--DLIBCLANG_INCLUDE_DIR=/usr/local/opt/llvm/include
--DLIBCLANG_LIBRARY=/usr/local/opt/llvm/lib/libclang.dylib
-
-More details for installation at [[https://gist.github.com/soonhokong/7c2bf6e8b72dbc71c93b][GithubGist]]
-
-#+begin_src emacs-lisp
-(use-package irony
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-  (add-hook 'irony-mode-hook 'yas-minor-mode))
-
-(use-package company-irony
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'irony-mode-hook (lambda ()
-			       '(add-to-list 'company-backends 'company-irony))))
-#+end_src
-
-Set up c++ to use the style I like, the linux kernel style:
+Set up c++ to use the style I like and enable some minor modes
 #+begin_src emacs-lisp
 (setq c-default-style "linux")
-(add-hook 'irony-mode-hook 'flycheck-mode)
+(add-hook 'c++-mode-hook 'flycheck-mode)
+(add-hook 'c++-mode-hook 'yas-minor-mode)
 #+end_src
 
 * Org Mode
@@ -829,7 +696,7 @@ is loaded
   (require 'org-tempo))
 #+END_SRC
 
-This gets org mode working with python and jupyter
+This gets org mode working with python, jupyter and emacs-lisp
 #+BEGIN_SRC emacs-lisp
 (org-babel-do-load-languages 'org-babel-load-languages
 			     '((emacs-lisp . t)
@@ -841,10 +708,8 @@ This gets org mode working with python and jupyter
 (use-package org-bullets
   :ensure t
   :defer t
-  ;; :hook
   :init
   (add-hook 'org-mode-hook 'org-bullets-mode))
-  ;; (org-mode . org-bullets-mode))
 #+END_SRC
 
 Tell Org mode to make pdfs from latex with syntax highlighting for source blocks
@@ -879,9 +744,6 @@ General Org Mode settings
 (setq org-hide-leading-stars nil)
 (setq org-startup-indented t)
 (setq org-hide-emphasis-markers t)
-(custom-set-faces
-  '(org-level-1
-    ((t (:inherit outline-1 :height 1.2)))))
 
 (require 'color)
 (set-face-attribute 'org-block nil :background
@@ -896,7 +758,6 @@ General Org Mode settings
 (setq org-edit-src-content-indentation 0)
 (setq org-src-tab-acts-natively t)
 
-
 (setq-default fill-column 80)
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'visual-line-mode)
@@ -907,10 +768,9 @@ General Org Mode settings
 (global-set-key (kbd "C-c t t") 'vterm)
 (global-set-key (kbd "C-c t e") 'eshell)
 (global-set-key (kbd "C-c t j") 'jupyter-run-repl)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-x C-k") 'kill-buffer)
 (define-key key-translation-map (kbd "M-3") (kbd "#"))
 (define-key key-translation-map (kbd "M-2") (kbd "€"))
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 (windmove-default-keybindings)
 #+END_SRC
 
@@ -948,16 +808,8 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'which-key-mode)
   (diminish 'company-mode)
   (diminish 'highlight-indentation-mode)
-  (diminish 'beacon-mode))
-#+END_SRC
+  (diminish 'beacon-mode)
+  (diminish 'persp-mode))
 
-* TODO Future Improvements
-** In Emacs 27
-*** Use package quickstart (just set it to true in init.el)
-*** Use early-init for the gui things
-*** Get rid of package-initialize
-** If I ever feel like it
-*** Set up spacemacs keybindings
-**** [[https://gist.github.com/adham90/0d85d023f9d4f1dd28ef#file-spacemacs-keybindings][List of all bindings]]
-* TESTGROUND
+#+END_SRC
 
