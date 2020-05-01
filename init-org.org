@@ -64,7 +64,7 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 (global-display-line-numbers-mode)
 ;; (global-hl-line-mode t)
 
-;;  disable line number in terminals and turn on hs minor mode when programming
+;; disable line number in terminals and turn on hs minor mode when programming
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))
 (add-hook 'prog-mode-hook (lambda () (diminish 'hs-minor-mode)))
 (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode -1)))
@@ -99,7 +99,6 @@ Alfred see it. It's a bit of a hack but it works.
 
 #+BEGIN_SRC emacs-lisp
 (set-frame-font "Inconsolata 16" nil t)
-;; (set-frame-font "Source Code Pro 14" nil t)
 
 ;; get pretty header bard in macOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
@@ -143,24 +142,28 @@ I use Dracula theme
 #+end_src
 
 * Mode Line
-Spaceline is a pretty complete option
+I change the font colours in the modeline
 #+BEGIN_SRC emacs-lisp
 (set-face-attribute 'mode-line nil
                     :background "#353644"
                     :foreground "white"
                     :overline nil
                     :underline nil)
+#+END_SRC
 
-(use-package spaceline
+Doom modeline is much lighter but still looks quite pretty
+#+begin_src emacs-lisp
+(use-package doom-modeline
   :ensure t
   :defer t
   :init
-  (setq powerline-default-separator 'arrow)
-  (spaceline-spacemacs-theme)
-  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  (setq auto-revert-check-vc-info t)
-  (powerline-reset))
-#+END_SRC
+  (setq doom-modeline-height 10)
+  (setq doom-modeline-icon nil)
+  (setq doom-modeline-minor-modes t)
+  (setq doom-modeline-perp-name t)
+  (setq doom-modeline-env-version nil)
+  (doom-modeline-mode 1))
+#+end_src
 
 * Autopair
 Autopair just autocloses brackets and quotations marks.
@@ -212,10 +215,12 @@ Evil must be done after Evil collection
   (setq evil-insert-state-message nil)
   (setq evil-visual-state-message nil)
   (setq evil-mode-line-format '(before . mode-line-front-space))
-  (setq evil-normal-state-tag "<N>")
-  (setq evil-insert-state-tag "<I>")
-  (setq evil-visual-state-tag "<V>")
-  (setq evil-emacs-state-tag "<E>")
+  (setq evil-normal-state-tag "NORMAL")
+  (setq evil-insert-state-tag "INSERT")
+  (setq evil-visual-state-tag "VISUAL")
+  (setq evil-operator-state-tag "OPERATOR")
+  (setq evil-motion-state-tag "MOTION")
+  (setq evil-emacs-state-tag "EMACS")
   (evil-mode 1))
 #+END_SRC
 
@@ -249,15 +254,12 @@ Provides evil mode bindings in magit
 Get evil bindings in org-agenda
 #+BEGIN_SRC emacs-lisp
 (use-package evil-org
-:ensure t
-:defer t
-:init
-(add-hook 'org-mode-hook 'evil-org-mode)
-(add-hook 'evil-org-mode-hook
-	      (lambda ()
-		(evil-org-set-key-theme)))
-    (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys))
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 #+END_SRC
 
 Evil numbers for incrementing and decrementing
@@ -396,6 +398,7 @@ Counsel and Ivy-mode for completion
   (define-key ivy-switch-buffer-map (kbd "C-j") #'ivy-next-line)
   (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
   (define-key ivy-minibuffer-map (kbd "<return>") #'ivy-alt-done)
+  (global-set-key (kbd "M-p") 'counsel-yank-pop)
   (setq projectile-completion-system 'ivy)
   (ivy-mode 1))
 #+end_src
@@ -443,6 +446,7 @@ PDF Tools is a better way to view PDFs than Docview
   (add-hook 'pdf-view-mode-hook (lambda() (line-number-mode -1)))
   (setq pdf-view-use-scaling t)
   :init
+  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
   (setq pdf-view-use-scaling t)
   (pdf-loader-install))
 #+END_SRC
@@ -489,6 +493,75 @@ Mode for editing markdown documents
   :ensure t
   :defer t)
 #+end_src
+
+* Org Mode
+
+This gets org mode working with python, jupyter and emacs-lisp
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages 'org-babel-load-languages 
+			     '((emacs-lisp . t) 
+			       (python . t) 
+			       (jupyter . t)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'org-mode-hook 'org-bullets-mode))
+#+END_SRC
+
+Tell Org mode to make pdfs from latex with syntax highlighting for source blocks
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+end_src
+
+Allow export to beamer
+#+BEGIN_SRC emacs-lisp
+(use-package ox-beamer
+  :config
+  (eval-after-load "ox-latex"
+      '(add-to-list 'org-latex-classes
+                    `("beamer"
+                      ,(concat "\\documentclass[presentation]{beamer}\n"
+                             "[DEFAULT-PACKAGES]"
+                             "[PACKAGES]"
+                             "[EXTRA]\n")
+                      ("\\section{%s}" . "\\section*{%s}")
+                      ("\\subsection{%s}" . "\\subsection*{%s}")
+                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+#+END_SRC
+
+General Org Mode settings
+#+BEGIN_SRC emacs-lisp
+(setq org-hide-leading-stars nil)
+(setq org-startup-indented t)
+(setq org-hide-emphasis-markers t)
+
+(require 'color)
+(set-face-attribute 'org-block nil :background
+                     (color-darken-name
+                     (face-attribute 'default :background) 3))
+
+(setq org-confirm-babel-evaluate nil)
+
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+(setq org-src-fontify-natively t)
+(setq org-edit-src-content-indentation 0)
+(setq org-src-tab-acts-natively t)
+
+(setq-default fill-column 80)
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'visual-line-mode)
+#+END_SRC
 
 * Flycheck
 Flycheck is a general linting package that other linters can plug into.
@@ -595,7 +668,7 @@ elpy-rpc-virtualenv-path variable
   :ensure t
   :defer t
   :init
-  (setq elpy-rpc-virtualenv-path "/Users/saipandian/miniconda3/envs/elpy")
+  (setq elpy-rpc-virtualenv-path (expand-file-name "~/miniconda3/envs/elpy"))
   (advice-add 'python-mode :before 'elpy-enable)
   (setq elpy-rpc-error-timeout 30)
   (setq elpy-rpc-timeout 30)
@@ -603,9 +676,8 @@ elpy-rpc-virtualenv-path variable
   (remove-hook 'elpy-modules 'elpy-module-pyvenv)
   (remove-hook 'elpy-modules 'elpy-module-django)
   (add-hook 'conda-postactivate-hook (lambda () (elpy-rpc-restart)))
-  (add-hook 'elpy-mode-hook (lambda ()
-			      (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
-			      (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)))
+  (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
+  (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)
   (add-hook 'python-mode-hook (lambda () (diminish 'highlight-indentation-mode)))
   (diminish 'hs-minor-mode))
 #+END_SRC
@@ -656,10 +728,7 @@ I use Emacs Jupyter for jupyter notebooks
 
 (add-hook 'conda-postactivate-hook (lambda () (my/get-jupyter-aliases)))
 
-(add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
-
-;; (add-to-list 'org-structure-template-alist
-;;              '("j" "#+begin_src jupyter-python \n?\n#+end_src"))
+(add-to-list 'org-structure-template-alist '("j" "#+BEGIN_SRC jupyter-python \n?\n#+END_SRC"))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, not available on
@@ -678,8 +747,18 @@ Occasionally I have to edit a vimrc file so syntax highlighting is nice.
 
 * C/C++
 You might need to install libclang for the completion to work properly
-On macOS, this is done with: brew install llvm
-But it should work fine even without this, provided xcode tools are installed
+On macOS, this simply involves installing Xcode Commandline tools
+
+Set up eldoc mode to work with C++
+#+begin_src emacs-lisp
+(use-package c-eldoc
+  :ensure t
+  :defer t
+  :init
+  (setq c-eldoc-buffer-regenerate-time 3)
+  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode))
+#+end_src
 
 Set up c++ to use the style I like and enable some minor modes
 #+begin_src emacs-lisp
@@ -687,81 +766,6 @@ Set up c++ to use the style I like and enable some minor modes
 (add-hook 'c++-mode-hook 'flycheck-mode)
 (add-hook 'c++-mode-hook 'yas-minor-mode)
 #+end_src
-
-* Org Mode
-Org mode seems to require an extra package after version 9.2 so ensure that it
-is loaded
-#+BEGIN_SRC emacs-lisp
-(when (version<= "9.2" (org-version))
-  (require 'org-tempo))
-#+END_SRC
-
-This gets org mode working with python, jupyter and emacs-lisp
-#+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages 'org-babel-load-languages
-			     '((emacs-lisp . t)
-			       (python . t)
-			       (jupyter . t)))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-(use-package org-bullets
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'org-mode-hook 'org-bullets-mode))
-#+END_SRC
-
-Tell Org mode to make pdfs from latex with syntax highlighting for source blocks
-#+begin_src emacs-lisp
-(add-to-list 'org-latex-packages-alist '("" "minted"))
-(setq org-latex-listings 'minted)
-
-(setq org-latex-pdf-process
-      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-#+end_src
-
-Allow export to beamer
-#+BEGIN_SRC emacs-lisp
-(use-package ox-beamer
-  :config
-  (eval-after-load "ox-latex"
-      '(add-to-list 'org-latex-classes
-                    `("beamer"
-                      ,(concat "\\documentclass[presentation]{beamer}\n"
-                             "[DEFAULT-PACKAGES]"
-                             "[PACKAGES]"
-                             "[EXTRA]\n")
-                      ("\\section{%s}" . "\\section*{%s}")
-                      ("\\subsection{%s}" . "\\subsection*{%s}")
-                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
-#+END_SRC
-
-General Org Mode settings
-#+BEGIN_SRC emacs-lisp
-(setq org-hide-leading-stars nil)
-(setq org-startup-indented t)
-(setq org-hide-emphasis-markers t)
-
-(require 'color)
-(set-face-attribute 'org-block nil :background
-                     (color-darken-name
-                     (face-attribute 'default :background) 3))
-
-(setq org-confirm-babel-evaluate nil)
-
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-
-(setq org-src-fontify-natively t)
-(setq org-edit-src-content-indentation 0)
-(setq org-src-tab-acts-natively t)
-
-(setq-default fill-column 80)
-(add-hook 'org-mode-hook 'auto-fill-mode)
-(add-hook 'org-mode-hook 'visual-line-mode)
-#+END_SRC
 
 * General Key Bindings
 #+BEGIN_SRC emacs-lisp
