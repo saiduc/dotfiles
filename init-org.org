@@ -77,6 +77,10 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 
 (defalias 'ff 'find-file)
 
+;; autopair brackets and stuff
+(electric-pair-mode 1)
+
+
 ;; enable emacs server
 (server-mode 1)
 
@@ -165,19 +169,6 @@ Doom modeline is much lighter but still looks quite pretty
   (doom-modeline-mode 1))
 #+end_src
 
-* Autopair
-Autopair just autocloses brackets and quotations marks.
-Make sure it doesn't autopair '<' in org mode, since that messed with snippets
-#+BEGIN_SRC emacs-lisp
-(use-package autopair
- :ensure t
- :defer t
- :init
- (autopair-global-mode)
- (add-hook 'org-mode-hook #'(lambda ()
-                              (push ?< (getf autopair-dont-pair :everywhere)))))
-#+END_SRC
-
 * Magit
 Magit is a wonderful git frontend for emacs
 #+BEGIN_SRC emacs-lisp
@@ -185,9 +176,8 @@ Magit is a wonderful git frontend for emacs
   :ensure t
   :defer t
   :init
-  (add-hook 'magit-mode-hook
-      (lambda ()
-	(diminish 'auto-revert-mode)))
+  (add-hook 'magit-mode-hook (lambda ()
+			       (diminish 'auto-revert-mode)))
   (global-set-key (kbd "C-x g") 'magit-status))
 #+END_SRC
 
@@ -813,7 +803,8 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'company-mode)
   (diminish 'highlight-indentation-mode)
   (diminish 'beacon-mode)
-  (diminish 'persp-mode))
+  (diminish 'persp-mode)
+  (diminish 'electric-pair-mode))
 
 #+END_SRC
 
