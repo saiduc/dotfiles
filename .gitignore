@@ -3,3 +3,4 @@
 !/emacs/.emacs.d/init-org.org
 /nvim/.config/nvim/*
 !/nvim/.config/nvim/init.vim
+/*/.DS_Store
