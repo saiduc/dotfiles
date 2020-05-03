@@ -77,10 +77,6 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 
 (defalias 'ff 'find-file)
 
-;; autopair brackets and stuff
-(electric-pair-mode 1)
-
-
 ;; enable emacs server
 (server-mode 1)
 
@@ -162,6 +158,7 @@ Doom modeline is much lighter but still looks quite pretty
   :defer t
   :init
   (setq doom-modeline-height 10)
+  (setq doom-modeline-bar-width 1)
   (setq doom-modeline-icon nil)
   (setq doom-modeline-minor-modes t)
   (setq doom-modeline-perp-name t)
@@ -169,6 +166,16 @@ Doom modeline is much lighter but still looks quite pretty
   (doom-modeline-mode 1))
 #+end_src
 
+* Autopair
+#+BEGIN_SRC emacs-lisp
+(use-package autopair
+ :ensure t
+ :defer t
+ :init
+ (autopair-global-mode)
+ (add-hook 'org-mode-hook #'(lambda ()
+                              (push ?< (getf autopair-dont-pair :everywhere)))))
+#+END_SRC
 * Magit
 Magit is a wonderful git frontend for emacs
 #+BEGIN_SRC emacs-lisp
@@ -406,6 +413,8 @@ Dashboard is the starting page when opening emacs
 			    (projects . 5)
 			    ;; (agenda . 5)
 			    (bookmarks . 10)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
   (dashboard-setup-startup-hook)
   (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1))))
@@ -485,6 +494,10 @@ Mode for editing markdown documents
 #+end_src
 
 * Org Mode
+Required for org mode versions >9.2
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
+#+end_src
 
 This gets org mode working with python, jupyter and emacs-lisp
 #+BEGIN_SRC emacs-lisp
@@ -718,7 +731,7 @@ I use Emacs Jupyter for jupyter notebooks
 
 (add-hook 'conda-postactivate-hook (lambda () (my/get-jupyter-aliases)))
 
-(add-to-list 'org-structure-template-alist '("j" "#+BEGIN_SRC jupyter-python \n?\n#+END_SRC"))
+(add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, not available on
@@ -807,4 +820,5 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'electric-pair-mode))
 
 #+END_SRC
+
 
