@@ -46,3 +46,6 @@ alias ec='emacsclient -n'
 alias ex='emacsclient -n'
 alias vim='nvim'
 alias vi='nvim'
+alias sshpi="ssh pi@82.19.40.42 -p 1010"
+alias getlog="python /Users/saipandian/Documents/Scripts/getlog.py"
+alias convert="python /Users/saipandian/Documents/Scripts/convert.py"
