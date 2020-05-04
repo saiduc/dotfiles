@@ -566,18 +566,6 @@ General Org Mode settings
 (add-hook 'org-mode-hook 'visual-line-mode)
 #+END_SRC
 
-* Flycheck
-Flycheck is a general linting package that other linters can plug into.
-It seems to work better than Flymake out of the box, except in Python where Elpy
-mode's included Flymake works well
-#+begin_src emacs-lisp
-(use-package flycheck
-  :ensure t
-  :defer t
-  :init
-  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
-#+end_src
-
 * Flyspell
 On the go spell-checking in Emacs
 You will need to install aspell on your system for this to work. On MacOS:
@@ -659,7 +647,7 @@ buffer after compilation
   	TeX-view-program-list '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b"))
   	TeX-source-correlate-start-server t)
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-(add-hook 'LaTeX-mode-hook 'flycheck-mode)
+(add-hook 'LaTeX-mode-hook 'flymake-mode)
 #+END_SRC
 
 * Python
@@ -753,11 +741,54 @@ You might need to install libclang for the completion to work properly
 On macOS, this simply involves installing Xcode Commandline tools
 On Ubuntu, this is done with sudo apt install clang
 
-Set up c++ to use the style I like and enable some minor modes
+Set up C++ to use the style I like and enable snippets
 #+begin_src emacs-lisp
 (setq c-default-style "linux")
-(add-hook 'c++-mode-hook 'flycheck-mode)
 (add-hook 'c++-mode-hook 'yas-minor-mode)
+#+end_src
+
+Get flymake working with C++, which is a little annoying
+#+begin_src emacs-lisp
+(defvar flymake-additional-compilation-flags nil)
+(put 'flymake-additional-compilation-flags 'safe-local-variable 'listp)
+
+(defun flymake-cc-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                     'flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name)))
+         (common-args (append (list "-Wall" "-W" "-fsyntax-only" local-file)
+                              flymake-additional-compilation-flags)))
+    (if (eq major-mode 'c++-mode)
+        (list "g++" common-args)
+      (list "gcc" common-args))))
+
+(require 'flymake)
+(loop for ext in '("\\.c$" "\\.h$" "\\.cc$" "\\.cpp$" "\\.hh$")
+      do
+      (push `(,ext flymake-cc-init) flymake-allowed-file-name-masks))
+
+;; make flymake only check after each save
+(eval-after-load "flymake"
+  '(progn
+    (defun flymake-after-change-function (start stop len)
+      )))
+(setq flymake-start-syntax-check-on-find-file nil)
+
+(add-hook 'c-mode-hook 'flymake-mode)
+(add-hook 'c++-mode-hook 'flymake-mode)
+(add-hook 'c++-mode-hook (lambda () (diminish 'flymake-mode)))
+#+end_src
+
+Get completion of Header files
+#+begin_src emacs-lisp
+(use-package company-c-headers
+  :ensure t
+  :init
+  (add-hook 'c++-mode-hook (lambda ()
+			     (eval-after-load "company"
+			       '(add-to-list 'company-backends 'company-c-headers)))))
 #+end_src
 
 * General Key Bindings
