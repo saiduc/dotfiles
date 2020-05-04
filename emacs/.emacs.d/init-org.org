@@ -751,17 +751,7 @@ Occasionally I have to edit a vimrc file so syntax highlighting is nice.
 * C/C++
 You might need to install libclang for the completion to work properly
 On macOS, this simply involves installing Xcode Commandline tools
-
-Set up eldoc mode to work with C++
-#+begin_src emacs-lisp
-(use-package c-eldoc
-  :ensure t
-  :defer t
-  :init
-  (setq c-eldoc-buffer-regenerate-time 3)
-  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode))
-#+end_src
+On Ubuntu, this is done with sudo apt install clang
 
 Set up c++ to use the style I like and enable some minor modes
 #+begin_src emacs-lisp
