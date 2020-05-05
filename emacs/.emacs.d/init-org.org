@@ -367,6 +367,17 @@ Emacs 27
   (persp-mode 1))
 #+end_src
 
+* Neotree
+Sometimes a Nerdtree like file browser is useful
+#+begin_src emacs-lisp
+(use-package neotree
+  :ensure t
+  :defer t
+  :init
+  (setq neo-theme 'icons)
+  (global-set-key (kbd "C-x C-o") 'neotree-toggle))
+#+end_src
+
 * Ivy, Counsel & Swiper
 Counsel and Ivy-mode for completion
 #+begin_src emacs-lisp
