@@ -392,7 +392,7 @@ Counsel and Ivy-mode for completion
   :defer t
   :init
   (global-set-key "\C-s" 'swiper)
-  (setq counsel-fzf-cmd "rg --files --no-ignore --hidden --follow --glob '!.git/*'")
+  (setq counsel-fzf-cmd "rg --files --hidden --no-ignore --glob '!.git/*'")
   (counsel-mode 1))
 
 (use-package ivy
