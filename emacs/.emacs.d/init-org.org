@@ -566,6 +566,16 @@ General Org Mode settings
 (add-hook 'org-mode-hook 'visual-line-mode)
 #+END_SRC
 
+* Flycheck
+I have started to use Flycheck instead of Flymake since it is easier to set up
+with everything and integrates well with Counsel.
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :init
+  (setq flycheck-python-flake8-executable "/Users/saipandian/miniconda3/envs/elpy/bin/flake8"))
+#+END_SRC
 * Flyspell
 On the go spell-checking in Emacs
 You will need to install aspell on your system for this to work. On MacOS:
@@ -647,7 +657,7 @@ buffer after compilation
   	TeX-view-program-list '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b"))
   	TeX-source-correlate-start-server t)
 (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-(add-hook 'LaTeX-mode-hook 'flymake-mode)
+(add-hook 'LaTeX-mode-hook 'flycheck-mode)
 #+END_SRC
 
 * Python
@@ -664,12 +674,14 @@ elpy-rpc-virtualenv-path variable
   (setq elpy-rpc-error-timeout 30)
   (setq elpy-rpc-timeout 30)
   :config
+  (remove-hook 'elpy-modules 'elpy-module-flymake)
   (remove-hook 'elpy-modules 'elpy-module-pyvenv)
   (remove-hook 'elpy-modules 'elpy-module-django)
   (add-hook 'conda-postactivate-hook (lambda () (elpy-rpc-restart)))
   (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)
   (add-hook 'python-mode-hook (lambda () (diminish 'highlight-indentation-mode)))
+  (add-hook 'elpy-mode-hook 'flycheck-mode)
   (diminish 'hs-minor-mode))
 #+END_SRC
 
@@ -698,7 +710,7 @@ some syntax higlighting
   :ensure t
   :defer t
   :init
-  (add-hook 'cython-mode-hook (lambda () (flymake-mode -1))))
+  (add-hook 'cython-mode-hook (lambda () (flycheck-mode -1))))
 #+END_SRC
 
 * Jupyter
@@ -745,40 +757,7 @@ Set up C++ to use the style I like and enable snippets
 #+begin_src emacs-lisp
 (setq c-default-style "linux")
 (add-hook 'c++-mode-hook 'yas-minor-mode)
-#+end_src
-
-Get flymake working with C++, which is a little annoying
-#+begin_src emacs-lisp
-(defvar flymake-additional-compilation-flags nil)
-(put 'flymake-additional-compilation-flags 'safe-local-variable 'listp)
-
-(defun flymake-cc-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                     'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name)))
-         (common-args (append (list "-Wall" "-W" "-fsyntax-only" local-file)
-                              flymake-additional-compilation-flags)))
-    (if (eq major-mode 'c++-mode)
-        (list "g++" common-args)
-      (list "gcc" common-args))))
-
-(require 'flymake)
-(loop for ext in '("\\.c$" "\\.h$" "\\.cc$" "\\.cpp$" "\\.hh$")
-      do
-      (push `(,ext flymake-cc-init) flymake-allowed-file-name-masks))
-
-;; make flymake only check after each save
-(eval-after-load "flymake"
-  '(progn
-    (defun flymake-after-change-function (start stop len)
-      )))
-(setq flymake-start-syntax-check-on-find-file nil)
-
-(add-hook 'c-mode-hook 'flymake-mode)
-(add-hook 'c++-mode-hook 'flymake-mode)
-(add-hook 'c++-mode-hook (lambda () (diminish 'flymake-mode)))
+(add-hook 'c++-mode-hook 'flycheck-mode)
 #+end_src
 
 Get completion of Header files. It might be necessary to change the path to
