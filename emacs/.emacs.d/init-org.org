@@ -374,7 +374,8 @@ Sometimes a Nerdtree like file browser is useful
   :ensure t
   :defer t
   :init
-  (setq neo-theme 'ascii)
+  (setq neo-theme 'icons)
+  (setq neo-smart-open t)
   (add-hook 'neotree-mode-hook 'doom-modeline-mode)
   (global-set-key (kbd "C-x C-o") 'neotree-toggle))
 #+end_src
