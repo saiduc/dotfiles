@@ -781,14 +781,16 @@ Get flymake working with C++, which is a little annoying
 (add-hook 'c++-mode-hook (lambda () (diminish 'flymake-mode)))
 #+end_src
 
-Get completion of Header files
+Get completion of Header files. It might be necessary to change the path to
+header files depending on the system you are on.
 #+begin_src emacs-lisp
 (use-package company-c-headers
   :ensure t
   :init
   (add-hook 'c++-mode-hook (lambda ()
 			     (eval-after-load "company"
-			       '(add-to-list 'company-backends 'company-c-headers)))))
+			       '(add-to-list 'company-backends 'company-c-headers))))
+  (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-c-headers-path-system "/Library/Developer/CommandLineTools/usr/include/c++/v1/"))))
 #+end_src
 
 * General Key Bindings

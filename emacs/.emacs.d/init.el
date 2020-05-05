@@ -43,9 +43,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("~/Documents/workstuff/University/Year 3/Semester 2/RevisionSchedule.org"))
+   (quote
+    ("~/Documents/workstuff/University/Year 3/Semester 2/RevisionSchedule.org")))
  '(package-selected-packages
-   '(autopair evil-org doom-modeline helm-mode c-eldoc yasnippet-snippets which-key vterm vimrc-mode use-package spaceline smex projectile perspective pdf-tools org-bullets org markdown-mode jupyter iedit flycheck exec-path-from-shell evil-surround evil-numbers evil-magit evil-commentary evil-collection esup elpy dracula-theme diminish dashboard cython-mode csv-mode counsel conda company-reftex company-auctex auto-package-update auctex-latexmk))
+   (quote
+    ()))
  '(pdf-tools-handle-upgrades nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
