@@ -374,7 +374,8 @@ Sometimes a Nerdtree like file browser is useful
   :ensure t
   :defer t
   :init
-  (setq neo-theme 'icons)
+  (setq neo-theme 'ascii)
+  (add-hook 'neotree-mode-hook 'doom-modeline-mode)
   (global-set-key (kbd "C-x C-o") 'neotree-toggle))
 #+end_src
 
@@ -750,6 +751,17 @@ melpa. If you don't have it, download it from: [[https://github.com/jkitchin/ox-
 #+BEGIN_SRC emacs-lisp
 (use-package ox-ipynb)
 #+END_SRC
+
+* R
+I use Emacs-Speaks-Statistics (ess) for R
+#+begin_src emacs-lisp
+(use-package ess
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'ess-mode-hook (lambda () (flymake-mode -1)))
+  (add-hook 'ess-mode-hook 'flycheck-mode))
+#+end_src
 
 * VimScript
 Occasionally I have to edit a vimrc file so syntax highlighting is nice.
