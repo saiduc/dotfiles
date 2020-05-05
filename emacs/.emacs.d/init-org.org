@@ -734,7 +734,10 @@ I use Emacs Jupyter for jupyter notebooks
   :init
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:session . "py")
-                                                       (:kernel . "python3"))))
+                                                       (:kernel . "python3")))
+  (setq org-babel-default-header-args:jupyter-R '((:async . "yes")
+						     (:session . "R")
+						     (:kernel . "R"))))
 
 ;; jupyter needs to refresh its aliases if you change virtualenv using conda
 (defun my/get-jupyter-aliases ()
@@ -744,6 +747,7 @@ I use Emacs Jupyter for jupyter notebooks
 (add-hook 'conda-postactivate-hook (lambda () (my/get-jupyter-aliases)))
 
 (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
+(add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, not available on
