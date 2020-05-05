@@ -15,7 +15,7 @@ export ZSH="/Users/saipandian/.oh-my-zsh"
 
 # fzf stuff
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --ignore --hidden'
 
 ZSH_THEME="dracula"
 plugins=()
