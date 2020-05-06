@@ -507,6 +507,11 @@ Mode for editing markdown documents
 #+end_src
 
 * Org Mode
+Set default org capture notes file
+#+begin_src emacs-lisp
+(setq org-default-notes-file "~/Documents/Notes/Notes.org")
+#+end_src
+
 Required for org mode versions >9.2
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
