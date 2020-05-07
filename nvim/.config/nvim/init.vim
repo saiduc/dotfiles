@@ -37,8 +37,7 @@ set autochdir                           " sets cwd to file directory
 set conceallevel=2                      " allows tex characters to show properly
 set hidden 				" allows switching buffers without saving
 " setting python locations for neovim
-let g:python_host_prog='/Users/saipandian/miniconda3/envs/Neovim2/bin/python'
-let g:python3_host_prog='/Users/saipandian/miniconda3/envs/Neovim3/bin/python'
+let g:python3_host_prog='/Users/saipandian/miniconda3/envs/neovim/bin/python'
 
 " on ubuntu need to do sudo apt install xsel
 set clipboard=unnamedplus               " copy paste between vim and system clipb
