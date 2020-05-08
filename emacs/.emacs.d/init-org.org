@@ -166,15 +166,14 @@ Doom modeline is much lighter but still looks quite pretty
   (doom-modeline-mode 1))
 #+end_src
 
-* Autopair
+* Smart Parens
+I use smartparens to automatically pair quotes and parentheses
 #+BEGIN_SRC emacs-lisp
-(use-package autopair
- :ensure t
- :defer t
- :init
- (autopair-global-mode)
- (add-hook 'org-mode-hook #'(lambda ()
-                              (push ?< (getf autopair-dont-pair :everywhere)))))
+(use-package smartparens
+  :ensure t
+  :defer t
+  :init
+  (smartparens-global-mode 1))
 #+END_SRC
 * Magit
 Magit is a wonderful git frontend for emacs
@@ -202,7 +201,7 @@ Evil-collection fixes evil mode in many places
   (evil-collection-init))
 #+END_SRC
 
-Evil must be done after Evil collection
+Evil mode
 #+BEGIN_SRC emacs-lisp
 (use-package evil
   :ensure t
@@ -250,13 +249,13 @@ Provides evil mode bindings in magit
 
 Get evil bindings in org-agenda
 #+BEGIN_SRC emacs-lisp
-(use-package evil-org
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+;; (use-package evil-org
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (add-hook 'org-mode-hook 'evil-org-mode))
+  ;; (require 'evil-org-agenda)
+  ;; (evil-org-agenda-set-keys))
 #+END_SRC
 
 Evil numbers for incrementing and decrementing
@@ -519,10 +518,11 @@ Required for org mode versions >9.2
 
 This gets org mode working with python, jupyter and emacs-lisp
 #+BEGIN_SRC emacs-lisp
-(org-babel-do-load-languages 'org-babel-load-languages 
-			     '((emacs-lisp . t) 
-			       (python . t) 
-			       (jupyter . t)))
+(org-babel-do-load-languages 
+ 'org-babel-load-languages 
+ '((emacs-lisp . t)
+   (python     . t) 
+   (jupyter    . t)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -535,29 +535,29 @@ This gets org mode working with python, jupyter and emacs-lisp
 
 Tell Org mode to make pdfs from latex with syntax highlighting for source blocks
 #+begin_src emacs-lisp
-(add-to-list 'org-latex-packages-alist '("" "minted"))
-(setq org-latex-listings 'minted)
+;; (add-to-list 'org-latex-packages-alist '("" "minted"))
+;; (setq org-latex-listings 'minted)
 
-(setq org-latex-pdf-process
-      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+;; (setq org-latex-pdf-process
+;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+;;         "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 
 Allow export to beamer
 #+BEGIN_SRC emacs-lisp
-(use-package ox-beamer
-  :config
-  (eval-after-load "ox-latex"
-      '(add-to-list 'org-latex-classes
-                    `("beamer"
-                      ,(concat "\\documentclass[presentation]{beamer}\n"
-                             "[DEFAULT-PACKAGES]"
-                             "[PACKAGES]"
-                             "[EXTRA]\n")
-                      ("\\section{%s}" . "\\section*{%s}")
-                      ("\\subsection{%s}" . "\\subsection*{%s}")
-                      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
+;; (use-package ox-beamer
+;;   :config
+;;   (eval-after-load "ox-latex"
+;;       '(add-to-list 'org-latex-classes
+;;                     `("beamer"
+;;                       ,(concat "\\documentclass[presentation]{beamer}\n"
+;;                              "[DEFAULT-PACKAGES]"
+;;                              "[PACKAGES]"
+;;                              "[EXTRA]\n")
+;;                       ("\\section{%s}" . "\\section*{%s}")
+;;                       ("\\subsection{%s}" . "\\subsection*{%s}")
+;;                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
 #+END_SRC
 
 General Org Mode settings
@@ -584,6 +584,74 @@ General Org Mode settings
 (add-hook 'org-mode-hook 'visual-line-mode)
 #+END_SRC
 
+#+begin_src emacs-lisp
+(eval-after-load 'org-agenda
+ '(progn
+    (evil-set-initial-state 'org-agenda-mode 'normal)
+    (evil-define-key 'normal org-agenda-mode-map
+      (kbd "<RET>") 'org-agenda-switch-to
+      (kbd "\t") 'org-agenda-goto
+      "q" 'org-agenda-quit
+      "r" 'org-agenda-redo
+      "S" 'org-save-all-org-buffers
+      ;; "gj" 'org-agenda-goto-date
+      ;; "gJ" 'org-agenda-clock-goto
+      ;; "gm" 'org-agenda-bulk-mark
+      ;; "go" 'org-agenda-open-link
+      ;; "s" 'org-agenda-schedule
+      ;; "+" 'org-agenda-priority-up
+      ;; "," 'org-agenda-priority
+      ;; "-" 'org-agenda-priority-down
+      ;; "y" 'org-agenda-todo-yesterday
+      ;; "n" 'org-agenda-add-note
+      ;; "t" 'org-agenda-todo
+      ;; ":" 'org-agenda-set-tags
+      ;; ";" 'org-timer-set-timer
+      ;; "I" 'helm-org-task-file-headings
+      ;; "i" 'org-agenda-clock-in-avy
+      ;; "O" 'org-agenda-clock-out-avy
+      ;; "u" 'org-agenda-bulk-unmark
+      ;; "x" 'org-agenda-exit
+      "j"  'org-agenda-next-line
+      "k"  'org-agenda-previous-line
+      ;; "vt" 'org-agenda-toggle-time-grid
+      ;; "va" 'org-agenda-archives-mode
+      "vw" 'org-agenda-week-view
+      "vl" 'org-agenda-log-mode
+      "vd" 'org-agenda-day-view
+      "vc" 'org-agenda-show-clocking-issues
+      ;; "g/" 'org-agenda-filter-by-tag
+      ;; "o" 'delete-other-windows
+      ;; "gh" 'org-agenda-holiday
+      ;; "gv" 'org-agenda-view-mode-dispatch
+      ;; "f" 'org-agenda-later
+      ;; "b" 'org-agenda-earlier
+      ;; "c" 'helm-org-capture-templates
+      ;; "e" 'org-agenda-set-effort
+      ;; "{" 'org-agenda-manipulate-query-add-re
+      ;; "}" 'org-agenda-manipulate-query-subtract-re
+      ;; "A" 'org-agenda-toggle-archive-tag
+      "." 'org-agenda-goto-today
+      "0" 'evil-digit-argument-or-evil-beginning-of-line
+      ;; "<" 'org-agenda-filter-by-category
+      ;; ">" 'org-agenda-date-prompt
+      ;; "F" 'org-agenda-follow-mode
+      ;; "D" 'org-agenda-deadline
+      ;; "H" 'org-agenda-holidays
+      "J" 'org-agenda-next-date-line
+      "K" 'org-agenda-previous-date-line
+      ;; "L" 'org-agenda-recenter
+      ;; "P" 'org-agenda-show-priority
+      ;; "R" 'org-agenda-clockreport-mode
+      ;; "Z" 'org-agenda-sunrise-sunset
+      ;; "T" 'org-agenda-show-tags
+      ;; "X" 'org-agenda-clock-cancel
+      ;; "[" 'org-agenda-manipulate-query-add
+      ;; "g\\" 'org-agenda-filter-by-tag-refine
+      ;; "]" 'org-agenda-manipulate-query-subtract
+      )))
+#+end_src
+
 * Flycheck
 I have started to use Flycheck instead of Flymake since it is easier to set up
 with everything and integrates well with Counsel.
@@ -594,19 +662,16 @@ with everything and integrates well with Counsel.
   :init
   (setq flycheck-python-flake8-executable "/Users/saipandian/miniconda3/envs/elpy/bin/flake8"))
 #+END_SRC
-* Flyspell
-On the go spell-checking in Emacs
-You will need to install aspell on your system for this to work. On MacOS:
-brew install aspell
-
-#+begin_src emacs-lisp
-(setq ispell-program-name "/usr/local/bin/aspell")
-(setq ispell-dictionary "british") 
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+* Flyspell 
+On the go spell-checking in Emacs You will need to install aspell on your system
+for this to work. On MacOS: brew install aspell
+#+begin_src emacs-lisp 
+(setq ispell-program-name "/usr/local/bin/aspell") 
+(setq ispell-dictionary "british")
+(add-hook 'LaTeX-mode-hook 'flyspell-mode) 
 (add-hook 'markdown-mode-hook 'flyspell-mode)
-(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'text-mode-hook 'flyspell-mode) 
 #+end_src
-
 * LaTeX
 I use AucTeX for all LateX stuff, but for some reason, this doesn't always work
 through use-package. Install it directly from Melpa instead
@@ -747,7 +812,6 @@ I use Emacs Jupyter for jupyter notebooks
 
 ;; jupyter needs to refresh its aliases if you change virtualenv using conda
 (defun my/get-jupyter-aliases ()
-  (interactive)
   (org-babel-jupyter-aliases-from-kernelspecs))
 
 (add-hook 'conda-postactivate-hook (lambda () (my/get-jupyter-aliases)))
@@ -759,7 +823,8 @@ I use Emacs Jupyter for jupyter notebooks
 Allow export to jupyter notebooks. This is a local file, not available on
 melpa. If you don't have it, download it from: [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] and put it in .emacs.d/lisp/
 #+BEGIN_SRC emacs-lisp
-(use-package ox-ipynb)
+(use-package ox-ipynb
+  :defer t)
 #+END_SRC
 
 * R

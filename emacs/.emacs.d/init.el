@@ -19,21 +19,19 @@
 ;; LOAD ORG FILE
 ;; --------------------------------------
 
-;; This 'compiles' the org init file so it is quicker to load
+;; This tangles the org file
 (defun my/tangle-dotfiles ()
    "If the current file is this file, the code blocks are tangled"
    (when (equal (buffer-file-name) (expand-file-name "~/dotfiles/emacs/.emacs.d/init-org.org"))
-     (org-babel-tangle nil "~/dotfiles/emacs/.emacs.d/init-org.el")
-     (byte-compile-file "~/dotfiles/emacs/.emacs.d/init-org.el")))
+     (org-babel-tangle nil "~/dotfiles/emacs/.emacs.d/init-org.el")))
+     ;; (byte-compile-file "~/dotfiles/emacs/.emacs.d/init-org.el")))
 (add-hook 'after-save-hook #'my/tangle-dotfiles)
 
-(load-file "~/dotfiles/emacs/.emacs.d/init-org.elc")
+(load-file "~/dotfiles/emacs/.emacs.d/init-org.el")
 
 (add-hook 'emacs-startup-hook
     (lambda () (setq gc-cons-threshold 16777216
 		     gc-cons-percentage 0.1)))
-
-)
 
 ;; STUFF EMACS ADDS
 ;; --------------------------------------
@@ -47,7 +45,7 @@
     ("~/Documents/workstuff/University/Year 3/Semester 2/RevisionSchedule.org")))
  '(package-selected-packages
    (quote
-    ()))
+    (smartparens org yasnippet-snippets which-key vterm vimrc-mode use-package smex projectile pos-tip perspective pdf-tools org-bullets neotree markdown-mode jupyter iedit flycheck exec-path-from-shell evil-surround evil-org evil-numbers evil-magit evil-commentary evil-collection esup ess elpy dracula-theme doom-modeline diminish dashboard dash-functional cython-mode csv-mode counsel conda company-reftex company-c-headers company-auctex autopair auto-package-update auctex-latexmk)))
  '(pdf-tools-handle-upgrades nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -61,3 +59,5 @@
  '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
  '(company-tooltip-selection ((t (:background "darkgray" :foreground "white"))))
  '(persp-selected-face ((t (:foreground "#FD7CC5")))))
+
+)
