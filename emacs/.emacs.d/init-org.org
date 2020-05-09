@@ -917,8 +917,5 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'highlight-indentation-mode)
   (diminish 'beacon-mode)
   (diminish 'persp-mode)
-  (diminish 'electric-pair-mode))
-
+  (diminish 'smartparens-mode))
 #+END_SRC
-
-
