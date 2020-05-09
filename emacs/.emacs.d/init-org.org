@@ -20,6 +20,7 @@ Here I set up the pacakge repositories we will be pulling from.
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 #+END_SRC
 
@@ -506,22 +507,19 @@ Mode for editing markdown documents
 #+end_src
 
 * Org Mode
-Install org from GNU instead of built-in and assign some colours and general settings
+Install org from org repos instead of built-in and assign some colours and general settings
 #+begin_src emacs-lisp
-(defun package-from-archive (f &rest args)
-  (and (apply f args)
-       (assq (car args) package-alist)))
-
-(advice-add 'package-installed-p :around 'package-from-archive)
-
 (use-package org
-  :ensure t
+  :ensure org-plus-contrib 
+  :pin org
   :defer t
   :init
   ;; some hooks and set notes file
   (setq org-default-notes-file "~/Documents/Notes/Notes.org")
   (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
   :config
+  ;; load ox-ipynb
+  (use-package ox-ipynb)
   ;; make background of source blocks dark
   (use-package color
     :defer t
@@ -655,6 +653,13 @@ Allow export to beamer
       )))
 #+end_src
 
+* Writeroom
+Writeroom provides a nice distraction free writing environment for org
+#+begin_src emacs-lisp
+(use-package writeroom-mode
+  :ensure t
+  :defer t)
+#+end_src
 * Flycheck
 I have started to use Flycheck instead of Flymake since it is easier to set up
 with everything and integrates well with Counsel.
@@ -823,13 +828,10 @@ I use Emacs Jupyter for jupyter notebooks
 (add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
 #+END_SRC
 
-Allow export to jupyter notebooks. This is a local file, not available on
-melpa. If you don't have it, download it from: [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] and put it in .emacs.d/lisp/
+Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
+This script will automatically download it. The package is loaded in the Org section
 #+BEGIN_SRC emacs-lisp
 (shell-command "bash ./oxipynb_download.sh")
-
-(use-package ox-ipynb
-  :defer t)
 #+END_SRC
 
 * R
