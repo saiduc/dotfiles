@@ -506,14 +506,41 @@ Mode for editing markdown documents
 #+end_src
 
 * Org Mode
-Set default org capture notes file
+Install org from GNU instead of built-in and assign some colours and general settings
 #+begin_src emacs-lisp
-(setq org-default-notes-file "~/Documents/Notes/Notes.org")
-#+end_src
+(defun package-from-archive (f &rest args)
+  (and (apply f args)
+       (assq (car args) package-alist)))
 
-Required for org mode versions >9.2
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
+(advice-add 'package-installed-p :around 'package-from-archive)
+
+(use-package org
+  :ensure t
+  :defer t
+  :init
+  ;; some hooks and set notes file
+  (setq org-default-notes-file "~/Documents/Notes/Notes.org")
+  (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
+  :config
+  ;; make background of source blocks dark
+  (use-package color
+    :defer t
+    :init
+    (set-face-attribute 'org-block nil :background
+			(color-darken-name
+			 (face-attribute 'default :background) 3)))
+  ;; some general settings
+  (setq org-hide-leading-stars nil)
+  (setq org-startup-indented t)
+  (setq org-hide-emphasis-markers t)
+  (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  (setq org-src-fontify-natively t)
+  (setq org-edit-src-content-indentation 0)
+  (setq org-src-tab-acts-natively t)
+  (setq-default fill-column 80)
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'visual-line-mode))
 #+end_src
 
 This gets org mode working with python, jupyter and emacs-lisp
@@ -560,30 +587,6 @@ Allow export to beamer
 ;;                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
 #+END_SRC
 
-General Org Mode settings
-#+BEGIN_SRC emacs-lisp
-(setq org-hide-leading-stars nil)
-(setq org-startup-indented t)
-(setq org-hide-emphasis-markers t)
-
-(require 'color)
-(set-face-attribute 'org-block nil :background
-                     (color-darken-name
-                     (face-attribute 'default :background) 3))
-
-(setq org-confirm-babel-evaluate nil)
-
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-
-(setq org-src-fontify-natively t)
-(setq org-edit-src-content-indentation 0)
-(setq org-src-tab-acts-natively t)
-
-(setq-default fill-column 80)
-(add-hook 'org-mode-hook 'auto-fill-mode)
-(add-hook 'org-mode-hook 'visual-line-mode)
-#+END_SRC
-
 #+begin_src emacs-lisp
 (eval-after-load 'org-agenda
  '(progn
@@ -594,61 +597,61 @@ General Org Mode settings
       "q" 'org-agenda-quit
       "r" 'org-agenda-redo
       "S" 'org-save-all-org-buffers
-      ;; "gj" 'org-agenda-goto-date
-      ;; "gJ" 'org-agenda-clock-goto
-      ;; "gm" 'org-agenda-bulk-mark
-      ;; "go" 'org-agenda-open-link
-      ;; "s" 'org-agenda-schedule
-      ;; "+" 'org-agenda-priority-up
-      ;; "," 'org-agenda-priority
-      ;; "-" 'org-agenda-priority-down
-      ;; "y" 'org-agenda-todo-yesterday
-      ;; "n" 'org-agenda-add-note
-      ;; "t" 'org-agenda-todo
+      "gj" 'org-agenda-goto-date
+      "gJ" 'org-agenda-clock-goto
+      "gm" 'org-agenda-bulk-mark
+      "go" 'org-agenda-open-link
+      "s" 'org-agenda-schedule
+      "+" 'org-agenda-priority-up
+      "," 'org-agenda-priority
+      "-" 'org-agenda-priority-down
+      "y" 'org-agenda-todo-yesterday
+      "n" 'org-agenda-add-note
+      "t" 'org-agenda-todo
       ;; ":" 'org-agenda-set-tags
-      ;; ";" 'org-timer-set-timer
-      ;; "I" 'helm-org-task-file-headings
-      ;; "i" 'org-agenda-clock-in-avy
-      ;; "O" 'org-agenda-clock-out-avy
-      ;; "u" 'org-agenda-bulk-unmark
-      ;; "x" 'org-agenda-exit
+      ";" 'org-timer-set-timer
+      "I" 'helm-org-task-file-headings
+      "i" 'org-agenda-clock-in-avy
+      "O" 'org-agenda-clock-out-avy
+      "u" 'org-agenda-bulk-unmark
+      "x" 'org-agenda-exit
       "j"  'org-agenda-next-line
       "k"  'org-agenda-previous-line
-      ;; "vt" 'org-agenda-toggle-time-grid
-      ;; "va" 'org-agenda-archives-mode
+      "vt" 'org-agenda-toggle-time-grid
+      "va" 'org-agenda-archives-mode
       "vw" 'org-agenda-week-view
       "vl" 'org-agenda-log-mode
       "vd" 'org-agenda-day-view
       "vc" 'org-agenda-show-clocking-issues
-      ;; "g/" 'org-agenda-filter-by-tag
-      ;; "o" 'delete-other-windows
-      ;; "gh" 'org-agenda-holiday
-      ;; "gv" 'org-agenda-view-mode-dispatch
-      ;; "f" 'org-agenda-later
-      ;; "b" 'org-agenda-earlier
-      ;; "c" 'helm-org-capture-templates
-      ;; "e" 'org-agenda-set-effort
-      ;; "{" 'org-agenda-manipulate-query-add-re
-      ;; "}" 'org-agenda-manipulate-query-subtract-re
-      ;; "A" 'org-agenda-toggle-archive-tag
+      "g/" 'org-agenda-filter-by-tag
+      "o" 'delete-other-windows
+      "gh" 'org-agenda-holiday
+      "gv" 'org-agenda-view-mode-dispatch
+      "f" 'org-agenda-later
+      "b" 'org-agenda-earlier
+      "c" 'helm-org-capture-templates
+      "e" 'org-agenda-set-effort
+      "{" 'org-agenda-manipulate-query-add-re
+      "}" 'org-agenda-manipulate-query-subtract-re
+      "A" 'org-agenda-toggle-archive-tag
       "." 'org-agenda-goto-today
       "0" 'evil-digit-argument-or-evil-beginning-of-line
-      ;; "<" 'org-agenda-filter-by-category
-      ;; ">" 'org-agenda-date-prompt
-      ;; "F" 'org-agenda-follow-mode
-      ;; "D" 'org-agenda-deadline
-      ;; "H" 'org-agenda-holidays
+      "<" 'org-agenda-filter-by-category
+      ">" 'org-agenda-date-prompt
+      "F" 'org-agenda-follow-mode
+      "D" 'org-agenda-deadline
+      "H" 'org-agenda-holidays
       "J" 'org-agenda-next-date-line
       "K" 'org-agenda-previous-date-line
-      ;; "L" 'org-agenda-recenter
-      ;; "P" 'org-agenda-show-priority
-      ;; "R" 'org-agenda-clockreport-mode
-      ;; "Z" 'org-agenda-sunrise-sunset
-      ;; "T" 'org-agenda-show-tags
-      ;; "X" 'org-agenda-clock-cancel
-      ;; "[" 'org-agenda-manipulate-query-add
-      ;; "g\\" 'org-agenda-filter-by-tag-refine
-      ;; "]" 'org-agenda-manipulate-query-subtract
+      "L" 'org-agenda-recenter
+      "P" 'org-agenda-show-priority
+      "R" 'org-agenda-clockreport-mode
+      "Z" 'org-agenda-sunrise-sunset
+      "T" 'org-agenda-show-tags
+      "X" 'org-agenda-clock-cancel
+      "[" 'org-agenda-manipulate-query-add
+      "g\\" 'org-agenda-filter-by-tag-refine
+      "]" 'org-agenda-manipulate-query-subtract
       )))
 #+end_src
 
