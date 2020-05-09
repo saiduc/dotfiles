@@ -826,6 +826,8 @@ I use Emacs Jupyter for jupyter notebooks
 Allow export to jupyter notebooks. This is a local file, not available on
 melpa. If you don't have it, download it from: [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] and put it in .emacs.d/lisp/
 #+BEGIN_SRC emacs-lisp
+(shell-command "bash ./oxipynb_download.sh")
+
 (use-package ox-ipynb
   :defer t)
 #+END_SRC
