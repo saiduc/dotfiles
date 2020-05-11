@@ -99,9 +99,9 @@ Emacs.app, then delete the folder. And then do the symlink, and this will let
 Alfred see it. It's a bit of a hack but it works.
 
 #+BEGIN_SRC emacs-lisp
-(set-frame-font "Inconsolata 16" nil t)
+(set-frame-font "Roboto Mono 14" nil t)
 
-;; get pretty header bard in macOS
+;; get pretty header bars in macOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
 (add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq ns-use-proxy-icon nil)
@@ -654,12 +654,24 @@ Allow export to beamer
 #+end_src
 
 * Writeroom
-Writeroom provides a nice distraction free writing environment for org
+This centres the window in the frame which is nice when writing prose
 #+begin_src emacs-lisp
 (use-package writeroom-mode
   :ensure t
-  :defer t)
+  :defer t
+  :init
+  (setq writeroom-bottom-divider-width 0)
+  (setq writeroom-fullscreen-effect 1)
+  (setq writeroom-mode-line 1)
+  (setq writeroom-restore-window-config 1)
+  (setq writeroom-width 121)
+  (add-hook 'writeroom-mode-hook (lambda () 
+				   (display-line-numbers-mode -1)
+				   (org-indent-mode -1)
+				   (setq-default fill-column 120)
+				   (doom-modeline-mode 1))))
 #+end_src
+
 * Flycheck
 I have started to use Flycheck instead of Flymake since it is easier to set up
 with everything and integrates well with Counsel.
