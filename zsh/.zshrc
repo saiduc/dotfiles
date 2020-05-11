@@ -18,6 +18,9 @@ export ZSH="/Users/saipandian/.oh-my-zsh"
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --glob "!.git/*"'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+# Path to curl
+export PATH="/usr/local/opt/curl/bin:$PATH"
+
 ZSH_THEME="dracula"
 plugins=()
 source $ZSH/oh-my-zsh.sh
