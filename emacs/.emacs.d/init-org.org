@@ -52,6 +52,9 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 ;; allow y-or-n instead of yes-or-no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; always follow symbolic links
+(setq vc-follow-symlinks t)
+
 ;; scroll properly, not stupid emacs way
 (setq scroll-conservatively 101)
 (setq mouse-wheel-scroll-amount '(1))
@@ -433,14 +436,6 @@ Dashboard is the starting page when opening emacs
   (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1))))
 #+END_SRC
 
-* Emacs Start Up Profiler
-I use esup to help profile my emacs to optimise startup time
-#+BEGIN_SRC elisp
-(use-package esup
-  :ensure t
-  :defer t)
-#+END_SRC
-
 * PDF Tools
 PDF Tools is a better way to view PDFs than Docview 
 #+BEGIN_SRC emacs-lisp
@@ -807,13 +802,17 @@ Conda handles switching virtual environments
 
 * Cython
 Sometimes I use cython for the best of both C and Python and it is nice to have
-some syntax higlighting
+some syntax higlighting and linting
 #+BEGIN_SRC emacs-lisp
 (use-package cython-mode
   :ensure t
   :defer t
   :init
-  (add-hook 'cython-mode-hook (lambda () (flycheck-mode -1))))
+  (add-hook 'cython-mode-hook 'flycheck-mode))
+
+(use-package flycheck-cython
+  :ensure t
+  :defer t)
 #+END_SRC
 
 * Jupyter
@@ -828,13 +827,11 @@ I use Emacs Jupyter for jupyter notebooks
                                                        (:kernel . "python3")))
   (setq org-babel-default-header-args:jupyter-R '((:async . "yes")
 						     (:session . "R")
-						     (:kernel . "R"))))
-
-;; jupyter needs to refresh its aliases if you change virtualenv using conda
-(defun my/get-jupyter-aliases ()
-  (org-babel-jupyter-aliases-from-kernelspecs))
-
-(add-hook 'conda-postactivate-hook (lambda () (my/get-jupyter-aliases)))
+						     (:kernel . "R")))
+  (defun my/get-jupyter-aliases ()
+    (org-babel-jupyter-aliases-from-kernelspecs))
+  :hook
+  (conda-postactivate . my/get-jupyter-aliases))
 
 (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 (add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
