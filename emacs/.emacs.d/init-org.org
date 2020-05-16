@@ -170,14 +170,17 @@ Doom modeline is much lighter but still looks quite pretty
   (doom-modeline-mode 1))
 #+end_src
 
-* Smart Parens
+* Autopair
 I use smartparens to automatically pair quotes and parentheses
 #+BEGIN_SRC emacs-lisp
-(use-package smartparens
+(use-package autopair
   :ensure t
   :defer t
   :init
-  (smartparens-global-mode 1))
+  (autopair-global-mode 1)
+  (add-hook 'org-mode-hook #'(lambda ()
+			       (push ?<
+				     (getf autopair-dont-pair :never)))))
 #+END_SRC
 * Magit
 Magit is a wonderful git frontend for emacs
@@ -656,7 +659,7 @@ This centres the window in the frame which is nice when writing prose
   :defer t
   :init
   (setq writeroom-bottom-divider-width 0)
-  (setq writeroom-fullscreen-effect 1)
+  (setq writeroom-fullscreen-effect nil)
   (setq writeroom-mode-line 1)
   (setq writeroom-restore-window-config 1)
   (setq writeroom-width 121)
