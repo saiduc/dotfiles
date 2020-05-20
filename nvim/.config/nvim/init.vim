@@ -64,6 +64,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug '/usr/local/opt/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'rhysd/reply.vim', { 'on': ['Repl', 'ReplAuto'] }
 
 call plug#end()
 " =============================================================================
@@ -136,6 +137,7 @@ nnoremap <C-p> :FZF<CR>
 command Autopep8 !/Users/saipandian/miniconda3/bin/autopep8 -i %
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>t :tab sball<CR>
+nnoremap <leader><CR> :ReplSend<CR>j
 
 " =============================================================================
 

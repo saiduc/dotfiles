@@ -102,7 +102,7 @@ Emacs.app, then delete the folder. And then do the symlink, and this will let
 Alfred see it. It's a bit of a hack but it works.
 
 #+BEGIN_SRC emacs-lisp
-(set-frame-font "Roboto Mono 14" nil t)
+(set-frame-font "Inconsolata 16" nil t)
 
 ;; get pretty header bars in macOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
@@ -781,8 +781,8 @@ elpy-rpc-virtualenv-path variable
   (add-hook 'conda-postactivate-hook (lambda () (elpy-rpc-restart)))
   (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
   (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)
-  (add-hook 'python-mode-hook (lambda () (diminish 'highlight-indentation-mode)))
   (add-hook 'elpy-mode-hook 'flycheck-mode)
+  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
   (diminish 'hs-minor-mode))
 #+END_SRC
 
