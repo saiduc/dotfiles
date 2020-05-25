@@ -545,7 +545,8 @@ This gets org mode working with python, jupyter and emacs-lisp
  'org-babel-load-languages 
  '((emacs-lisp . t)
    (python     . t) 
-   (jupyter    . t)))
+   (jupyter    . t)
+   (latex       . t)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -898,6 +899,15 @@ header files depending on the system you are on.
 (define-key key-translation-map (kbd "M-2") (kbd "€"))
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (windmove-default-keybindings)
+
+(global-set-key (kbd "C-c h") 'evil-window-left)
+(global-set-key (kbd "C-c j") 'evil-window-down)
+(global-set-key (kbd "C-c k") 'evil-window-up)
+(global-set-key (kbd "C-c l") 'evil-window-right)
+(global-set-key (kbd "C-c H") 'evil-window-move-far-left)
+(global-set-key (kbd "C-c J") 'evil-window-move-very-bottom)
+(global-set-key (kbd "C-c K") 'evil-window-move-very-top)
+(global-set-key (kbd "C-c L") 'evil-window-move-far-right)
 #+END_SRC
 
 * Auto Update Packages
