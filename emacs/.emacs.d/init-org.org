@@ -516,8 +516,6 @@ Install org from org repos instead of built-in and assign some colours and gener
   (setq org-default-notes-file "~/Documents/Notes/Notes.org")
   (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
   :config
-  ;; load ox-ipynb
-  (use-package ox-ipynb)
   ;; make background of source blocks dark
   (use-package color
     :defer t
@@ -545,8 +543,7 @@ This gets org mode working with python, jupyter and emacs-lisp
  'org-babel-load-languages 
  '((emacs-lisp . t)
    (python     . t) 
-   (jupyter    . t)
-   (latex       . t)))
+   (jupyter    . t)))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -846,6 +843,12 @@ This script will automatically download it. The package is loaded in the Org sec
 #+BEGIN_SRC emacs-lisp
 (shell-command "bash ~/.emacs.d/oxipynb_download.sh")
 #+END_SRC
+
+Set up export to Jupyter notebooks
+#+begin_src emacs-lisp
+(use-package ox-ipynb
+  :after org)
+#+end_src
 
 * R
 I use Emacs-Speaks-Statistics (ess) for R
