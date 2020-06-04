@@ -311,6 +311,12 @@ I use company for all my autocompletion needs
   (add-hook 'shell-mode-hook (lambda () (company-mode -1))))
 #+END_SRC
 
+* Emacs Startup Profiler
+#+begin_src emacs-lisp
+(use-package esup
+  :ensure t
+  :defer t)
+#+end_src
 * Projectile
 I use projectile to manage projects
 #+BEGIN_SRC emacs-lisp
@@ -382,6 +388,7 @@ Sometimes a Nerdtree like file browser is useful
   :init
   (setq neo-theme 'icons)
   (setq neo-smart-open t)
+  (setq neo-show-hidden-files t)
   (add-hook 'neotree-mode-hook 'doom-modeline-mode)
   (global-set-key (kbd "C-x C-o") 'neotree-toggle))
 #+end_src
@@ -417,6 +424,25 @@ Counsel and Ivy-mode for completion
   (global-set-key (kbd "M-p") 'counsel-yank-pop)
   (setq projectile-completion-system 'ivy)
   (ivy-mode 1))
+#+end_src
+
+#+begin_src emacs-lisp
+;; (use-package ivy-posframe
+;;   :ensure t
+;;   :defer t
+;;   :custom-face
+;;   (ivy-posframe-border ((t (:background "#ffffff"))))
+;;   :init
+;;   (setq ivy-posframe-parameters '((left-fringe . 8)
+;; 				  (right-fringe . 8)
+;; 				  (internal-border-width . 8)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
+;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+;;   (ivy-posframe-mode 1))
 #+end_src
 
 * Dashboard
@@ -542,7 +568,7 @@ This gets org mode working with python, jupyter and emacs-lisp
 (org-babel-do-load-languages 
  'org-babel-load-languages 
  '((emacs-lisp . t)
-   (python     . t) 
+   (python     . t)
    (jupyter    . t)))
 #+END_SRC
 
@@ -710,6 +736,7 @@ through use-package. Install it directly from Melpa instead
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'yas-minor-mode)
+(setq LaTeX-item-indent 0)
 (setq-default fill-column 80)
 (setq TeX-source-correlate-method 'synctex)
 (setq TeX-source-correlate-start-server t)
