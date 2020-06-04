@@ -122,6 +122,7 @@ set rtp+=/usr/local/opt/fzf
 "                                 KEYBINDINGS
 " =============================================================================
 let mapleader=","
+nnoremap ; :Commands<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -133,11 +134,12 @@ autocmd FileType markdown nnoremap <leader>r :!/Users/saipandian/miniconda3/bin/
 nnoremap <C-t> :vsplit term://zsh<CR>
 nnoremap <leader><C-t> :vsplit term://
 tnoremap <Esc> <C-\><C-n>
-nnoremap <C-p> :FZF<CR>
+nnoremap <C-p> :Files<CR>
 command Autopep8 !/Users/saipandian/miniconda3/bin/autopep8 -i %
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>t :tab sball<CR>
 nnoremap <leader><CR> :ReplSend<CR>j
+nnoremap <C-S> :BLines<CR>
 
 " =============================================================================
 
