@@ -42,7 +42,7 @@
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
    (quote
-    ("~/Documents/workstuff/University/Year 3/Semester 2/RevisionSchedule.org")))
+    ("~/Documents/Notes/work.org" "~/Documents/Notes/personal.org")))
  '(package-selected-packages
    (quote
     (org-plus-contrib autopair flycheck-cython smartparens org yasnippet-snippets which-key vterm vimrc-mode use-package smex projectile pos-tip perspective pdf-tools org-bullets neotree markdown-mode jupyter iedit flycheck exec-path-from-shell evil-surround evil-org evil-numbers evil-magit evil-commentary evil-collection esup ess elpy dracula-theme doom-modeline diminish dashboard dash-functional cython-mode csv-mode counsel conda company-reftex company-c-headers company-auctex auto-package-update auctex-latexmk)))
