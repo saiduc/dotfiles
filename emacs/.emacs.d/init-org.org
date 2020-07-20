@@ -457,9 +457,9 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-startup-banner 2)
   (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 15)
-			    (projects . 5)
+			    (projects . 5)))
 			    ;; (agenda . 5)
-			    (bookmarks . 10)))
+			    ;; (bookmarks . 10)))
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
@@ -550,6 +550,13 @@ Install org from org repos instead of built-in and assign some colours and gener
 			(color-darken-name
 			 (face-attribute 'default :background) 3)))
   ;; some general settings
+  (setq org-agenda-files (directory-files-recursively "~/Documents/Org/" "\\.org$"))
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-refile-use-outline-path t)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
   (setq org-hide-leading-stars nil)
   (setq org-startup-indented t)
   (setq org-hide-emphasis-markers t)
@@ -678,13 +685,13 @@ Allow export to beamer
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
-	("p" "Quick Note - Personal" entry (file+headline "~/Documents/Notes/personal.org" "Inbox")
+	("p" "Quick Note - Personal" entry (file+headline "~/Documents/Org/Personal/Inbox.org" "Inbox")
 	 "** %?" :empty-lines 0)
-	("P" "Quick Task - Personal" entry (file+headline "~/Documents/Notes/personal.org" "Inbox")
-       "** TODO %?" :empty-lines 0)
-	("w" "Quick Note - Work" entry (file+healine "~/Documents/Notes/work.org" "Inbox")
+	("P" "Quick Task - Personal" entry (file+headline "~/Documents/Org/Personal/Inbox.org" "Inbox")
+	 "** TODO %?" :empty-lines 0)
+	("w" "Quick Note - Work" entry (file+headline "~/Documents/Org/Work/Inbox.org" "Inbox")
 	 "** %?" :empty-lines 0)
-	("W" "Quick Task - Work" entry (file+headline "~/Documents/Notes/work.org" "Inbox")
+	("W" "Quick Task - Work" entry (file+headline "~/Documents/Org/Work/Inbox.org" "Inbox")
        "** TODO %?\n%i%a" :empty-lines 0)
 	))
 #+end_src
