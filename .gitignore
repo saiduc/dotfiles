@@ -2,6 +2,7 @@
 !/emacs/.emacs.d/init.el
 !/emacs/.emacs.d/init-org.org
 !/emacs/.emacs.d/oxipynb_download.sh
+!/emacs/.emacs.d/setup_ignore.sh
 /nvim/.config/nvim/*
 !/nvim/.config/nvim/init.vim
 /*/.DS_Store
