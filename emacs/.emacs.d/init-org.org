@@ -687,10 +687,13 @@ Allow export to beamer
   :ensure t
   :defer t
   :init
-  (setq org-gcal-client-id "Client ID"
-	  org-gcal-client-secret "Client Secret"
-	  org-gcal-file-alist '(("saipandian97@gmail.com" . "~/Dropbox/Org/Personal/Personal Calendar.org")
-				("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/Work/Work Calendar.org"))))
+  (setq org-gcal-client-id
+	                            "Client ID"
+	  org-gcal-client-secret
+	                            "Client Secret"
+	  org-gcal-file-alist
+	                            '(("saipandian97@gmail.com" . "~/Dropbox/Org/Personal/Personal Calendar.org")
+				      ("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/Work/Work Calendar.org"))))
 #+end_src
 
 * Org Capture Templates
