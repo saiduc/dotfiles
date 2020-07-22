@@ -703,16 +703,12 @@ with the client id and secret.
       '(
 	("n" "Quick Note" entry (file "~/Dropbox/Org/Inbox.org")
 	 "* %?" :empty-lines 0)
-	("p" "Personal")
-	("pt" "Quick Task - Personal" entry (file "~/Dropbox/Org/Inbox.org")
+	("e" "Quick Event" entry (file "~/Dropbox/Org/Inbox.org")
+	 "* %?\n%^T")
+	("p" "Quick Task - Personal" entry (file "~/Dropbox/Org/Inbox.org")
 	 "* TODO %?" :empty-lines 0)
-	("pe" "Quick Event - Personal" entry (file  "~/Dropbox/Org/Inbox.org" )
-	 "* %?\n%^T")
-	("w" "Work")
-	("wt" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
+	("w" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
        "* TODO %?\n%i%a" :empty-lines 0)
-	("we" "Quick Event - Work" entry (file "~/Dropbox/Org/Inbox.org")
-	 "* %?\n%^T")
 	))
 #+end_src
 
