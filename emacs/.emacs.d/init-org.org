@@ -682,16 +682,19 @@ Allow export to beamer
 #+end_src
 
 * Org GCal
+Allows synchronisation with Google Calendar. Replace the appropriate variables
+with the client id and secret.
 #+begin_src emacs-lisp
 (use-package org-gcal
   :ensure t
   :defer t
   :init
-  (setq org-gcal-client-id
-	  org-gcal-client-secret
-	  org-gcal-file-alist
-	                            '(("saipandian97@gmail.com" . "~/Dropbox/Org/Personal/Personal Calendar.org")
-				      ("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/Work/Work Calendar.org"))))
+  (setq
+   org-gcal-client-id ;; put client id below
+   org-gcal-client-secret ;; put client secret below
+   org-gcal-file-alist
+   '(("saipandian97@gmail.com" . "~/Dropbox/Org/Personal/Personal Calendar.org")
+     ("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/Work/Work Calendar.org"))))
 #+end_src
 
 * Org Capture Templates
