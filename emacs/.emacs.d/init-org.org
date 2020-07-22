@@ -136,7 +136,7 @@ Alfred see it. It's a bit of a hack but it works.
 #+END_SRC
 
 * Themes
-I use Dracula theme
+I use the dracula theme
 #+begin_src emacs-lisp
 (use-package dracula-theme
   :ensure t
@@ -182,6 +182,7 @@ I use smartparens to automatically pair quotes and parentheses
 			       (push ?<
 				     (getf autopair-dont-pair :never)))))
 #+END_SRC
+
 * Magit
 Magit is a wonderful git frontend for emacs
 #+BEGIN_SRC emacs-lisp
@@ -317,6 +318,7 @@ I use company for all my autocompletion needs
   :ensure t
   :defer t)
 #+end_src
+
 * Projectile
 I use projectile to manage projects
 #+BEGIN_SRC emacs-lisp
@@ -752,6 +754,7 @@ for this to work. On MacOS: brew install aspell
 (add-hook 'markdown-mode-hook 'flyspell-mode)
 (add-hook 'text-mode-hook 'flyspell-mode) 
 #+end_src
+
 * LaTeX
 I use AucTeX for all LateX stuff, but for some reason, this doesn't always work
 through use-package. Install it directly from Melpa instead
@@ -1015,3 +1018,4 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'persp-mode)
   (diminish 'smartparens-mode))
 #+END_SRC
+
