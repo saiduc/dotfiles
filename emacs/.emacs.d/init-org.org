@@ -20,7 +20,6 @@ Here I set up the pacakge repositories we will be pulling from.
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 (package-initialize)
 #+END_SRC
 
@@ -37,6 +36,7 @@ Here, I let emacs load the files for any manually added packages in the .emacs.d
 #+END_SRC
 
 * General Tweaks to Emacs
+Some tweaks to the default look and behaviour of emacs
 #+BEGIN_SRC emacs-lisp
 (show-paren-mode)
 (setq make-backup-files nil)
@@ -313,6 +313,7 @@ I use company for all my autocompletion needs
 #+END_SRC
 
 * Emacs Startup Profiler
+Let's me analyse the startup time and identify problems
 #+begin_src emacs-lisp
 (use-package esup
   :ensure t
@@ -430,25 +431,6 @@ Counsel and Ivy-mode for completion
   (ivy-mode 1))
 #+end_src
 
-#+begin_src emacs-lisp
-;; (use-package ivy-posframe
-;;   :ensure t
-;;   :defer t
-;;   :custom-face
-;;   (ivy-posframe-border ((t (:background "#ffffff"))))
-;;   :init
-;;   (setq ivy-posframe-parameters '((left-fringe . 8)
-;; 				  (right-fringe . 8)
-;; 				  (internal-border-width . 8)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
-;;   (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-bottom-left)))
-;;   ;; (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
-;;   (ivy-posframe-mode 1))
-#+end_src
-
 * Dashboard
 Dashboard is the starting page when opening emacs
 #+BEGIN_SRC emacs-lisp
@@ -460,7 +442,7 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 15)
 			    (projects . 5)))
-			    ;; (agenda . 5)
+			    ;; (agenda . 5)))
 			    ;; (bookmarks . 10)))
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
@@ -566,6 +548,7 @@ Install org from org repos instead of built-in and assign some colours and gener
   (setq org-src-tab-acts-natively t)
   (setq-default fill-column 80)
   (setq org-agenda-default-appointment-duration 30)
+  (setq org-log-done 'time)
 
   ;; keybindings
   (global-set-key (kbd "C-c a") 'org-agenda)
@@ -580,6 +563,9 @@ Install org from org repos instead of built-in and assign some colours and gener
         (todo . "%-18:c ")
         (tags . "%-18c")
         (search . "%-18c"))))
+  
+  (setq org-todo-keywords
+	'((sequence "TODO" "WAIT" "|" "DONE" "CANCELLED")))
   
   ;; make background of source blocks dark
   (use-package color
@@ -718,6 +704,7 @@ with the client id and secret.
 #+end_src
 
 * Org Capture Templates
+Some capture templates that suit my workflow
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
@@ -887,6 +874,11 @@ Conda handles switching virtual environments
   (conda-env-initialize-eshell))
 #+END_SRC
 
+Turn off annoying python start message
+#+begin_src emacs-lisp
+(setq python-indent-guess-indent-offset-verbose nil)
+#+end_src
+
 * Cython
 Sometimes I use cython for the best of both C and Python and it is nice to have
 some syntax higlighting and linting
@@ -980,6 +972,7 @@ header files depending on the system you are on.
 #+end_src
 
 * General Key Bindings
+Some general key bindings
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c t t") 'vterm)
 (global-set-key (kbd "C-c t e") 'eshell)
