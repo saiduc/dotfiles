@@ -1,12 +1,6 @@
-#  $$$$$$\            $$\ $$$$$$$\                      
-# $$  __$$\           \__|$$  __$$\                     
-# $$ /  \__| $$$$$$\  $$\ $$ |  $$ |$$\   $$\  $$$$$$$\ 
-# \$$$$$$\   \____$$\ $$ |$$ |  $$ |$$ |  $$ |$$  _____|
-#  \____$$\  $$$$$$$ |$$ |$$ |  $$ |$$ |  $$ |$$ /      
-# $$\   $$ |$$  __$$ |$$ |$$ |  $$ |$$ |  $$ |$$ |      
-# \$$$$$$  |\$$$$$$$ |$$ |$$$$$$$  |\$$$$$$  |\$$$$$$$\   Sai Pandian
-#  \______/  \_______|\__|\_______/  \______/  \_______|  github.com/saiduc
-# ------------------------------------------------------------------------
+#+TITLE: Emacs Configuration
+#+AUTHOR: Sai Pandian
+#+EMAIL: saipandian97@gmail.com
 #+STARTUP: overview
 
 * Setting up New Installation
@@ -524,6 +518,7 @@ Install org from org repos instead of built-in and assign some colours and gener
    '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
    '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+   '(org-document-title ((t :height 1.5)))
    )
 
   ;; keybindings
