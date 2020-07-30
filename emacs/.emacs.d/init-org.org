@@ -16,7 +16,7 @@ Then restart emacs and everything should be working!
 You might have to change the location of the specified miniconda...
 
 * Package Installation Setup
-Here I set up the pacakge repositories we will be pulling from.
+Here I set up the package repositories we will be pulling from.
 #+BEGIN_SRC emacs-lisp
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
@@ -136,13 +136,13 @@ Alfred see it. It's a bit of a hack but it works.
 #+END_SRC
 
 * Themes
-I use the dracula theme
+A nice collection of themes
 #+begin_src emacs-lisp
-(use-package dracula-theme
+(use-package doom-themes
   :ensure t
   :defer t
   :init
-  (load-theme 'dracula t))
+  (load-theme 'doom-dracula t))
 #+end_src
 
 * Mode Line
@@ -384,20 +384,6 @@ Emacs 27
   (persp-mode 1))
 #+end_src
 
-* Neotree
-Sometimes a Nerdtree like file browser is useful
-#+begin_src emacs-lisp
-(use-package neotree
-  :ensure t
-  :defer t
-  :init
-  (setq neo-theme 'icons)
-  (setq neo-smart-open t)
-  (setq neo-show-hidden-files t)
-  (add-hook 'neotree-mode-hook 'doom-modeline-mode)
-  (global-set-key (kbd "C-x C-o") 'neotree-toggle))
-#+end_src
-
 * Ivy, Counsel & Swiper
 Counsel and Ivy-mode for completion
 #+begin_src emacs-lisp
@@ -549,6 +535,16 @@ Install org from org repos instead of built-in and assign some colours and gener
   (setq-default fill-column 80)
   (setq org-agenda-default-appointment-duration 30)
   (setq org-log-done 'time)
+  (setq org-ellipsis " ⌄")
+
+  ;; heading sizes
+  (custom-set-faces
+   '(org-level-1 ((t (:inherit outline-1 :height 1.1))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+   )
 
   ;; keybindings
   (global-set-key (kbd "C-c a") 'org-agenda)
@@ -776,7 +772,6 @@ through use-package. Install it directly from Melpa instead
 (setq TeX-parse-self t)
 (setq TeX-save-query nil)
 (setq TeX-PDF-mode t)
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (setq-default TeX-master t)
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
@@ -798,7 +793,6 @@ The completion is handled by Company-AucTeX
   :ensure t
   :defer t
   :init
-  ;; can probably move the hook into hook: in company-auctex usepackage
   (add-hook 'LaTeX-mode-hook (lambda ()
 			       (company-auctex-init)
 			       (eval-after-load "company"
