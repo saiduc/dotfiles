@@ -4,30 +4,10 @@
 #+STARTUP: overview
 
 * Setting up New Installation
-Execute the Package Installation section manually with C-c C-c in the src blocks.
-Then save the file and let it compile into a .elc file
-Then restart emacs and everything should be working!
-You might have to change the location of the specified miniconda...
-
-* Package Installation Setup
-Here I set up the package repositories we will be pulling from.
-#+BEGIN_SRC emacs-lisp
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
-#+END_SRC
-
-If use-package isn't already installed, install it
-#+BEGIN_SRC emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-#+END_SRC
-
-Here, I let emacs load the files for any manually added packages in the .emacs.d/lisp/ folder
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'load-path "~/.emacs.d/lisp")
-#+END_SRC
+Make a small change to this file, delete the change, and then save the file.
+Emacs will compile the file and install all necessary packages.
+You may need to change the locations of some paths and add your own api
+credentials. 
 
 * General Tweaks to Emacs
 Some tweaks to the default look and behaviour of emacs
