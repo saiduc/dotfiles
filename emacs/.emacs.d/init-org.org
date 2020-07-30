@@ -102,7 +102,7 @@ Emacs.app, then delete the folder. And then do the symlink, and this will let
 Alfred see it. It's a bit of a hack but it works.
 
 #+BEGIN_SRC emacs-lisp
-(set-frame-font "Inconsolata 16" nil t)
+(set-frame-font "Roboto Mono 14" nil t)
 
 ;; get pretty header bars in macOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
@@ -171,7 +171,7 @@ Doom modeline is much lighter but still looks quite pretty
 #+end_src
 
 * Autopair
-I use smartparens to automatically pair quotes and parentheses
+I use autopair to automatically pair quotes and parentheses
 #+BEGIN_SRC emacs-lisp
 (use-package autopair
   :ensure t
@@ -255,17 +255,6 @@ Provides evil mode bindings in magit
   (add-hook 'magit-mode-hook (lambda () (evil-magit-init))))
 #+END_SRC
 
-Get evil bindings in org-agenda
-#+BEGIN_SRC emacs-lisp
-;; (use-package evil-org
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (add-hook 'org-mode-hook 'evil-org-mode))
-  ;; (require 'evil-org-agenda)
-  ;; (evil-org-agenda-set-keys))
-#+END_SRC
-
 Evil numbers for incrementing and decrementing
 #+begin_src emacs-lisp
 (use-package evil-numbers
@@ -311,14 +300,6 @@ I use company for all my autocompletion needs
   (add-hook 'term-mode-hook (lambda () (company-mode -1)))
   (add-hook 'shell-mode-hook (lambda () (company-mode -1))))
 #+END_SRC
-
-* Emacs Startup Profiler
-Let's me analyse the startup time and identify problems
-#+begin_src emacs-lisp
-(use-package esup
-  :ensure t
-  :defer t)
-#+end_src
 
 * Projectile
 I use projectile to manage projects
@@ -539,7 +520,7 @@ Install org from org repos instead of built-in and assign some colours and gener
 
   ;; heading sizes
   (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.1))))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
    '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
    '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
    '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
