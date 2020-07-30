@@ -405,12 +405,11 @@ Dashboard is the starting page when opening emacs
   :ensure t
   :defer t
   :init
-  (setq dashboard-startup-banner 2)
-  (setq dashboard-set-init-info t)
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-banner-logo-title "Sai Pandian")
+  (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 15)
-			    (projects . 5)))
-			    ;; (agenda . 5)))
-			    ;; (bookmarks . 10)))
+  			    (projects . 5)))
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
