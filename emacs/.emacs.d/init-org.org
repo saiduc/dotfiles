@@ -542,7 +542,7 @@ Tell Org mode to make pdfs from latex with particular process
 	  "pdflatex -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 
-Make citations work when pdfs are made
+Make citations work when pdfs are made and make margins smaller
 #+begin_src emacs-lisp
 ;; (require 'dash)
 (setq org-latex-default-packages-alist
@@ -561,6 +561,7 @@ Make citations work when pdfs are made
               menucolor=blue,
               urlcolor=blue"
 	       "hyperref" nil) t)
+(setq org-latex-packages-alist '(("margin=2.5cm" "geometry" nil)))
 #+end_src
 
 Allow export to beamer
