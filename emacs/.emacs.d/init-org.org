@@ -544,15 +544,9 @@ This gets org mode working with python, jupyter and emacs-lisp
   (add-hook 'org-mode-hook 'org-bullets-mode))
 #+END_SRC
 
-Tell Org mode to make pdfs from latex with syntax highlighting for source blocks
+Tell Org mode to make pdfs from latex with particular process
 #+begin_src emacs-lisp
-(add-to-list 'org-latex-packages-alist '("" "minted"))
-(setq org-latex-listings 'minted)
-
-(setq org-latex-pdf-process
-      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
 #+end_src
 
 Allow export to beamer
@@ -877,8 +871,8 @@ Set up export to Jupyter notebooks
   :after org)
 #+end_src
 
-* R
-I use Emacs-Speaks-Statistics (ess) for R
+* Emacs Speaks Statistics
+I use Emacs-Speaks-Statistics (ess) for R, and potentially Julia
 #+begin_src emacs-lisp
 (use-package ess
   :ensure t
