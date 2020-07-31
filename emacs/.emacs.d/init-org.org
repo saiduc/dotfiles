@@ -668,7 +668,8 @@ I use Org Ref to handle citations in Org mode
 			     (require 'org-ref-url-utils)))
   :config
   (org-ref-ivy-cite-completion)
-  (define-key org-ref-ivy-cite-keymap (kbd "C-k") 'ivy-previous-line))
+  (define-key org-ref-ivy-cite-keymap (kbd "C-k") 'ivy-previous-line)
+  (define-key org-mode-map (kbd "C-c [") 'org-ref-ivy-insert-ref-link))
 #+end_src
 
 * Org GCal
