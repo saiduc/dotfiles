@@ -144,19 +144,6 @@ Doom modeline is much lighter but still looks quite pretty
   (doom-modeline-mode 1))
 #+end_src
 
-* Autopair
-I use autopair to automatically pair quotes and parentheses
-#+BEGIN_SRC emacs-lisp
-(use-package autopair
-  :ensure t
-  :defer t
-  :init
-  (autopair-global-mode 1)
-  (add-hook 'org-mode-hook #'(lambda ()
-			       (push ?<
-				     (getf autopair-dont-pair :never)))))
-#+END_SRC
-
 * Magit
 Magit is a wonderful git frontend for emacs
 #+BEGIN_SRC emacs-lisp
@@ -470,6 +457,7 @@ Install org from org repos instead of built-in and assign some colours and gener
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
   ;; agenda files and refile targets
   (setq org-agenda-files (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
@@ -714,6 +702,17 @@ Some capture templates that suit my workflow
        "* TODO %?\n%i%a" :empty-lines 0)
 	))
 #+end_src
+
+* Autopair
+I use autopair to automatically pair quotes and parentheses
+#+BEGIN_SRC emacs-lisp
+(use-package autopair
+  :ensure t
+  :defer t
+  :init
+  (autopair-global-mode 1)
+  (add-hook 'org-mode-hook #'(lambda () (push ?< (getf autopair-dont-pair :never)))))
+#+END_SRC
 
 * Writeroom
 This centres the window in the frame which is nice when writing prose
