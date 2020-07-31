@@ -546,7 +546,33 @@ This gets org mode working with python, jupyter and emacs-lisp
 
 Tell Org mode to make pdfs from latex with particular process
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+(setq org-latex-pdf-process
+      '("pdflatex -interaction nonstopmode -output-directory %o %f"
+	  "bibtex %b"
+	  "pdflatex -interaction nonstopmode -output-directory %o %f"
+	  "pdflatex -interaction nonstopmode -output-directory %o %f"))
+#+end_src
+
+Make citations work when pdfs are made
+#+begin_src emacs-lisp
+;; (require 'dash)
+(setq org-latex-default-packages-alist
+      (-remove-item
+       '("" "hyperref" nil)
+       org-latex-default-packages-alist))
+(add-to-list 'org-latex-default-packages-alist '("" "natbib" "") t)
+(add-to-list 'org-latex-default-packages-alist
+	     '("linktocpage,
+              pdfstartview=FitH,
+              colorlinks, 
+              linkcolor=blue,
+              anchorcolor=blue, 
+              citecolor=blue,
+              filecolor=blue,
+              menucolor=blue,
+              urlcolor=blue"
+	       "hyperref" nil) t)
 #+end_src
 
 Allow export to beamer
@@ -630,6 +656,31 @@ Allow export to beamer
       "g\\" 'org-agenda-filter-by-tag-refine
       "]" 'org-agenda-manipulate-query-subtract
       )))
+#+end_src
+
+* Org Ref
+I use Org Ref to handle citations in Org mode
+#+begin_src emacs-lisp
+(use-package org-ref
+  :ensure t
+  :defer t
+  :init
+  (setq bibtex-autokey-year-length 4
+	  bibtex-autokey-name-year-separator "-"
+	  bibtex-autokey-year-title-separator "-"
+	  bibtex-autokey-titleword-separator "-"
+	  bibtex-autokey-titlewords 2
+	  bibtex-autokey-titlewords-stretch 1
+	  bibtex-autokey-titleword-length 5)
+
+  (setq org-ref-label-use-font-lock nil)
+  (add-hook 'org-mode-hook (lambda ()
+			     (require 'org-ref)
+			     (require 'org-ref-pdf)
+			     (require 'org-ref-url-utils)))
+  :config
+  (org-ref-ivy-cite-completion)
+  (define-key org-ref-ivy-cite-keymap (kbd "C-k") 'ivy-previous-line))
 #+end_src
 
 * Org GCal
