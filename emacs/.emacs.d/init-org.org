@@ -459,9 +459,16 @@ Install org from org repos instead of built-in and assign some colours and gener
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
   (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
-  ;; agenda files and refile targets
+  ;; agenda files, refile targets and drawer targets
   (setq org-agenda-files (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+  (setq org-log-into-drawer "LOGBOOK")
+
+  ;; make custom function that refreshes org files
+  (defun my/refresh-org-files ()
+    (interactive)
+    (setq org-agenda-files (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+    (setq org-refile-targets '((org-agenda-files :maxlevel . 1))))
 
   ;; some general settings
   (setq org-outline-path-complete-in-steps nil)
