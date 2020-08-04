@@ -16,6 +16,9 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 # Path to curl
 export PATH="/usr/local/opt/curl/bin:$PATH"
 
+# Path to homebrew's sbin
+export PATH="/usr/local/sbin:$PATH"
+
 ZSH_THEME="dracula"
 plugins=()
 source $ZSH/oh-my-zsh.sh
