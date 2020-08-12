@@ -12,6 +12,8 @@ credentials.
 * General Tweaks to Emacs
 Some tweaks to the default look and behaviour of emacs
 #+BEGIN_SRC emacs-lisp
+(setq byte-compile-warnings '(cl-functions))
+(cd "~")
 (show-paren-mode)
 (setq make-backup-files nil)
 (setq auto-save-default nil)
@@ -511,7 +513,7 @@ Install org from org repos instead of built-in and assign some colours and gener
         (search . "%-18c"))))
   
   (setq org-todo-keywords
-	'((sequence "TODO" "WAIT" "|" "DONE" "CANCELLED")))
+	'((sequence "TODO" "WAIT" "SOMEDAY" "|" "DONE" "CANCELLED")))
   
   ;; make background of source blocks dark
   (use-package color
