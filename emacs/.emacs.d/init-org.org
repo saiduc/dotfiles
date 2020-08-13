@@ -977,7 +977,7 @@ header files depending on the system you are on.
 
 * Java
 I use meghanada mode for the basic java development I do.
-Ensure jdk is installed (on mac with brew cask install oracle-jdk)
+Ensure jdk is installed. On mac this is done with: brew install openjdk
 #+begin_src emacs-lisp
 (use-package meghanada
   :ensure t
@@ -985,7 +985,10 @@ Ensure jdk is installed (on mac with brew cask install oracle-jdk)
   :init
   (add-hook 'java-mode-hook 'meghanada-mode)
   (add-hook 'java-mode-hook 'flycheck-mode)
-  (add-hook 'java-mode-hook (lambda () (setq c-basic-offset 2))))
+  (add-hook 'java-mode-hook (lambda () 
+			      (setq c-basic-offset 2)
+			      (diminish 'yas-minor-mode)
+			      (diminish 'abbrev-mode))))
 #+end_src
 
 * General Key Bindings

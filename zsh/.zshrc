@@ -8,6 +8,9 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/saipandian/.oh-my-zsh"
 
+# Path to java 11
+export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+
 # fzf stuff
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --glob "!.git/*"'
