@@ -42,6 +42,7 @@ Some tweaks to the default look and behaviour of emacs
 
 ;; show line number and highlight current line
 (global-display-line-numbers-mode)
+(add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
 ;; (global-hl-line-mode t)
 
 ;; disable line number in terminals and turn on hs minor mode when programming
@@ -787,6 +788,7 @@ through use-package. Install it directly from Melpa instead
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'yas-minor-mode)
+(add-hook 'LaTeX-mode-hook 'display-fill-column-indicator-mode)
 (setq LaTeX-item-indent 0)
 (setq-default fill-column 80)
 (setq TeX-source-correlate-method 'synctex)
@@ -861,9 +863,7 @@ elpy-rpc-virtualenv-path variable
   (diminish 'hs-minor-mode))
 #+END_SRC
 
-Elpy works faster and neater than Anaconda-mode from my experience, especially
-when importing new modules. But supposedly Anaconda-mode is lighter. And so is
-Jedi, but neither offer as many features as Elpy. 
+I prefer Elpy to a language server since it works really well with tramp.
 
 Conda handles switching virtual environments
 #+BEGIN_SRC emacs-lisp
@@ -933,7 +933,7 @@ Set up export to Jupyter notebooks
 #+end_src
 
 * Emacs Speaks Statistics
-I use Emacs-Speaks-Statistics (ess) for R, and potentially Julia
+I use Emacs-Speaks-Statistics (ess) for R, and potentially Julia in the future
 #+begin_src emacs-lisp
 (use-package ess
   :ensure t
@@ -973,6 +973,19 @@ header files depending on the system you are on.
 			     (eval-after-load "company"
 			       '(add-to-list 'company-backends 'company-c-headers))))
   (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-c-headers-path-system "/Library/Developer/CommandLineTools/usr/include/c++/v1/"))))
+#+end_src
+
+* Java
+I use meghanada mode for the basic java development I do.
+Ensure jdk is installed (on mac with brew cask install oracle-jdk)
+#+begin_src emacs-lisp
+(use-package meghanada
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'java-mode-hook 'meghanada-mode)
+  (add-hook 'java-mode-hook 'flycheck-mode)
+  (add-hook 'java-mode-hook (lambda () (setq c-basic-offset 2))))
 #+end_src
 
 * General Key Bindings
