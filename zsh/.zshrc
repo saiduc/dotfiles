@@ -9,7 +9,7 @@
 export ZSH="/Users/saipandian/.oh-my-zsh"
 
 # Path to java 11
-export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+# export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 
 # fzf stuff
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

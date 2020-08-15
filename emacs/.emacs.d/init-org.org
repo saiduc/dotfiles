@@ -940,7 +940,8 @@ I use Emacs-Speaks-Statistics (ess) for R, and potentially Julia in the future
   :ensure t
   :defer t
   :init
-  (add-hook 'ess-mode-hook (lambda () (flymake-mode -1)))
+  (setq ess-use-flymake nil)
+  (setq ess-eval-visibly-p nil)
   (add-hook 'ess-mode-hook 'flycheck-mode))
 #+end_src
 
@@ -978,7 +979,7 @@ header files depending on the system you are on.
 
 * Java
 I use meghanada mode for the basic java development I do.
-Ensure jdk is installed. On mac this is done with: brew install openjdk
+Ensure jdk is installed. On mac this is done with: brew cask install java
 #+begin_src emacs-lisp
 (use-package meghanada
   :ensure t
