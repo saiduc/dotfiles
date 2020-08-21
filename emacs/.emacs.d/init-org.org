@@ -514,15 +514,7 @@ Install org from org repos instead of built-in and assign some colours and gener
         (search . "%-18c"))))
   
   (setq org-todo-keywords
-	'((sequence "TODO" "WAIT" "SOMEDAY" "|" "DONE" "CANCELLED")))
-  
-  ;; make background of source blocks dark
-  (use-package color
-    :defer t
-    :init
-    (set-face-attribute 'org-block nil :background
-			(color-darken-name
-			 (face-attribute 'default :background) 3))))
+	'((sequence "TODO" "WAIT" "SOMEDAY" "|" "DONE" "CANCELLED"))))
 #+end_src
 
 This gets org mode working with python, jupyter and emacs-lisp
@@ -535,11 +527,12 @@ This gets org mode working with python, jupyter and emacs-lisp
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(use-package org-bullets
+(use-package org-superstar
   :ensure t
   :defer t
   :init
-  (add-hook 'org-mode-hook 'org-bullets-mode))
+  (setq org-superstar-configure-like-org-bullets t)
+  (add-hook 'org-mode-hook 'org-superstar-mode))
 #+END_SRC
 
 Tell Org mode to make pdfs from latex with particular process
@@ -712,6 +705,8 @@ Some capture templates that suit my workflow
 	 "* TODO %?" :empty-lines 0)
 	("w" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
        "* TODO %?\n%i%a" :empty-lines 0)
+	("f" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
+	 "** Monthly Finance Review [0/4] \n- [ ] Check Expenditure and Balance in Yolt\n- [ ] Update Spreadsheet\n- [ ] Move Extra Revolut into Vault\n- [ ] Transfer £150 into Revolut\n- [ ] Mark TODO as DONE" :empty-lines 0 :jump-to-captured t :kill-buffer t)
 	))
 #+end_src
 
@@ -912,6 +907,7 @@ I use Emacs Jupyter for jupyter notebooks
   (setq org-babel-default-header-args:jupyter-R '((:async . "yes")
 						     (:session . "R")
 						     (:kernel . "R")))
+  (define-key jupyter-org-interaction-mode-map (kbd "C-c h") nil)
   (defun my/get-jupyter-aliases ()
     (org-babel-jupyter-aliases-from-kernelspecs))
   :hook
@@ -919,6 +915,10 @@ I use Emacs Jupyter for jupyter notebooks
 
 (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 (add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
+
+;; (add-hook 'org-mode-hook (lambda () 
+;; 			   (global-unset-key (kbd "C-c h"))
+;; 			   (global-set-key (kbd "C-c h") 'evil-window-left)))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
@@ -990,7 +990,16 @@ Ensure jdk is installed. On mac this is done with: brew cask install java
   (add-hook 'java-mode-hook (lambda () 
 			      (setq c-basic-offset 2)
 			      (diminish 'yas-minor-mode)
-			      (diminish 'abbrev-mode))))
+			      (diminish 'abbrev-mode)))
+  :config
+  (setq tab-width 2)
+  (setq meghanada-server-remote-debug t)
+  (setq meghanada-telemetry-enable nil)
+  (setq meghanada-javac-xlint "-Xlint:all,-processing")
+  (setq meghanada-server-jvm-option "-Xms256m -Xmx2048m -Dmeghanada.zpage.port=8080")
+  (setq meghanada-import-static-enable "java.util.Objects,org.junit.Assert")
+  (setq meghanada-cache-root "~/.cache/meghanada")
+  (setq meghanada-cache-in-project nil))
 #+end_src
 
 * General Key Bindings
