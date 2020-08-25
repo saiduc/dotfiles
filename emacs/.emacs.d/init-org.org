@@ -526,15 +526,6 @@ This gets org mode working with python, jupyter and emacs-lisp
    (jupyter    . t)))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-(use-package org-superstar
-  :ensure t
-  :defer t
-  :init
-  (setq org-superstar-configure-like-org-bullets t)
-  (add-hook 'org-mode-hook 'org-superstar-mode))
-#+END_SRC
-
 Tell Org mode to make pdfs from latex with particular process
 #+begin_src emacs-lisp
 ;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
@@ -692,6 +683,17 @@ with the client id and secret.
      ("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/Work/Work Calendar.org"))))
 #+end_src
 
+* Org Superstar
+This enables nice looking icons in org headings
+#+BEGIN_SRC emacs-lisp
+(use-package org-superstar
+  :ensure t
+  :defer t
+  :init
+  (setq org-superstar-configure-like-org-bullets t)
+  (add-hook 'org-mode-hook 'org-superstar-mode))
+#+END_SRC
+
 * Org Capture Templates
 Some capture templates that suit my workflow
 #+begin_src emacs-lisp
@@ -706,7 +708,7 @@ Some capture templates that suit my workflow
 	("w" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
        "* TODO %?\n%i%a" :empty-lines 0)
 	("f" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
-	 "** Monthly Finance Review [0/4] \n- [ ] Check Expenditure and Balance in Yolt\n- [ ] Update Spreadsheet\n- [ ] Move Extra Revolut into Vault\n- [ ] Transfer £150 into Revolut\n- [ ] Mark TODO as DONE" :empty-lines 0 :jump-to-captured t :kill-buffer t)
+	 "** Monthly Finance Review [0/4] \n- [ ] Check Expenditure and Balance in Yolt\n- [ ] Update [[file+sys:~/Google Drive/Budgets/budget_20_21.xlsx][Budget Spreadsheet]]\n- [ ] Move Extra Revolut into Vault\n- [ ] Transfer money into Revolut\n- [ ] Mark TODO as DONE" :empty-lines 0 :jump-to-captured t :kill-buffer t)
 	))
 #+end_src
 
@@ -879,6 +881,15 @@ Turn off annoying python start message
 (setq python-indent-guess-indent-offset-verbose nil)
 #+end_src
 
+Get nice sphinx doc generation
+#+begin_src emacs-lisp
+(use-package sphinx-doc
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'python-mode-hook (lambda () (require 'sphinx-doc) (sphinx-doc-mode t))))
+#+end_src
+
 * Cython
 Sometimes I use cython for the best of both C and Python and it is nice to have
 some syntax higlighting and linting
@@ -915,10 +926,6 @@ I use Emacs Jupyter for jupyter notebooks
 
 (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 (add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
-
-;; (add-hook 'org-mode-hook (lambda () 
-;; 			   (global-unset-key (kbd "C-c h"))
-;; 			   (global-set-key (kbd "C-c h") 'evil-window-left)))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
