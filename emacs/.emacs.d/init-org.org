@@ -648,17 +648,13 @@ Some capture templates that suit my workflow
 * Org Agenda Customisation
 For a nice looking custom agenda
 #+begin_src emacs-lisp
-(use-package org-ql
-  :ensure t
-  :defer t)
-
 (setq org-agenda-custom-commands
       '(("n" "Custom agenda view"
 	 (
 	  (agenda)
-	  (org-ql-block '(todo "TODO"))
-	  (org-ql-block '(todo "WAIT"))
-	  (org-ql-block '(todo "SOMEDAY"))
+	  (todo "TODO")
+	  (todo "WAIT")
+	  (todo "SOMEDAY")
 	  ))))
 #+end_src
 
