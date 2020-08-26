@@ -456,7 +456,6 @@ Install org from org repos instead of built-in and assign some colours and gener
   :init
 
   ;; some hooks
-  (add-hook 'org-mode-hook (lambda () (require 'org-tempo)))
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -504,6 +503,8 @@ Install org from org repos instead of built-in and assign some colours and gener
   (global-set-key (kbd "C-c c") 'org-capture)
 
   :config
+  (add-to-list 'org-modules 'org-tempo t)
+  (add-to-list 'org-modules 'org-habit t)
 
   (setq org-agenda-prefix-format
       (quote
@@ -612,8 +613,8 @@ with the client id and secret.
    org-gcal-client-id ;; put client id below
    org-gcal-client-secret ;; put client secret below
    org-gcal-file-alist
-   '(("saipandian97@gmail.com" . "~/Dropbox/Org/Personal/Personal Calendar.org")
-     ("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/Work/Work Calendar.org"))))
+   '(("saipandian97@gmail.com" . "~/Dropbox/Org/GCal/Personal Calendar.org")
+     ("1uguohmrhenl3g657n7mot9l0k@group.calendar.google.com" . "~/Dropbox/Org/GCal/Work Calendar.org"))))
 #+end_src
 
 * Org Superstar
