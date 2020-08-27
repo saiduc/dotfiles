@@ -370,7 +370,8 @@ Dashboard is the starting page when opening emacs
   :defer t
   :init
   (setq dashboard-startup-banner 'logo)
-  (setq dashboard-banner-logo-title "Sai Pandian")
+  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 15)
   			    (projects . 5)))
@@ -501,6 +502,11 @@ Install org from org repos instead of built-in and assign some colours and gener
   ;; keybindings
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c c") 'org-capture)
+  (defun my/list-org-files ()
+    (interactive)
+    (projectile-find-file-in-directory "~/Dropbox/Org/"))
+  (global-set-key (kbd "C-c f") 'my/list-org-files)
+
 
   :config
   (add-to-list 'org-modules 'org-tempo t)
