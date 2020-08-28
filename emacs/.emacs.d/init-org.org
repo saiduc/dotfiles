@@ -861,9 +861,6 @@ I use Emacs Jupyter for jupyter notebooks
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:session . "py")
                                                        (:kernel . "python3")))
-  (setq org-babel-default-header-args:jupyter-R '((:async . "yes")
-						     (:session . "R")
-						     (:kernel . "R")))
   (define-key jupyter-org-interaction-mode-map (kbd "C-c h") nil)
   (defun my/get-jupyter-aliases ()
     (org-babel-jupyter-aliases-from-kernelspecs))
@@ -871,7 +868,6 @@ I use Emacs Jupyter for jupyter notebooks
   (conda-postactivate . my/get-jupyter-aliases))
 
 (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
-(add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
@@ -955,22 +951,6 @@ I use the Eclipse JDT Language Server for Java development
   :hook (java-mode . (lambda () (require 'lsp-java) (lsp)))
   :init
   (add-hook 'java-mode-hook (lambda () (diminish 'abbrev-mode))))
-#+end_src
-
-* VimScript
-Occasionally I have to edit a vimrc file so syntax highlighting is nice.
-#+begin_src emacs-lisp
-(use-package vimrc-mode
-  :ensure t
-  :defer t)
-#+end_src
-
-* Markdown Mode
-Mode for editing markdown documents
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :defer t)
 #+end_src
 
 * General Key Bindings
