@@ -143,6 +143,7 @@ Doom modeline is much lighter but still looks quite pretty
   (setq doom-modeline-icon nil)
   (setq doom-modeline-minor-modes t)
   (setq doom-modeline-perp-name t)
+  (setq doom-modeline-lsp t)
   (setq doom-modeline-env-version nil)
   (doom-modeline-mode 1))
 #+end_src
@@ -254,7 +255,7 @@ I use company for all my autocompletion needs
   (push ".blg" company-files-exclusions)
   (push ".fls" company-files-exclusions)
   (delete 'company-dabbrev company-backends)
-  (company-tng-configure-default)
+  ;; (company-tng-configure-default)
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
@@ -410,21 +411,6 @@ Make dired work as expected
 (put 'dired-find-alternate-file 'disabled nil)
 #+END_SRC
 
-* YASnippets
-This package allows for useful snippet expansion
-#+begin_src emacs-lisp
-(use-package yasnippet
-  :ensure t
-  :defer t)
-#+end_src
-
-Now we need to get some actual snippets:
-#+begin_src emacs-lisp
-(use-package yasnippet-snippets
-  :ensure t
-  :defer t)
-#+end_src
-
 * CSV Mode
 Viewing CSVs is often useful
 #+BEGIN_SRC emacs-lisp
@@ -438,14 +424,6 @@ Viewing CSVs is often useful
                                       (display-line-numbers-mode -1)
                                       (linum-mode 1))))
 #+END_SRC
-
-* Markdown Mode
-Mode for editing markdown documents
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure t
-  :defer t)
-#+end_src
 
 * Org Mode
 Install org from org repos instead of built-in and assign some colours and general settings
@@ -763,16 +741,23 @@ This centres the window in the frame which is nice when writing prose
 				   (doom-modeline-mode 1))))
 #+end_src
 
-* Flycheck
-I have started to use Flycheck instead of Flymake since it is easier to set up
-with everything and integrates well with Counsel.
-#+BEGIN_SRC emacs-lisp
-(use-package flycheck
+* YASnippets
+This package provides snippet insertion
+#+begin_src emacs-lisp
+(use-package yasnippet
   :ensure t
   :defer t
+  :diminish yas-minor-mode
   :init
-  (setq flycheck-python-flake8-executable "/Users/saipandian/miniconda3/envs/elpy/bin/flake8"))
-#+END_SRC
+  (yas-global-mode 1))
+#+end_src
+
+A collection of useful snippets
+#+begin_src emacs-lisp
+(use-package yasnippet-snippets
+  :ensure t
+  :defer t)
+#+end_src
 
 * Flyspell 
 On the go spell-checking in Emacs You will need to install aspell on your system
@@ -785,104 +770,58 @@ for this to work. On MacOS: brew install aspell
 (add-hook 'text-mode-hook 'flyspell-mode) 
 #+end_src
 
-* LaTeX
-I use AucTeX for all LateX stuff, but for some reason, this doesn't always work
-through use-package. Install it directly from Melpa instead
-#+BEGIN_SRC emacs-lisp
-(use-package auctex
+* Flycheck
+Use flycheck as the syntax checker, but only after saving the file.
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :diminish flycheck-mode
+  :defer t)
+#+end_src
+
+* LSP
+Language servers handle most of my languages
+#+begin_src emacs-lisp
+(setq lsp-keymap-prefix "C-l")
+
+(use-package lsp-mode
   :ensure t
   :defer t
+  :diminish lsp-mode
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp
+  :init
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-modeline-code-actions-enable nil)
   :config
-  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode))
-#+END_SRC
+  (define-key lsp-mode-map (kbd "M-]") 'lsp-find-definition)
+  (define-key lsp-mode-map (kbd "M-[") 'xref-pop-marker-stack))
 
-#+BEGIN_SRC emacs-lisp
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-save-query nil)
-(setq TeX-PDF-mode t)
-(setq-default TeX-master t)
-(add-hook 'LaTeX-mode-hook 'auto-fill-mode)
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'yas-minor-mode)
-(add-hook 'LaTeX-mode-hook 'display-fill-column-indicator-mode)
-(setq LaTeX-item-indent 0)
-(setq-default fill-column 80)
-(setq TeX-source-correlate-method 'synctex)
-(setq TeX-source-correlate-start-server t)
-#+END_SRC
-
-The completion is handled by Company-AucTeX
-#+BEGIN_SRC emacs-lisp
-(use-package company-auctex
+(use-package company-lsp
   :ensure t
   :defer t)
 
-(use-package company-reftex
+(use-package lsp-ivy 
   :ensure t
   :defer t
-  :init
-  (add-hook 'LaTeX-mode-hook 
-	    (lambda ()
-	      (eval-after-load "company"
-		'(add-to-list 'company-backends 'company-reftex-labels))
-	      (eval-after-load "company"
-		'(add-to-list 'company-backends 'company-reftex-citations)))
-            (company-auctex-init))
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX t))
-#+END_SRC
-
-Compile with Latexmk, since it works better
-#+BEGIN_SRC emacs-lisp
-(use-package auctex-latexmk
-  :ensure t
-  :defer t
-  :init
-  (with-eval-after-load 'tex
-    (auctex-latexmk-setup))
-  (add-hook 'TeX-mode-hook (lambda () (setq TeX-command-default "LatexMk")))
-  (setq auctex-latexmk-inherit-TeX-PDF-mode t))
-#+END_SRC
-
-I can use PDF tools or Skim.app to view PDFs. If PDF tools, then auto update
-buffer after compilation
-#+BEGIN_SRC emacs-lisp
-(setq TeX-view-program-selection '((output-pdf "PDF Viewer"))
-  	;; TeX-view-program-list '(("PDF Viewer" TeX-pdf-tools-sync-view))
-  	TeX-view-program-list '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b"))
-  	TeX-source-correlate-start-server t)
-(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
-(add-hook 'LaTeX-mode-hook 'flycheck-mode)
-#+END_SRC
+  :commands lsp-ivy-workspace-symbol)
+#+end_src
 
 * Python
-I am using Elpy because it remains fast and is feature rich. You will need to
-make your own elpy virtual environment with conda, and point to it with the
-elpy-rpc-virtualenv-path variable
-#+BEGIN_SRC emacs-lisp
-(use-package elpy
-  :ensure t
+I use the pyright server for Python
+#+begin_src emacs-lisp
+(use-package lsp-pyright
   :defer t
-  :init
-  (setq elpy-rpc-virtualenv-path (expand-file-name "~/miniconda3/envs/elpy"))
-  (advice-add 'python-mode :before 'elpy-enable)
-  (setq elpy-rpc-error-timeout 30)
-  (setq elpy-rpc-timeout 30)
+  :ensure t
+  :hook (python-mode . (lambda () (require 'lsp-pyright) (lsp)))
+  :delight
+  :diminish
   :config
-  (remove-hook 'elpy-modules 'elpy-module-flymake)
-  (remove-hook 'elpy-modules 'elpy-module-pyvenv)
-  (remove-hook 'elpy-modules 'elpy-module-django)
-  (add-hook 'conda-postactivate-hook (lambda () (elpy-rpc-restart)))
-  (define-key elpy-mode-map (kbd "M-]") 'elpy-goto-definition)
-  (define-key elpy-mode-map (kbd "M-[") 'pop-tag-mark)
-  (add-hook 'elpy-mode-hook 'flycheck-mode)
-  (add-hook 'elpy-mode-hook (lambda () (highlight-indentation-mode -1)))
-  (diminish 'hs-minor-mode))
-#+END_SRC
-
-I prefer Elpy to a language server since it works really well with tramp.
+  (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace))))
+#+end_src
 
 Conda handles switching virtual environments
 #+BEGIN_SRC emacs-lisp
@@ -907,24 +846,10 @@ Get nice sphinx doc generation
 (use-package sphinx-doc
   :ensure t
   :defer t
+  :diminish sphinx-doc-mode
   :init
   (add-hook 'python-mode-hook (lambda () (require 'sphinx-doc) (sphinx-doc-mode t))))
 #+end_src
-
-* Cython
-Sometimes I use cython for the best of both C and Python and it is nice to have
-some syntax higlighting and linting
-#+BEGIN_SRC emacs-lisp
-(use-package cython-mode
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'cython-mode-hook 'flycheck-mode))
-
-(use-package flycheck-cython
-  :ensure t
-  :defer t)
-#+END_SRC
 
 * Jupyter
 I use Emacs Jupyter for jupyter notebooks
@@ -936,9 +861,6 @@ I use Emacs Jupyter for jupyter notebooks
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:session . "py")
                                                        (:kernel . "python3")))
-  (setq org-babel-default-header-args:jupyter-R '((:async . "yes")
-						     (:session . "R")
-						     (:kernel . "R")))
   (define-key jupyter-org-interaction-mode-map (kbd "C-c h") nil)
   (defun my/get-jupyter-aliases ()
     (org-babel-jupyter-aliases-from-kernelspecs))
@@ -946,7 +868,6 @@ I use Emacs Jupyter for jupyter notebooks
   (conda-postactivate . my/get-jupyter-aliases))
 
 (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
-(add-to-list 'org-structure-template-alist '("r" . "src jupyter-R"))
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
@@ -961,24 +882,42 @@ Set up export to Jupyter notebooks
   :after org)
 #+end_src
 
-* Emacs Speaks Statistics
-I use Emacs-Speaks-Statistics (ess) for R, and potentially Julia in the future
+* LaTeX
+I use the TexLab language server, installed with: brew install texlab
 #+begin_src emacs-lisp
-(use-package ess
+(use-package lsp-latex
   :ensure t
   :defer t
   :init
-  (setq ess-use-flymake nil)
-  (setq ess-eval-visibly-p nil)
-  (add-hook 'ess-mode-hook 'flycheck-mode))
+  (with-eval-after-load "tex-mode"
+    (require 'lsp-latex)
+    (add-hook 'tex-mode-hook 'lsp)
+    (add-hook 'latex-mode-hook 'lsp))
+  (with-eval-after-load "bibtex"
+    (add-hook 'bibtex-mode-hook 'lsp))
+  (setq lsp-latex-lint-on-change nil)
+  (setq lsp-latex-lint-on-save t)
+
+  ;; function to open pdf associated with tex file
+  (defun my/open-pdf ()
+    (interactive)
+    (buffer-file-name (other-buffer))
+    (print "Opening pdf...")
+    ;; (find-file (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))
+    (shell-command (concat "open " (replace-regexp-in-string ".tex" ".pdf" buffer-file-name)))
+    )
+
+  :config
+  (define-key latex-mode-map (kbd "C-c C-c") 'lsp-latex-build)
+  (define-key latex-mode-map (kbd "C-c C-v") 'my/open-pdf))
 #+end_src
 
-* VimScript
-Occasionally I have to edit a vimrc file so syntax highlighting is nice.
+Some general latex settings
 #+begin_src emacs-lisp
-(use-package vimrc-mode
-  :ensure t
-  :defer t)
+(add-hook 'latex-mode-hook 'auto-fill-mode)
+(add-hook 'latex-mode-hook 'visual-line-mode)
+(add-hook 'latex-mode-hook 'display-fill-column-indicator-mode)
+(setq-default fill-column 80)
 #+end_src
 
 * C/C++
@@ -989,12 +928,10 @@ On Ubuntu, this is done with sudo apt install clang
 Set up C++ to use the style I like and enable snippets
 #+begin_src emacs-lisp
 (setq c-default-style "linux")
-(add-hook 'c++-mode-hook 'yas-minor-mode)
 (add-hook 'c++-mode-hook 'flycheck-mode)
 #+end_src
 
-Get completion of Header files. It might be necessary to change the path to
-header files depending on the system you are on.
+Get completion of Header files. It might be necessary to change the path to header files depending on the system you are on.
 #+begin_src emacs-lisp
 (use-package company-c-headers
   :ensure t
@@ -1006,28 +943,14 @@ header files depending on the system you are on.
 #+end_src
 
 * Java
-I use meghanada mode for the basic java development I do.
-Ensure jdk is installed. On mac this is done with: brew cask install java
+I use the Eclipse JDT Language Server for Java development
 #+begin_src emacs-lisp
-(use-package meghanada
+(use-package lsp-java
   :ensure t
   :defer t
+  :hook (java-mode . (lambda () (require 'lsp-java) (lsp)))
   :init
-  (add-hook 'java-mode-hook 'meghanada-mode)
-  (add-hook 'java-mode-hook 'flycheck-mode)
-  (add-hook 'java-mode-hook (lambda () 
-			      (setq c-basic-offset 2)
-			      (diminish 'yas-minor-mode)
-			      (diminish 'abbrev-mode)))
-  :config
-  (setq tab-width 2)
-  (setq meghanada-server-remote-debug t)
-  (setq meghanada-telemetry-enable nil)
-  (setq meghanada-javac-xlint "-Xlint:all,-processing")
-  (setq meghanada-server-jvm-option "-Xms256m -Xmx2048m -Dmeghanada.zpage.port=8080")
-  (setq meghanada-import-static-enable "java.util.Objects,org.junit.Assert")
-  (setq meghanada-cache-root "~/.cache/meghanada")
-  (setq meghanada-cache-in-project nil))
+  (add-hook 'java-mode-hook (lambda () (diminish 'abbrev-mode))))
 #+end_src
 
 * General Key Bindings
