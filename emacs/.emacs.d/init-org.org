@@ -797,6 +797,7 @@ Language servers handle most of my languages
   (setq lsp-signature-render-documentation nil)
   (setq lsp-modeline-code-actions-enable nil)
   :config
+  (lsp-treemacs-sync-mode 1)
   (define-key lsp-mode-map (kbd "M-]") 'lsp-find-definition)
   (define-key lsp-mode-map (kbd "M-[") 'xref-pop-marker-stack))
 
@@ -871,7 +872,7 @@ I use Emacs Jupyter for jupyter notebooks
 #+END_SRC
 
 Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
-This script will automatically download it. The package is loaded in the Org section
+This script will automatically download it.
 #+BEGIN_SRC emacs-lisp
 (shell-command "bash ~/.emacs.d/oxipynb_download.sh")
 #+END_SRC
@@ -904,8 +905,7 @@ I use the TexLab language server, installed with: brew install texlab
     (buffer-file-name (other-buffer))
     (print "Opening pdf...")
     ;; (find-file (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))
-    (shell-command (concat "open " (replace-regexp-in-string ".tex" ".pdf" buffer-file-name)))
-    )
+    (shell-command (concat "open " (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))))
 
   :config
   (define-key latex-mode-map (kbd "C-c C-c") 'lsp-latex-build)
