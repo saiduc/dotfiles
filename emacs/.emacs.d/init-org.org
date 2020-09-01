@@ -765,8 +765,7 @@ for this to work. On MacOS: brew install aspell
 #+begin_src emacs-lisp 
 (setq ispell-program-name "/usr/local/bin/aspell") 
 (setq ispell-dictionary "british")
-(add-hook 'LaTeX-mode-hook 'flyspell-mode) 
-(add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'latex-mode-hook 'flyspell-mode) 
 (add-hook 'text-mode-hook 'flyspell-mode) 
 #+end_src
 
@@ -818,8 +817,6 @@ I use the pyright server for Python
   :defer t
   :ensure t
   :hook (python-mode . (lambda () (require 'lsp-pyright) (lsp)))
-  :delight
-  :diminish
   :config
   (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace))))
 #+end_src
@@ -896,7 +893,8 @@ I use the TexLab language server, installed with: brew install texlab
     (add-hook 'latex-mode-hook 'lsp))
   (with-eval-after-load "bibtex"
     (add-hook 'bibtex-mode-hook 'lsp))
-  (setq lsp-latex-lint-on-change nil)
+
+  (setq lsp-latex-lint-on-change t)
   (setq lsp-latex-lint-on-save t)
 
   ;; function to open pdf associated with tex file
@@ -906,10 +904,15 @@ I use the TexLab language server, installed with: brew install texlab
     (print "Opening pdf...")
     ;; (find-file (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))
     (shell-command (concat "open " (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))))
+  
+  (defun my/latex-build ()
+    (interactive)
+    (save-buffer)
+    (lsp-latex-build))
 
-  :config
-  (define-key latex-mode-map (kbd "C-c C-c") 'lsp-latex-build)
-  (define-key latex-mode-map (kbd "C-c C-v") 'my/open-pdf))
+  (add-hook 'latex-mode-hook (lambda () 
+			       (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
+			       (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf))))
 #+end_src
 
 Some general latex settings
@@ -921,25 +924,12 @@ Some general latex settings
 #+end_src
 
 * C/C++
-You might need to install libclang for the completion to work properly
-On macOS, this simply involves installing Xcode Commandline tools
-On Ubuntu, this is done with sudo apt install clang
-
-Set up C++ to use the style I like and enable snippets
+I use the clangd server for C++. On Mac this is installed with:
+brew install llvm
+Make sure llvm is on your path.
 #+begin_src emacs-lisp
 (setq c-default-style "linux")
-(add-hook 'c++-mode-hook 'flycheck-mode)
-#+end_src
-
-Get completion of Header files. It might be necessary to change the path to header files depending on the system you are on.
-#+begin_src emacs-lisp
-(use-package company-c-headers
-  :ensure t
-  :init
-  (add-hook 'c++-mode-hook (lambda ()
-			     (eval-after-load "company"
-			       '(add-to-list 'company-backends 'company-c-headers))))
-  (add-hook 'c++-mode-hook (lambda () (add-to-list 'company-c-headers-path-system "/Library/Developer/CommandLineTools/usr/include/c++/v1/"))))
+(add-hook 'c++-mode-hook (lambda () (lsp)))
 #+end_src
 
 * Java
