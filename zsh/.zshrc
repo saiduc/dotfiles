@@ -5,21 +5,6 @@
 #                         GENERAL SETTINGS AND PATHS
 # =============================================================================
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/saipandian/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/saipandian/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/saipandian/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/saipandian/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-#
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/saipandian/.oh-my-zsh"
 
@@ -41,6 +26,21 @@ ZSH_THEME="dracula"
 plugins=(vi-mode fzf)
 source $ZSH/oh-my-zsh.sh
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/Users/saipandian/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/saipandian/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/saipandian/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/saipandian/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
 # =============================================================================
 #                                 ALIASES
 # =============================================================================
@@ -55,9 +55,3 @@ alias sshvps="ssh sai@51.195.139.81"
 alias getlog="python /Users/saipandian/Documents/Scripts/getlog.py"
 alias convert="python /Users/saipandian/Documents/Scripts/convert.py"
 alias icat="kitty +kitten icat"
-
-
-# =============================================================================
-#                                 PROMPT
-# =============================================================================
-clear
