@@ -70,6 +70,9 @@ Some tweaks to the default look and behaviour of emacs
 
 ;; make emacs open maximised
 (toggle-frame-maximized)
+
+;; set default wrap length
+(setq-default fill-column 80)
 #+END_SRC
 
 * MacOS Specific
@@ -462,7 +465,6 @@ Install org from org repos instead of built-in and assign some colours and gener
   (setq org-src-fontify-natively t)
   (setq org-edit-src-content-indentation 0)
   (setq org-src-tab-acts-natively t)
-  (setq-default fill-column 80)
   (setq org-agenda-default-appointment-duration 30)
   (setq org-log-done 'time)
   (setq org-ellipsis " ⌄")
@@ -737,7 +739,7 @@ This centres the window in the frame which is nice when writing prose
   (add-hook 'writeroom-mode-hook (lambda () 
 				   (display-line-numbers-mode -1)
 				   (org-indent-mode -1)
-				   (setq-default fill-column 120)
+				   (setq fill-column 120)
 				   (doom-modeline-mode 1))))
 #+end_src
 
@@ -920,7 +922,6 @@ Some general latex settings
 (add-hook 'latex-mode-hook 'auto-fill-mode)
 (add-hook 'latex-mode-hook 'visual-line-mode)
 (add-hook 'latex-mode-hook 'display-fill-column-indicator-mode)
-(setq-default fill-column 80)
 #+end_src
 
 * C/C++
