@@ -48,6 +48,7 @@ call plug#begin()
 " list required plugins here
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
 Plug 'thinca/vim-quickrun'
 Plug 'jiangmiao/auto-pairs'
