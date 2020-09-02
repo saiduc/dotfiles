@@ -53,3 +53,9 @@ alias vim='nvim'
 alias vi='nvim'
 alias sshvps="ssh sai@51.195.139.81"
 alias convert="python /Users/saipandian/Documents/Scripts/convert.py"
+
+# =============================================================================
+#                                 PROMPT
+# =============================================================================
+clear
+
