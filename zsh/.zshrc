@@ -52,6 +52,4 @@ alias ex='emacsclient -n'
 alias vim='nvim'
 alias vi='nvim'
 alias sshvps="ssh sai@51.195.139.81"
-alias getlog="python /Users/saipandian/Documents/Scripts/getlog.py"
 alias convert="python /Users/saipandian/Documents/Scripts/convert.py"
-alias icat="kitty +kitten icat"
