@@ -904,10 +904,10 @@ I use the TexLab language server, installed with: brew install texlab
   (defun my/open-pdf ()
     (interactive)
     (buffer-file-name (other-buffer))
-    (print "Opening pdf...")
     ;; (find-file (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))
-    (shell-command (concat "open " (replace-regexp-in-string ".tex" ".pdf" buffer-file-name))))
+    (shell-command (concat "open " (replace-regexp-in-string " " "\\ " (replace-regexp-in-string ".tex" ".pdf" buffer-file-name) t t))))
   
+  ;; function to save and build latex file
   (defun my/latex-build ()
     (interactive)
     (save-buffer)
