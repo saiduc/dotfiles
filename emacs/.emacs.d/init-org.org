@@ -820,7 +820,8 @@ I use the pyright server for Python
   :ensure t
   :hook (python-mode . (lambda () (require 'lsp-pyright) (lsp)))
   :config
-  (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace))))
+  (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
+  (add-hook 'conda-postdeactivate-hook (lambda () (lsp-restart-workspace))))
 #+end_src
 
 Conda handles switching virtual environments
