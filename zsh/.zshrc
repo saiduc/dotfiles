@@ -23,7 +23,7 @@ export PATH="/usr/local/opt/llvm/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 
 ZSH_THEME="dracula"
-plugins=(vi-mode fzf)
+plugins=()
 source $ZSH/oh-my-zsh.sh
 
 # >>> conda initialize >>>
