@@ -373,7 +373,6 @@ Dashboard is the starting page when opening emacs
   :ensure t
   :defer t
   :init
-  (setq initial-buffer-choice (lambda () (switch-to-buffer "*dashboard*")))
   (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   (setq dashboard-footer-messages '("Sai Pandian"))
