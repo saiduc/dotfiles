@@ -9,7 +9,7 @@ Emacs will compile the file and install all necessary packages.
 You may need to change the locations of some paths and add your own api
 credentials. 
 
-* General Tweaks to Emacs
+* Better Defaults
 Some tweaks to the default look and behaviour of emacs
 #+BEGIN_SRC emacs-lisp
 (setq byte-compile-warnings '(cl-functions))
@@ -40,18 +40,12 @@ Some tweaks to the default look and behaviour of emacs
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; show line number and ruler in programming files
+;; show line number and ruler when programming, and enable code folding
 (add-hook 'prog-mode-hook (lambda () 
 			    (display-fill-column-indicator-mode 1)
-			    (display-line-numbers-mode 1)))
-
-;; disable line number in terminals and turn on hs minor mode when programming
-(add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))
-(add-hook 'prog-mode-hook (lambda () (diminish 'hs-minor-mode)))
-;; (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode -1)))
-;; (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1)))
-;; (add-hook 'eshell-mode-hook (lambda () (display-line-numbers-mode -1)))
-;; (add-hook 'help-mode-hook (lambda () (display-line-numbers-mode -1)))
+			    (display-line-numbers-mode 1)
+			    (hs-minor-mode 1)
+			    (diminish 'hs-minor-mode)))
 
 ;; turn off bell
 (setq ring-bell-function 'ignore)
@@ -349,6 +343,8 @@ Helm mode for completion
   (setq helm-buffers-fuzzy-matching t)
   (setq helm-M-x-fuzzy-match t)
   (setq helm-apropos-fuzzy-match t)
+  (setq helm-split-window-in-side-p t)
+  (setq helm-move-to-line-cycle-in-source nil)
 
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "M-p") 'helm-show-kill-ring)
@@ -358,7 +354,6 @@ Helm mode for completion
   (global-set-key (kbd "C-s") 'helm-occur)
   (global-set-key (kbd "C-x r b") 'helm-bookmarks)
 
-  ;TODO: fix this since it messes with tab for indent
   (add-to-list 'display-buffer-alist
                `(,(rx bos "*helm" (* not-newline) "*" eos)
                  (display-buffer-in-side-window)
@@ -367,7 +362,7 @@ Helm mode for completion
  
   (helm-mode 1)
   :config
-  ;; (define-key helm-find-files-map (kbd "<backspace>") 'helm-find-files-up-one-level)
+  (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
   (define-key helm-map (kbd "C-j") 'helm-next-line)
   (define-key helm-map (kbd "C-k") 'helm-previous-line)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
@@ -536,6 +531,7 @@ Make citations work when pdfs are made and make margins smaller
       (-remove-item
        '("" "hyperref" nil)
        org-latex-default-packages-alist))
+
 (add-to-list 'org-latex-default-packages-alist '("" "natbib" "") t)
 (add-to-list 'org-latex-default-packages-alist
 	     '("linktocpage,
