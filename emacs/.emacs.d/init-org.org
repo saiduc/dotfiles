@@ -40,18 +40,18 @@ Some tweaks to the default look and behaviour of emacs
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; show line number and highlight current line
-(global-display-line-numbers-mode)
-(add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
-;; (global-hl-line-mode t)
+;; show line number and ruler in programming files
+(add-hook 'prog-mode-hook (lambda () 
+			    (display-fill-column-indicator-mode 1)
+			    (display-line-numbers-mode 1)))
 
 ;; disable line number in terminals and turn on hs minor mode when programming
 (add-hook 'prog-mode-hook (lambda () (hs-minor-mode 1)))
 (add-hook 'prog-mode-hook (lambda () (diminish 'hs-minor-mode)))
-(add-hook 'term-mode-hook (lambda () (display-line-numbers-mode -1)))
-(add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1)))
-(add-hook 'eshell-mode-hook (lambda () (display-line-numbers-mode -1)))
-(add-hook 'help-mode-hook (lambda () (display-line-numbers-mode -1)))
+;; (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode -1)))
+;; (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1)))
+;; (add-hook 'eshell-mode-hook (lambda () (display-line-numbers-mode -1)))
+;; (add-hook 'help-mode-hook (lambda () (display-line-numbers-mode -1)))
 
 ;; turn off bell
 (setq ring-bell-function 'ignore)
@@ -322,48 +322,57 @@ Emacs 27
   :ensure t
   :defer t
   :init
-  (global-set-key (kbd "C-x b") 'persp-ivy-switch-buffer)
-  (global-set-key (kbd "C-x C-b") 'persp-ivy-switch-buffer)
   (global-set-key (kbd "C-x C-i") 'persp-ibuffer)
   (global-set-key (kbd "C-x k") 'persp-kill-buffer*)
   (global-set-key (kbd "C-x C-k") 'persp-kill-buffer*)
   (global-set-key (kbd "C-x x h") 'persp-prev)
   (global-set-key (kbd "C-x x l") 'persp-next)
   (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
+
+  ;; (setq  ido-ignore-buffers
+  ;; 	 '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
+  ;;          "^\*compilation" "^\*GTAGS" "^session\.*" "^\*"))
+  (setq  ido-ignore-buffers '("\\` " "^\*helm"))
+
   (persp-mode 1))
 #+end_src
 
-* Ivy, Counsel & Swiper
-Counsel and Ivy-mode for completion
+* Helm
+Helm mode for completion
 #+begin_src emacs-lisp
-(use-package smex
-  :ensure t
-  :defer t)
-
-(use-package counsel
+(use-package helm
   :ensure t
   :defer t
+  :diminish
   :init
-  (global-set-key "\C-s" 'swiper)
-  (setq counsel-fzf-cmd "rg --files --hidden --no-ignore --glob '!.git/*'")
-  (counsel-mode 1))
+  (setq projectile-completion-system 'helm)
+  (setq helm-buffers-fuzzy-matching t)
+  (setq helm-M-x-fuzzy-match t)
+  (setq helm-apropos-fuzzy-match t)
 
-(use-package ivy
-  :ensure t
-  :defer t
-  :init
-  ;; (custom-set-faces '(ivy-current-match ((t (:background "#FF0000")))))
-  (setq ivy-initial-inputs-alist nil)
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-height 15)
-  (define-key ivy-minibuffer-map (kbd "C-j") #'ivy-next-line)
-  (define-key ivy-minibuffer-map (kbd "C-k") #'ivy-previous-line)
-  (define-key ivy-switch-buffer-map (kbd "C-j") #'ivy-next-line)
-  (define-key ivy-switch-buffer-map (kbd "C-k") #'ivy-previous-line)
-  (define-key ivy-minibuffer-map (kbd "<return>") #'ivy-alt-done)
-  (global-set-key (kbd "M-p") 'counsel-yank-pop)
-  (setq projectile-completion-system 'ivy)
-  (ivy-mode 1))
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "M-p") 'helm-show-kill-ring)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-x C-b") 'helm-mini)
+  (global-set-key (kbd "C-s") 'helm-occur)
+  (global-set-key (kbd "C-x r b") 'helm-bookmarks)
+
+  ;TODO: fix this since it messes with tab for indent
+  (add-to-list 'display-buffer-alist
+               `(,(rx bos "*helm" (* not-newline) "*" eos)
+                 (display-buffer-in-side-window)
+                 (inhibit-same-window . t)
+                 (window-height . 0.3)))
+ 
+  (helm-mode 1)
+  :config
+  ;; (define-key helm-find-files-map (kbd "<backspace>") 'helm-find-files-up-one-level)
+  (define-key helm-map (kbd "C-j") 'helm-next-line)
+  (define-key helm-map (kbd "C-k") 'helm-previous-line)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z")  'helm-select-action))
 #+end_src
 
 * Dashboard
@@ -382,8 +391,7 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
-  (dashboard-setup-startup-hook)
-  (add-hook 'dashboard-mode-hook (lambda() (display-line-numbers-mode -1))))
+  (dashboard-setup-startup-hook))
 #+END_SRC
 
 * PDF Tools
@@ -399,8 +407,6 @@ PDF Tools is a better way to view PDFs than Docview
   (setq pdf-view-use-scaling t)
   (setq mouse-wheel-follow-mouse t)
   (setq-default pdf-view-display-size 'fit-page)
-  (add-hook 'pdf-view-mode-hook (lambda() (display-line-numbers-mode -1)))
-  (add-hook 'pdf-view-mode-hook (lambda() (line-number-mode -1)))
   (setq pdf-view-use-scaling t)
   :init
   (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
@@ -424,7 +430,6 @@ Viewing CSVs is often useful
   (setq csv-align-padding 3)
   (add-hook 'csv-mode-hook (lambda () (csv-header-line)
                                       (csv-align-mode)
-                                      (display-line-numbers-mode -1)
                                       (linum-mode 1))))
 #+END_SRC
 
@@ -441,6 +446,7 @@ Install org from org repos instead of built-in and assign some colours and gener
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'visual-line-mode)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  (add-hook 'org-mode-hook 'display-line-numbers-mode)
   (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
   ;; agenda files, refile targets and drawer targets
@@ -576,15 +582,17 @@ I use Org Ref to handle citations in Org mode
 	  bibtex-autokey-titlewords-stretch 1
 	  bibtex-autokey-titleword-length 5)
 
-  (setq org-ref-label-use-font-lock nil)
+  ;; (setq org-ref-label-use-font-lock nil)
   (add-hook 'org-mode-hook (lambda ()
 			     (require 'org-ref)
 			     (require 'org-ref-pdf)
 			     (require 'org-ref-url-utils)))
+
+  (setq helm-bibtex-full-frame nil)
   :config
-  (org-ref-ivy-cite-completion)
-  (define-key org-ref-ivy-cite-keymap (kbd "C-k") 'ivy-previous-line)
-  (define-key org-mode-map (kbd "C-c [") 'org-ref-ivy-insert-ref-link))
+  (setq bibtex-completion-display-formats
+	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}")))
+  (define-key org-mode-map (kbd "C-c [") 'org-ref-helm-insert-ref-link))
 #+end_src
 
 * Org GCal
@@ -643,8 +651,6 @@ For a nice looking custom agenda
 	  (todo "WAIT")
 	  (todo "SOMEDAY")
 	  ))))
-
-(add-hook 'org-agenda-mode-hook (lambda () (display-line-numbers-mode -1)))
 #+end_src
 
 Custom keyboard shortcuts in org-agenda
@@ -689,7 +695,7 @@ Custom keyboard shortcuts in org-agenda
       "gv" 'org-agenda-view-mode-dispatch
       "f" 'org-agenda-later
       "b" 'org-agenda-earlier
-      "c" 'counsel-org-capture
+      ;; "c" 'counsel-org-capture
       "e" 'org-agenda-set-effort
       "{" 'org-agenda-manipulate-query-add-re
       "}" 'org-agenda-manipulate-query-subtract-re
@@ -808,10 +814,10 @@ Language servers handle most of my languages
   :ensure t
   :defer t)
 
-(use-package lsp-ivy 
+(use-package helm-lsp
   :ensure t
   :defer t
-  :commands lsp-ivy-workspace-symbol)
+  :commands helm-lsp-workspace-symbol)
 #+end_src
 
 * Python
@@ -988,8 +994,6 @@ I diminish modes last since otherwise it doesn't seem to work
   :defer t
   :init
   (diminish 'page-break-lines-mode)
-  (diminish 'counsel-mode)
-  (diminish 'ivy-mode)
   (diminish 'yas-minor-mode)
   (diminish 'projectile-mode)
   (diminish 'undo-tree-mode)
@@ -1000,9 +1004,6 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'autopair-mode)
   (diminish 'which-key-mode)
   (diminish 'company-mode)
-  (diminish 'highlight-indentation-mode)
-  (diminish 'beacon-mode)
-  (diminish 'persp-mode)
-  (diminish 'smartparens-mode))
+  (diminish 'highlight-indentation-mode))
 #+END_SRC
 
