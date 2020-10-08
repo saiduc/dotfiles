@@ -58,4 +58,3 @@ alias convert="python /Users/saipandian/Documents/Scripts/convert.py"
 #                                 PROMPT
 # =============================================================================
 clear
-
