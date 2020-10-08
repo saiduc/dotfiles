@@ -345,6 +345,7 @@ Helm mode for completion
   (setq helm-apropos-fuzzy-match t)
   (setq helm-split-window-in-side-p t)
   (setq helm-move-to-line-cycle-in-source nil)
+  (setq helm-display-header-line nil)
 
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "M-p") 'helm-show-kill-ring)
@@ -562,6 +563,17 @@ Allow export to beamer
                       ("\\subsection{%s}" . "\\subsection*{%s}")
                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
 #+END_SRC
+
+Make thesis export class
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-classes
+    '("thesis"
+      "\\documentclass[12pt, twoside]{report}"
+      ("\\chapter{%s}" . "\\chapter*{%s}")
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+#+end_src
 
 * Org Ref
 I use Org Ref to handle citations in Org mode
@@ -939,13 +951,15 @@ Make sure llvm is on your path.
 #+end_src
 
 * Java
-I use the Eclipse JDT Language Server for Java development
+I use the Eclipse JDT Language Server for Java development.
+I used Java 8 installed with brew cask install adoptopenjdk8
 #+begin_src emacs-lisp
 (use-package lsp-java
   :ensure t
   :defer t
   :hook (java-mode . (lambda () (require 'lsp-java) (lsp)))
   :init
+  (setq lsp-java-jdt-download-url  "https://download.eclipse.org/jdtls/snapshots/jdt-language-server-0.58.0-202007061255.tar.gz")
   (add-hook 'java-mode-hook (lambda () (diminish 'abbrev-mode))))
 #+end_src
 
@@ -1002,4 +1016,3 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'company-mode)
   (diminish 'highlight-indentation-mode))
 #+END_SRC
-
