@@ -16,7 +16,6 @@
 ;; --------------------------------------
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
 
