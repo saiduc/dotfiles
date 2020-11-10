@@ -116,7 +116,7 @@ A nice collection of themes
   :ensure t
   :defer t
   :init
-  (load-theme 'doom-moonlight t))
+  (load-theme 'doom-dracula t))
 #+end_src
 
 * Mode Line
@@ -563,17 +563,6 @@ Allow export to beamer
                       ("\\section{%s}" . "\\section*{%s}")
                       ("\\subsection{%s}" . "\\subsection*{%s}")
                       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))))
-#+END_SRC
-
-Make thesis export class
-#+begin_src emacs-lisp
-(add-to-list 'org-latex-classes
-    '("thesis"
-      "\\documentclass[12pt, twoside]{report}"
-      ("\\chapter{%s}" . "\\chapter*{%s}")
-      ("\\section{%s}" . "\\section*{%s}")
-      ("\\subsection{%s}" . "\\subsection*{%s}")
-      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 #+end_src
 
 Make IEEEtran export class
@@ -586,6 +575,16 @@ Make IEEEtran export class
          ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
          ("\\paragraph{%s}" . "\\paragraph*{%s}")
          ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+end_src
+
+#+begin_src emacs-lisp
+(add-to-list 'org-latex-classes
+    '("thesis"
+      "\\documentclass[12pt, twoside]{report}"
+      ("\\chapter{%s}" . "\\chapter*{%s}")
+      ("\\section{%s}" . "\\section*{%s}")
+      ("\\subsection{%s}" . "\\subsection*{%s}")
+      ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 #+end_src
 
 * Org Ref
