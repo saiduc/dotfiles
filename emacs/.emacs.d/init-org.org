@@ -84,10 +84,10 @@ Alfred see it. It's a bit of a hack but it works.
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 
-;; open new files from finder in already opened frame
+;; ;; open new files from finder in already opened frame
 (setq ns-pop-up-frames nil)
 
-;; only hide emacs when x button pressed
+;; ;; only hide emacs when x button pressed
 (defun handle-delete-frame-without-kill-emacs (event)
   "Handle delete-frame events from the X server."
   (interactive "e")
@@ -116,7 +116,7 @@ A nice collection of themes
   :ensure t
   :defer t
   :init
-  (load-theme 'doom-dracula t))
+  (load-theme 'doom-moonlight t))
 #+end_src
 
 * Mode Line
@@ -291,8 +291,8 @@ I use which key to show me possible keyboard shortcuts
   :ensure t
   :defer t
   :init
-  (setq which-key-idle-delay 0.3)
-  (setq which-key-idle-secondary-delay 0.05)
+  (setq which-key-idle-delay 0.7)
+  (setq which-key-idle-secondary-delay 0.7)
   (which-key-mode))
 #+END_SRC
 
@@ -360,8 +360,8 @@ Helm mode for completion
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "M-p") 'helm-show-kill-ring)
   (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-x b") 'helm-mini)
-  (global-set-key (kbd "C-x C-b") 'helm-mini)
+  (global-set-key (kbd "C-x b") 'helm-buffers-list)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
   (global-set-key (kbd "C-s") 'helm-occur)
   (global-set-key (kbd "C-x r b") 'helm-bookmarks)
 
