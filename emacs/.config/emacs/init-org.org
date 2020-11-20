@@ -72,7 +72,8 @@ Emacs.app, then delete the folder. And then do the symlink, and this will let
 Alfred see it. It's a bit of a hack but it works.
 
 #+BEGIN_SRC emacs-lisp
-(set-frame-font "Roboto Mono 14" nil t)
+;; (set-frame-font "Roboto Mono 14" nil t)
+(add-to-list 'default-frame-alist '(font . "Roboto Mono 14"))
 
 ;; get pretty header bars in macOS
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
