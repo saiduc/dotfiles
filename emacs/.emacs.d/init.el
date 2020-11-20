@@ -45,11 +45,4 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-
-;; BOILERPLATE
-;; --------------------------------------
-(add-hook 'emacs-startup-hook
-    (lambda () (setq gc-cons-threshold 16777216
-		     gc-cons-percentage 0.1)))
-
 )

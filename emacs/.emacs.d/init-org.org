@@ -36,10 +36,6 @@ Some tweaks to the default look and behaviour of emacs
 (setq mouse-wheel-scroll-amount '(1))
 (setq mouse-wheel-progressive-speed nil)
 
-;; disable tool bar and scroll bar and menu bar if not in mac
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-
 ;; show line number and ruler when programming, and enable code folding
 (add-hook 'prog-mode-hook (lambda () 
 			    (display-fill-column-indicator-mode 1)
