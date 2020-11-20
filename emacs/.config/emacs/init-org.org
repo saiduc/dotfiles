@@ -905,7 +905,7 @@ I use Emacs Jupyter for jupyter notebooks
 Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
 This script will automatically download it.
 #+BEGIN_SRC emacs-lisp
-(shell-command "bash ~/.emacs.d/oxipynb_download.sh")
+(shell-command "bash ~/.config/emacs/oxipynb_download.sh")
 #+END_SRC
 
 Set up export to Jupyter notebooks

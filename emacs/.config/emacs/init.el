@@ -16,7 +16,7 @@
 ;; --------------------------------------
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.config/emacs/lisp")
 
 
 ;; INSTALLING USE-PACKAGE
@@ -30,12 +30,12 @@
 ;; --------------------------------------
 (defun my/tangle-dotfiles ()
    "If the current file is this file, the code blocks are tangled"
-   (when (equal (buffer-file-name) (expand-file-name "~/dotfiles/emacs/.emacs.d/init-org.org"))
-     (org-babel-tangle nil "~/dotfiles/emacs/.emacs.d/init-org.el")
-     (byte-compile-file "~/dotfiles/emacs/.emacs.d/init-org.el")))
+   (when (equal (buffer-file-name) (expand-file-name "~/dotfiles/emacs/.config/emacs/init-org.org"))
+     (org-babel-tangle nil "~/dotfiles/emacs/.config/emacs/init-org.el")
+     (byte-compile-file "~/dotfiles/emacs/.config/emacs/init-org.el")))
 (add-hook 'after-save-hook #'my/tangle-dotfiles)
 
-(load-file "~/dotfiles/emacs/.emacs.d/init-org.elc")
+(load-file "~/dotfiles/emacs/.config/emacs/init-org.elc")
 
 
 ;; SET CUSTOM.EL LOCATION
