@@ -193,6 +193,7 @@ Evil mode
   (setq evil-operator-state-tag "OPERATOR")
   (setq evil-motion-state-tag "MOTION")
   (setq evil-emacs-state-tag "EMACS")
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
   (evil-set-undo-system 'undo-tree)
   (evil-mode 1))
 #+END_SRC
