@@ -116,6 +116,14 @@ A nice collection of themes
   (load-theme 'doom-dracula t))
 #+end_src
 
+#+begin_src emacs-lisp
+;; (use-package modus-vivendi-theme
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   (load-theme 'modus-vivendi t))
+#+end_src
+
 * Mode Line
 I change the font colours in the modeline
 #+BEGIN_SRC emacs-lisp
@@ -358,8 +366,8 @@ Helm mode for completion
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
   (global-set-key (kbd "M-p") 'helm-show-kill-ring)
   (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-x b") 'helm-buffers-list)
-  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-x C-b") 'helm-mini)
   (global-set-key (kbd "C-s") 'helm-occur)
   (global-set-key (kbd "C-x r b") 'helm-bookmarks)
 
@@ -386,7 +394,8 @@ Dashboard is the starting page when opening emacs
   :ensure t
   :defer t
   :init
-  (setq dashboard-startup-banner 'logo)
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
   (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info nil)

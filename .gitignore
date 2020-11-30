@@ -4,6 +4,7 @@
 !/emacs/.config/emacs/early-init.el
 !/emacs/.config/emacs/oxipynb_download.sh
 !/emacs/.config/emacs/setup_ignore.sh
+!/emacs/.config/emacs/dashboard_banner.png
 /nvim/.config/nvim/*
 !/nvim/.config/nvim/init.vim
 /*/.DS_Store
