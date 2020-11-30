@@ -224,15 +224,6 @@ Useful port of vim surround
   (global-evil-surround-mode 1))
 #+END_SRC
 
-Provides evil mode bindings in magit
-#+BEGIN_SRC emacs-lisp
-(use-package evil-magit
-  :ensure t
-  :defer t
-  :init
-  (add-hook 'magit-mode-hook (lambda () (evil-magit-init))))
-#+END_SRC
-
 Evil numbers for incrementing and decrementing
 #+begin_src emacs-lisp
 (use-package evil-numbers
