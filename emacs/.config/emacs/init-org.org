@@ -113,7 +113,7 @@ A nice collection of themes
   :ensure t
   :defer t
   :init
-  (load-theme 'doom-dracula t))
+  (load-theme 'doom-moonlight t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -847,6 +847,7 @@ Language servers handle most of my languages
 
 * Python
 I use the pyright server for Python
+Install using: sudo npm install -g pyright
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :defer t
@@ -917,7 +918,8 @@ Set up export to Jupyter notebooks
 #+end_src
 
 * LaTeX
-I use the TexLab language server, installed with: brew install texlab
+I use the TexLab language server for LaTeX
+Install using: brew install texlab
 #+begin_src emacs-lisp
 (use-package lsp-latex
   :ensure t
@@ -960,8 +962,8 @@ Some general latex settings
 #+end_src
 
 * C/C++
-I use the clangd server for C++. On Mac this is installed with:
-brew install llvm
+I use the clangd server for C++.
+Install using: brew install llvm
 Make sure llvm is on your path.
 #+begin_src emacs-lisp
 (setq c-default-style "linux")
@@ -987,6 +989,86 @@ Some general key bindings
 (global-set-key (kbd "C-c K") 'evil-window-move-very-top)
 (global-set-key (kbd "C-c L") 'evil-window-move-far-right)
 #+END_SRC
+
+I use general.el to get some spacemacs-like keybindings
+#+begin_src emacs-lisp
+(use-package general
+  :ensure t
+  :defer t)
+
+(general-create-definer space-leader
+  :states '(normal visual insert emacs)
+  :prefix "SPC"
+  :non-normal-prefix "C-SPC")
+
+(space-leader
+
+ ;; Files (SPC-f) 
+ "f" '(:ignore t :which-key "Files")
+ "fc" '(:ignore t :which-key "config files")
+ "fb" 'helm-bookmarks
+ "fo" 'my/list-org-files
+ "fd" 'dired
+ "ff" 'helm-find-files
+ "fs" 'save-buffer
+ "fg" 'magit-status
+
+ ;; Configuration (SPC-c)
+ "c" '(:ignore t :which-key "Config")
+ "ci" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :which-key "init.el")
+ "co" '((lambda () (interactive) (find-file "~/.config/emacs/init-org.org")) :which-key "init-org.org")
+ "cc" '((lambda () (interactive) (find-file "~/.config/emacs/custom.el")) :which-key "custom.el")
+ "cv" '((lambda () (interactive) (find-file "~/.config/nvim/init.vim")) :which-key "init.vim")
+ "cf" '((lambda () (interactive) (find-file "~/.config/fish/config.fish")) :which-key "config.fish")
+
+ ;; Projects (SPC-p)
+ "p" '(projectile-command-map :which-key "Projects")
+
+ ;; Buffers (SPC-b)
+ "b" '(:ignore t :which-key "Buffers")
+ "bs" 'helm-mini
+ "bk" 'persp-kill-buffer*
+ "bi" 'persp-ibuffer
+ "bl" 'switch-to-next-buffer
+ "bh" 'switch-to-prev-buffer
+
+ ;; Windows (SPC-w)
+ "w" '(:ignore t :which-key "Windows")
+ "wh" 'evil-window-left
+ "wj" 'evil-window-down
+ "wk" 'evil-window-up
+ "wl" 'evil-window-right
+ "wH" 'evil-window-move-far-left
+ "wJ" 'evil-window-move-very-bottom
+ "wK" 'evil-window-move-very-top
+ "wL" 'evil-window-move-far-right
+ "wc" 'evil-window-delete
+ "wm" 'delete-other-windows
+ "wv" 'split-window-right
+ "ws" 'split-window-below 
+
+ ;; M-x (SPC-SPC)
+ "SPC" '(helm-M-x :which-key "M-x")
+
+ ;; Org (SPC-o)
+ "o" '(:ignore t :which-key "Org")
+ "oa" '((lambda () (interactive) (org-agenda nil "n")) :which-key "org-agenda")
+ "oc" 'org-capture
+ "of" 'my/list-org-files
+
+ ;; Terminals (SPC-t)
+ "t" '(:ignore t :which-key "Terminals")
+ "tt" 'vterm
+ "tj" 'jupyter-run-repl
+ "te" 'eshell
+ "ts" 'shell
+ "ta" 'ansi-term)
+
+ ;; Programming (SPC-l)
+(space-leader
+  :keymaps '(prog-mode-map tex-mode-map)
+  "l" (general-simulate-key "C-l" :which-key "+LSP"))
+#+end_src
 
 * Auto Update Packages
 This package allows me to set autoupdate of packages
