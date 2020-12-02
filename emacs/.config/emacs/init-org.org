@@ -63,6 +63,9 @@ Some tweaks to the default look and behaviour of emacs
 
 ;; set default wrap length
 (setq-default fill-column 80)
+
+;; turn on winner mode
+(winner-mode 1)
 #+END_SRC
 
 * MacOS Specific
@@ -846,8 +849,7 @@ Language servers handle most of my languages
 #+end_src
 
 * Python
-I use the pyright server for Python
-Install using: sudo npm install -g pyright
+I use the pyright server for Python which needs npm installed
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :defer t
@@ -1046,6 +1048,8 @@ I use general.el to get some spacemacs-like keybindings
  "wm" 'delete-other-windows
  "wv" 'split-window-right
  "ws" 'split-window-below 
+ "wu" 'winner-undo
+ "wr" 'winner-reo
 
  ;; M-x (SPC-SPC)
  "SPC" '(helm-M-x :which-key "M-x")
@@ -1062,7 +1066,16 @@ I use general.el to get some spacemacs-like keybindings
  "tj" 'jupyter-run-repl
  "te" 'eshell
  "ts" 'shell
- "ta" 'ansi-term)
+ "ta" 'ansi-term
+
+ ;; Workspaces (SPC-s)
+ "s" '(:ignore t :which-key "Workspaces")
+ "ss" 'persp-switch
+ "sc" 'persp-kill
+ "sa" 'persp-set-buffer
+ "sl" 'persp-next
+ "sh" 'persp-prev
+ "sr" 'persp-rename)
 
  ;; Programming (SPC-l)
 (space-leader

@@ -7,4 +7,5 @@
 !/emacs/.config/emacs/dashboard_banner.png
 /nvim/.config/nvim/*
 !/nvim/.config/nvim/init.vim
+!/nvim/.config/nvim/coc-settings.json
 /*/.DS_Store
