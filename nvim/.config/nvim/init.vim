@@ -29,11 +29,9 @@ autocmd FileType markdown set textwidth=80   " sets hard wrap for latex files
 autocmd FileType python set cc=80       " sets ruler at 80 for python
 set noshowmode                          " disables showing of commands
 set autochdir                           " sets cwd to file directory
-" set cmdheight=2                         " so echodoc displays prperly
 set conceallevel=2                      " allows tex characters to show properly
 set hidden 				" allows switching buffers without saving
-" setting python locations for neovim
-let g:python3_host_prog='/Users/saipandian/miniconda3/envs/neovim/bin/python'
+let g:python3_host_prog='~/miniconda3/envs/neovim/bin/python'
 
 " on ubuntu need to do sudo apt install xsel
 set clipboard=unnamedplus               " copy paste between vim and system clipb
@@ -48,19 +46,13 @@ call plug#begin()
 " list required plugins here
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
 Plug 'itchyny/lightline.vim'
-Plug 'thinca/vim-quickrun'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lervag/vimtex'
-Plug 'Shougo/deoplete.nvim'
-Plug 'deoplete-plugins/deoplete-jedi'
-Plug 'deoplete-plugins/deoplete-clang'
-Plug 'Shougo/echodoc'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 " =============================================================================
@@ -69,48 +61,47 @@ call plug#end()
 " =============================================================================
 "                                PLUGIN CONFIGS
 " =============================================================================
-let g:loaded_netrw = 1                  " stops netrw loading because i hate it
-let g:loaded_netrwPlugin = 1            " stops netrw loading because i hate it
-
-autocmd FileType quickrun set nonumber  " turns off numbers for quickrun buffer
-
 let g:tex_flavor = "latex"              " makes default tex favour latex
 let g:vimtex_viewer_method='skim'       " open with skim pdf viewer
 
-" deoplete stuff
-let g:deoplete#enable_at_startup = 0    " lazy load deoplete
-autocmd InsertEnter * call deoplete#enable()
-call deoplete#custom#option({
-    \ 'auto_refresh_delay': 1,
-    \ 'auto_complete_delay': 0,
-    \ 'max_list': 20,
-    \ })
+" always show gutter
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " allows tab in autocompletion
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-let echodoc#enable_at_startup=0          " prevents echodoc loading on startup
-autocmd InsertEnter * call echodoc#enable() 
+" allow enter to select completion
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-" deoplete-jedi stuff
-let g:deoplete#sources#jedi#statement_length=1
-let g:deoplete#sources#jedi#enable_typeinfo=1
-let g:deoplete#sources#jedi#python_path="python"
-let g:deoplete#sources#jedi#ignore_errors=0
-set completeopt-=preview
-let g:deoplete#sources#jedi#show_docstring=0
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
 
-" deoplete vimtex stuff
-call deoplete#custom#var('omni', 'input_patterns', {
-  \ 'tex': g:vimtex#re#deoplete
-  \})
-
-" deoplete clang stuff
-let g:deoplete#sources#clang#libclang_path="/Library/Developer/CommandLineTools/usr/lib/libclang.dylib"
-let g:deoplete#sources#clang#clang_header="/Library/Developer/CommandLineTools/usr/lib/clang"
-
-" fzf stuff
-set rtp+=/usr/local/opt/fzf
+" for python: :CocInstall coc-pyright
+" for latex:  :CocInstall coc-vimtex
+" for cpp:    :CocInstall coc-clangd
 
 " =============================================================================
 
@@ -124,20 +115,19 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-nnoremap <C-o> :NERDTreeToggle<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <leader>s :set ft=
-autocmd FileType python nnoremap <leader>r :QuickRun python3<CR>
-autocmd FileType markdown nnoremap <leader>r :!/Users/saipandian/miniconda3/bin/grip<CR>
-nnoremap <C-t> :vsplit term://zsh<CR>
-nnoremap <leader><C-t> :vsplit term://
+nnoremap <C-t> :vsplit term://fish<CR>
 tnoremap <Esc> <C-\><C-n>
 nnoremap <C-p> :Files<CR>
-command Autopep8 !/Users/saipandian/miniconda3/bin/autopep8 -i %
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>t :tab sball<CR>
-nnoremap <leader><CR> :ReplSend<CR>j
 nnoremap <C-S> :BLines<CR>
-
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <leader>rn <Plug>(coc-rename)
 " =============================================================================
 
 " =============================================================================
