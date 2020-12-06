@@ -41,6 +41,16 @@ set clipboard=unnamedplus               " copy paste between vim and system clip
 " =============================================================================
 "                                    VIMPLUG
 " =============================================================================
+let plug_install = 0
+let autoload_plug_path = stdpath('config') . '/autoload/plug.vim'
+if !filereadable(autoload_plug_path)
+    silent exe '!curl -fL --create-dirs -o ' . autoload_plug_path . 
+        \ ' https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+    execute 'source ' . fnameescape(autoload_plug_path)
+    let plug_install = 1
+endif
+unlet autoload_plug_path
+
 call plug#begin()
 
 " list required plugins here
@@ -53,8 +63,14 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mhinz/vim-startify'
 
 call plug#end()
+
+if plug_install
+    PlugInstall --sync
+endif
+unlet plug_install
 " =============================================================================
 
 
@@ -102,6 +118,15 @@ endfunction
 " for python: :CocInstall coc-pyright
 " for latex:  :CocInstall coc-vimtex
 " for cpp:    :CocInstall coc-clangd
+"
+
+" disable random quotes
+let g:startify_custom_header = ["   Welcome"]
+
+" show most recent fles
+let g:startify_lists = [
+  \ { 'type': 'files',     'header': ['   Recent Files']            },
+  \ ]
 
 " =============================================================================
 
@@ -128,6 +153,8 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
+vnoremap < <gv
+vnoremap > >gv
 " =============================================================================
 
 " =============================================================================
