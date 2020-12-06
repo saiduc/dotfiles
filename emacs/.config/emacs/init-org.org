@@ -36,6 +36,9 @@ Some tweaks to the default look and behaviour of emacs
 (setq mouse-wheel-scroll-amount '(1))
 (setq mouse-wheel-progressive-speed nil)
 
+;; refresh buffers if they are changed outside of emacs
+(global-auto-revert-mode 1)
+
 ;; show line number and ruler when programming, and enable code folding
 (add-hook 'prog-mode-hook (lambda () 
 			    (display-fill-column-indicator-mode 1)
@@ -114,17 +117,16 @@ A nice collection of themes
 #+begin_src emacs-lisp
 (use-package doom-themes
   :ensure t
-  :defer t
-  :init
-  (load-theme 'doom-moonlight t))
+  :defer t)
+
+(use-package modus-vivendi-theme
+  :ensure t
+  :defer t)
 #+end_src
 
+Load selected theme
 #+begin_src emacs-lisp
-;; (use-package modus-vivendi-theme
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   (load-theme 'modus-vivendi t))
+(load-theme 'doom-dracula t)
 #+end_src
 
 * Mode Line
@@ -150,6 +152,7 @@ Doom modeline is much lighter but still looks quite pretty
   (setq doom-modeline-perp-name t)
   (setq doom-modeline-lsp t)
   (setq doom-modeline-env-version nil)
+  (doom-themes-org-config)
   (doom-modeline-mode 1))
 #+end_src
 
@@ -272,6 +275,14 @@ I use company for all my autocompletion needs
   (add-hook 'term-mode-hook (lambda () (company-mode -1)))
   (add-hook 'shell-mode-hook (lambda () (company-mode -1))))
 #+END_SRC
+
+#+begin_src emacs-lisp
+(use-package company-box
+  :ensure t
+  :defer t
+  :diminish
+  :hook (company-mode . company-box-mode))
+#+end_src
 
 * Projectile
 I use projectile to manage projects
@@ -399,26 +410,6 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
   (dashboard-setup-startup-hook))
-#+END_SRC
-
-* PDF Tools
-PDF Tools is a better way to view PDFs than Docview 
-#+BEGIN_SRC emacs-lisp
-(use-package pdf-tools
-  :ensure t
-  :defer t
-  :config
-  (custom-set-variables
-  '(pdf-tools-handle-upgrades nil))
-  (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
-  (setq pdf-view-use-scaling t)
-  (setq mouse-wheel-follow-mouse t)
-  (setq-default pdf-view-display-size 'fit-page)
-  (setq pdf-view-use-scaling t)
-  :init
-  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
-  (setq pdf-view-use-scaling t)
-  (pdf-loader-install))
 #+END_SRC
 
 * Dired
@@ -773,11 +764,15 @@ This centres the window in the frame which is nice when writing prose
   (setq writeroom-mode-line 1)
   (setq writeroom-restore-window-config 1)
   (setq writeroom-width 121)
-  (add-hook 'writeroom-mode-hook (lambda () 
-				   (display-line-numbers-mode -1)
-				   (org-indent-mode -1)
-				   (setq fill-column 120)
-				   (doom-modeline-mode 1))))
+  (add-hook 'writeroom-mode-enable-hook (lambda () 
+					  (display-line-numbers-mode -1)
+					  (org-indent-mode -1)
+					  (setq fill-column 120)
+					  (doom-modeline-mode 1)))
+  (add-hook 'writeroom-mode-disable-hook (lambda ()
+					   (display-line-numbers-mode 1)
+					   (setq fill-column 80)
+					   (org-indent-mode 1))))
 #+end_src
 
 * YASnippets
@@ -814,7 +809,9 @@ Use flycheck as the syntax checker
 (use-package flycheck
   :ensure t
   :diminish flycheck-mode
-  :defer t)
+  :defer t
+  :init
+  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
 #+end_src
 
 * LSP
@@ -832,6 +829,7 @@ Language servers handle most of my languages
   (setq lsp-prefer-flymake nil)
   (setq lsp-modeline-diagnostics-enable nil)
   (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
   (setq lsp-modeline-code-actions-enable nil)
   :config
@@ -1005,82 +1003,101 @@ I use general.el to get some spacemacs-like keybindings
 
 (space-leader
 
- ;; Files (SPC-f) 
- "f" '(:ignore t :which-key "Files")
- "fc" '(:ignore t :which-key "config files")
- "fb" 'helm-bookmarks
- "fo" 'my/list-org-files
- "fd" 'dired
- "ff" 'helm-find-files
- "fs" 'save-buffer
- "fg" 'magit-status
+  ;; Emacs (SPC-x)
+  "x" '(:ignore t :which-key "Emacs")
+  "xc" 'save-buffers-kill-terminal
 
- ;; Configuration (SPC-c)
- "c" '(:ignore t :which-key "Config")
- "ci" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :which-key "init.el")
- "co" '((lambda () (interactive) (find-file "~/.config/emacs/init-org.org")) :which-key "init-org.org")
- "cc" '((lambda () (interactive) (find-file "~/.config/emacs/custom.el")) :which-key "custom.el")
- "cv" '((lambda () (interactive) (find-file "~/.config/nvim/init.vim")) :which-key "init.vim")
- "cf" '((lambda () (interactive) (find-file "~/.config/fish/config.fish")) :which-key "config.fish")
+  ;; Files (SPC-f) 
+  "f" '(:ignore t :which-key "Files")
+  "fc" '(:ignore t :which-key "config files")
+  "fb" 'helm-bookmarks
+  "fo" 'my/list-org-files
+  "fd" 'dired
+  "ff" 'helm-find-files
+  "fs" 'save-buffer
+  "fg" 'magit-status
 
- ;; Projects (SPC-p)
- "p" '(projectile-command-map :which-key "Projects")
+  ;; Configuration (SPC-c)
+  "c" '(:ignore t :which-key "Config")
+  "ci" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :which-key "init.el")
+  "co" '((lambda () (interactive) (find-file "~/.config/emacs/init-org.org")) :which-key "init-org.org")
+  "cc" '((lambda () (interactive) (find-file "~/.config/emacs/custom.el")) :which-key "custom.el")
+  "cv" '((lambda () (interactive) (find-file "~/.config/nvim/init.vim")) :which-key "init.vim")
+  "cf" '((lambda () (interactive) (find-file "~/.config/fish/config.fish")) :which-key "config.fish")
 
- ;; Buffers (SPC-b)
- "b" '(:ignore t :which-key "Buffers")
- "bs" 'helm-mini
- "bk" 'persp-kill-buffer*
- "bi" 'persp-ibuffer
- "bl" 'switch-to-next-buffer
- "bh" 'switch-to-prev-buffer
+  ;; Projects (SPC-p)
+  "p" '(projectile-command-map :which-key "Projects")
 
- ;; Windows (SPC-w)
- "w" '(:ignore t :which-key "Windows")
- "wh" 'evil-window-left
- "wj" 'evil-window-down
- "wk" 'evil-window-up
- "wl" 'evil-window-right
- "wH" 'evil-window-move-far-left
- "wJ" 'evil-window-move-very-bottom
- "wK" 'evil-window-move-very-top
- "wL" 'evil-window-move-far-right
- "wc" 'evil-window-delete
- "wm" 'delete-other-windows
- "wv" 'split-window-right
- "ws" 'split-window-below 
- "wu" 'winner-undo
- "wr" 'winner-reo
+  ;; Buffers (SPC-b)
+  "b" '(:ignore t :which-key "Buffers")
+  "bs" 'helm-mini
+  "bb" 'helm-mini
+  "bk" 'persp-kill-buffer*
+  "bi" 'persp-ibuffer
+  "bl" 'switch-to-next-buffer
+  "bh" 'switch-to-prev-buffer
 
- ;; M-x (SPC-SPC)
- "SPC" '(helm-M-x :which-key "M-x")
+  ;; Windows (SPC-w)
+  "w" '(:ignore t :which-key "Windows")
+  "wh" 'evil-window-left
+  "wj" 'evil-window-down
+  "wk" 'evil-window-up
+  "wl" 'evil-window-right
+  "wH" 'evil-window-move-far-left
+  "wJ" 'evil-window-move-very-bottom
+  "wK" 'evil-window-move-very-top
+  "wL" 'evil-window-move-far-right
+  "wc" 'evil-window-delete
+  "wm" 'delete-other-windows
+  "wv" 'split-window-right
+  "ws" 'split-window-below 
+  "wu" 'winner-undo
+  "wr" 'winner-reo
 
- ;; Org (SPC-o)
- "o" '(:ignore t :which-key "Org")
- "oa" '((lambda () (interactive) (org-agenda nil "n")) :which-key "org-agenda")
- "oc" 'org-capture
- "of" 'my/list-org-files
+  ;; M-x (SPC-SPC)
+  "SPC" '(helm-M-x :which-key "M-x")
 
- ;; Terminals (SPC-t)
- "t" '(:ignore t :which-key "Terminals")
- "tt" 'vterm
- "tj" 'jupyter-run-repl
- "te" 'eshell
- "ts" 'shell
- "ta" 'ansi-term
+  ;; Org (SPC-o)
+  "o" '(:ignore t :which-key "Org")
+  "oa" '((lambda () (interactive) (org-agenda nil "n")) :which-key "org-agenda")
+  "oc" 'org-capture
+  "of" 'my/list-org-files
 
- ;; Workspaces (SPC-s)
- "s" '(:ignore t :which-key "Workspaces")
- "ss" 'persp-switch
- "sc" 'persp-kill
- "sa" 'persp-set-buffer
- "sl" 'persp-next
- "sh" 'persp-prev
- "sr" 'persp-rename)
+  ;; Terminals (SPC-t)
+  "t" '(:ignore t :which-key "Terminals")
+  "tt" 'vterm
+  "tj" 'jupyter-run-repl
+  "te" 'eshell
+  "ts" 'shell
+  "ta" 'ansi-term
 
- ;; Programming (SPC-l)
+  ;; Workspaces (SPC-s)
+  "s" '(:ignore t :which-key "Workspaces")
+  "ss" 'persp-switch
+  "sc" 'persp-kill
+  "sa" 'persp-set-buffer
+  "sl" 'persp-next
+  "sh" 'persp-prev
+  "sr" 'persp-rename)
+
+  ;; LSP (SPC-l)
 (space-leader
   :keymaps '(prog-mode-map tex-mode-map)
   "l" (general-simulate-key "C-l" :which-key "+LSP"))
+
+  ;; Errors (SPC-e)
+(space-leader
+  :keymaps '(prog-mode-map tex-mode-map)
+  "e" '(:ignore t :which-key "Errors")
+  "en" 'flycheck-next-error
+  "en" 'flycheck-previous-error
+  "es" 'flycheck-select-checker
+  "ec" 'flycheck-buffer
+  "ed" 'flycheck-display-error-at-point
+  "ev" 'flycheck-verify-setup
+  "eC" 'flycheck-compile
+  "el" 'flycheck-list-errors)
+
 #+end_src
 
 * Auto Update Packages
@@ -1114,5 +1131,8 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'autopair-mode)
   (diminish 'which-key-mode)
   (diminish 'company-mode)
+  (diminish 'flyspell-mode)
+  (diminish 'org-indent-mode)
+  (diminish 'visual-line-mode)
   (diminish 'highlight-indentation-mode))
 #+END_SRC
