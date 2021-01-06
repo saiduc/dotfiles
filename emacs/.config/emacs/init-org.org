@@ -3,6 +3,46 @@
 #+EMAIL: saipandian97@gmail.com
 #+STARTUP: overview
 
+* Table of Contents                                                     :TOC:
+- [[#setting-up-new-installation][Setting up New Installation]]
+- [[#better-defaults][Better Defaults]]
+- [[#macos-specific][MacOS Specific]]
+- [[#themes][Themes]]
+- [[#mode-line][Mode Line]]
+- [[#magit][Magit]]
+- [[#evil][Evil]]
+- [[#iedit][Iedit]]
+- [[#company][Company]]
+- [[#projectile][Projectile]]
+- [[#which-key][Which Key]]
+- [[#exec-path-from-shell][Exec Path From Shell]]
+- [[#vterm][Vterm]]
+- [[#perspective-mode][Perspective Mode]]
+- [[#helm][Helm]]
+- [[#dashboard][Dashboard]]
+- [[#dired][Dired]]
+- [[#csv-mode][CSV Mode]]
+- [[#pdf-tools][PDF Tools]]
+- [[#org-mode][Org Mode]]
+- [[#org-toc][Org TOC]]
+- [[#org-ref][Org Ref]]
+- [[#org-gcal][Org GCal]]
+- [[#org-superstar][Org Superstar]]
+- [[#org-capture-templates][Org Capture Templates]]
+- [[#org-agenda-customisation][Org Agenda Customisation]]
+- [[#autopair][Autopair]]
+- [[#yasnippets][YASnippets]]
+- [[#flyspell][Flyspell]]
+- [[#flycheck][Flycheck]]
+- [[#lsp][LSP]]
+- [[#python][Python]]
+- [[#jupyter][Jupyter]]
+- [[#latex][LaTeX]]
+- [[#cc][C/C++]]
+- [[#general-key-bindings][General Key Bindings]]
+- [[#auto-update-packages][Auto Update Packages]]
+- [[#diminished-modes][Diminished Modes]]
+
 * Setting up New Installation
 Make a small change to this file, delete the change, and then save the file.
 Emacs will compile the file and install all necessary packages.
@@ -330,8 +370,7 @@ brew install cmake libtool libvterm
 #+end_src
 
 * Perspective Mode
-I use this for managing workspaces inside Emacs. Might be redunant with tabs in
-Emacs 27
+I use this for managing workspaces inside Emacs
 #+begin_src emacs-lisp
 (use-package perspective
   :ensure t
@@ -381,7 +420,7 @@ Helm mode for completion
                  (display-buffer-in-side-window)
                  (inhibit-same-window . t)
                  (window-height . 0.3)))
- 
+  
   (helm-mode 1)
   :config
   (define-key helm-find-files-map (kbd "C-h") 'helm-find-files-up-one-level)
@@ -430,6 +469,23 @@ Viewing CSVs is often useful
                                       (csv-align-mode)
                                       (linum-mode 1))))
 #+END_SRC
+
+* PDF Tools
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure t
+  :defer t
+  :config
+  (custom-set-variables
+   '(pdf-tools-handle-upgrades nil))
+  (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
+  (setq mouse-wheel-follow-mouse t)
+  (setq-default pdf-view-display-size 'fit-page)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  :init
+  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+  (pdf-loader-install))
+#+end_src
 
 * Org Mode
 Install org from org repos instead of built-in and assign some colours and general settings
@@ -577,6 +633,16 @@ Make IEEEtran export class
       ("\\section{%s}" . "\\section*{%s}")
       ("\\subsection{%s}" . "\\subsection*{%s}")
       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+#+end_src
+
+* Org TOC
+I use this to get a Table of Contents in Org Mode
+#+begin_src emacs-lisp
+(use-package toc-org
+  :ensure t
+  :defer t
+  :init
+  (add-hook 'org-mode-hook 'toc-org-mode))
 #+end_src
 
 * Org Ref
@@ -751,29 +817,6 @@ I use autopair to automatically pair quotes and parentheses
   (autopair-global-mode 1)
   (add-hook 'org-mode-hook #'(lambda () (push ?< (getf autopair-dont-pair :never)))))
 #+END_SRC
-
-* Writeroom
-This centres the window in the frame which is nice when writing prose
-#+begin_src emacs-lisp
-(use-package writeroom-mode
-  :ensure t
-  :defer t
-  :init
-  (setq writeroom-bottom-divider-width 0)
-  (setq writeroom-fullscreen-effect nil)
-  (setq writeroom-mode-line 1)
-  (setq writeroom-restore-window-config 1)
-  (setq writeroom-width 121)
-  (add-hook 'writeroom-mode-enable-hook (lambda () 
-					  (display-line-numbers-mode -1)
-					  (org-indent-mode -1)
-					  (setq fill-column 120)
-					  (doom-modeline-mode 1)))
-  (add-hook 'writeroom-mode-disable-hook (lambda ()
-					   (display-line-numbers-mode 1)
-					   (setq fill-column 80)
-					   (org-indent-mode 1))))
-#+end_src
 
 * YASnippets
 This package provides snippet insertion
@@ -989,116 +1032,6 @@ Some general key bindings
 (global-set-key (kbd "C-c K") 'evil-window-move-very-top)
 (global-set-key (kbd "C-c L") 'evil-window-move-far-right)
 #+END_SRC
-
-I use general.el to get some spacemacs-like keybindings
-#+begin_src emacs-lisp
-(use-package general
-  :ensure t
-  :defer t)
-
-(general-create-definer space-leader
-  :states '(normal visual insert emacs)
-  :prefix "SPC"
-  :non-normal-prefix "C-SPC")
-
-(space-leader
-
-  ;; Emacs (SPC-x)
-  "x" '(:ignore t :which-key "Emacs")
-  "xc" 'save-buffers-kill-terminal
-
-  ;; Files (SPC-f) 
-  "f" '(:ignore t :which-key "Files")
-  "fc" '(:ignore t :which-key "config files")
-  "fb" 'helm-bookmarks
-  "fo" 'my/list-org-files
-  "fd" 'dired
-  "ff" 'helm-find-files
-  "fs" 'save-buffer
-  "fg" 'magit-status
-
-  ;; Configuration (SPC-c)
-  "c" '(:ignore t :which-key "Config")
-  "ci" '((lambda () (interactive) (find-file "~/.config/emacs/init.el")) :which-key "init.el")
-  "co" '((lambda () (interactive) (find-file "~/.config/emacs/init-org.org")) :which-key "init-org.org")
-  "cc" '((lambda () (interactive) (find-file "~/.config/emacs/custom.el")) :which-key "custom.el")
-  "cv" '((lambda () (interactive) (find-file "~/.config/nvim/init.vim")) :which-key "init.vim")
-  "cf" '((lambda () (interactive) (find-file "~/.config/fish/config.fish")) :which-key "config.fish")
-
-  ;; Projects (SPC-p)
-  "p" '(projectile-command-map :which-key "Projects")
-
-  ;; Buffers (SPC-b)
-  "b" '(:ignore t :which-key "Buffers")
-  "bs" 'helm-mini
-  "bb" 'helm-mini
-  "bk" 'persp-kill-buffer*
-  "bi" 'persp-ibuffer
-  "bl" 'switch-to-next-buffer
-  "bh" 'switch-to-prev-buffer
-
-  ;; Windows (SPC-w)
-  "w" '(:ignore t :which-key "Windows")
-  "wh" 'evil-window-left
-  "wj" 'evil-window-down
-  "wk" 'evil-window-up
-  "wl" 'evil-window-right
-  "wH" 'evil-window-move-far-left
-  "wJ" 'evil-window-move-very-bottom
-  "wK" 'evil-window-move-very-top
-  "wL" 'evil-window-move-far-right
-  "wc" 'evil-window-delete
-  "wm" 'delete-other-windows
-  "wv" 'split-window-right
-  "ws" 'split-window-below 
-  "wu" 'winner-undo
-  "wr" 'winner-reo
-
-  ;; M-x (SPC-SPC)
-  "SPC" '(helm-M-x :which-key "M-x")
-
-  ;; Org (SPC-o)
-  "o" '(:ignore t :which-key "Org")
-  "oa" '((lambda () (interactive) (org-agenda nil "n")) :which-key "org-agenda")
-  "oc" 'org-capture
-  "of" 'my/list-org-files
-
-  ;; Terminals (SPC-t)
-  "t" '(:ignore t :which-key "Terminals")
-  "tt" 'vterm
-  "tj" 'jupyter-run-repl
-  "te" 'eshell
-  "ts" 'shell
-  "ta" 'ansi-term
-
-  ;; Workspaces (SPC-s)
-  "s" '(:ignore t :which-key "Workspaces")
-  "ss" 'persp-switch
-  "sc" 'persp-kill
-  "sa" 'persp-set-buffer
-  "sl" 'persp-next
-  "sh" 'persp-prev
-  "sr" 'persp-rename)
-
-  ;; LSP (SPC-l)
-(space-leader
-  :keymaps '(prog-mode-map tex-mode-map)
-  "l" (general-simulate-key "C-l" :which-key "+LSP"))
-
-  ;; Errors (SPC-e)
-(space-leader
-  :keymaps '(prog-mode-map tex-mode-map)
-  "e" '(:ignore t :which-key "Errors")
-  "en" 'flycheck-next-error
-  "en" 'flycheck-previous-error
-  "es" 'flycheck-select-checker
-  "ec" 'flycheck-buffer
-  "ed" 'flycheck-display-error-at-point
-  "ev" 'flycheck-verify-setup
-  "eC" 'flycheck-compile
-  "el" 'flycheck-list-errors)
-
-#+end_src
 
 * Auto Update Packages
 This package allows me to set autoupdate of packages
