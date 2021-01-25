@@ -321,7 +321,8 @@ I use company for all my autocompletion needs
   :ensure t
   :defer t
   :diminish
-  :hook (company-mode . company-box-mode))
+  :hook (company-mode . company-box-mode)
+  :init (setq company-box-doc-enable nil))
 #+end_src
 
 * Projectile
@@ -342,8 +343,8 @@ I use which key to show me possible keyboard shortcuts
   :ensure t
   :defer t
   :init
-  (setq which-key-idle-delay 0.7)
-  (setq which-key-idle-secondary-delay 0.7)
+  (setq which-key-idle-delay 2)
+  (setq which-key-idle-secondary-delay 0)
   (which-key-mode))
 #+END_SRC
 
@@ -440,7 +441,8 @@ Dashboard is the starting page when opening emacs
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
-  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 15)
@@ -542,6 +544,8 @@ Install org from org repos instead of built-in and assign some colours and gener
   ;; keybindings
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c c") 'org-capture)
+  (add-hook 'org-mode-hook (lambda ()
+			     (global-set-key (kbd "C-c 1") 'org-toggle-narrow-to-subtree)))
   (defun my/list-org-files ()
     (interactive)
     (projectile-find-file-in-directory "~/Dropbox/Org/"))
@@ -599,7 +603,7 @@ Make citations work when pdfs are made and make margins smaller
               menucolor=blue,
               urlcolor=blue"
 	       "hyperref" nil) t)
-(setq org-latex-packages-alist '(("tmargin=1in, bmargin=1in, lmargin=1in, rmargin=1in" "geometry" nil)))
+(setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
 #+end_src
 
 Allow export to beamer
@@ -655,7 +659,7 @@ I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
 (use-package org-ref
   :ensure t
-  :defer t
+  ;; don't defer this since the font-lock doesn't work otherwise
   :init
   (setq bibtex-autokey-year-length 4
 	  bibtex-autokey-name-year-separator "-"
@@ -665,7 +669,7 @@ I use Org Ref to handle citations in Org mode
 	  bibtex-autokey-titlewords-stretch 1
 	  bibtex-autokey-titleword-length 5)
 
-  (setq org-ref-label-use-font-lock nil)
+  ;; (setq org-ref-label-use-font-lock nil)
   (add-hook 'org-mode-hook (lambda ()
 			     (require 'org-ref)
 			     (require 'org-ref-pdf)
@@ -673,9 +677,11 @@ I use Org Ref to handle citations in Org mode
 
   (setq helm-bibtex-full-frame nil)
   :config
+  ;; can choose between fancy helm insert and basic insert
+  ;; (define-key org-mode-map (kbd "C-c [") 'org-ref-helm-insert-ref-link)
+  (define-key org-mode-map (kbd "C-c [") 'org-pageref-insert-ref-link)
   (setq bibtex-completion-display-formats
-	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}")))
-  (define-key org-mode-map (kbd "C-c [") 'org-pageref-insert-ref-link))
+	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}"))))
 #+end_src
 
 * Org GCal
@@ -880,6 +886,7 @@ Language servers handle most of my languages
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
   (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
   :config
   (define-key lsp-mode-map (kbd "M-]") 'lsp-find-definition)
   (define-key lsp-mode-map (kbd "M-[") 'xref-pop-marker-stack))
