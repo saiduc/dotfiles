@@ -37,5 +37,7 @@ alias ex='emacsclient -n'
 alias vim='nvim'
 alias vi='nvim'
 alias sshvps="ssh sai@51.195.139.81"
-alias convert="python /Users/saipandian/Documents/Scripts/convert.py"
+alias convert="python ~/dotfiles/scripts/convert_ipynb_to_org.py"
 alias createstub="~/.config/emacs/.cache/lsp/npm/pyright/bin/pyright --createstub"
+alias update="brew update && brew upgrade && brew cleanup -s --prune 0"
+thefuck --alias | source
