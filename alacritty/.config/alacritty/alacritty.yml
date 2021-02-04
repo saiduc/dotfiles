@@ -1,6 +1,9 @@
 # Author: Sai Pandian
 # Email:  saipandian97@gmail.com
 
+key_bindings:
+        - { key: Key3, mods: Alt, chars: "#"}
+          
 window:
         dimensions:
                 columns: 90
