@@ -41,3 +41,5 @@ alias convert="python ~/dotfiles/scripts/convert_ipynb_to_org.py"
 alias createstub="~/.config/emacs/.cache/lsp/npm/pyright/bin/pyright --createstub"
 alias update="brew update && brew upgrade && brew cleanup -s --prune 0"
 thefuck --alias | source
+alias fv="vim (fzf)"
+alias fe="ec (fzf)"
