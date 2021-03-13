@@ -576,8 +576,9 @@ This gets org mode working with python, jupyter and emacs-lisp
 
 Tell Org mode to make pdfs from latex with particular process
 #+begin_src emacs-lisp
-;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-(setq org-latex-pdf-process '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
+(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; (setq org-latex-pdf-process '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
+;; (setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
 ;; (setq org-latex-pdf-process
 ;;       '("pdflatex -interaction nonstopmode -output-directory %o %f"
 ;; 	  "bibtex %b"
