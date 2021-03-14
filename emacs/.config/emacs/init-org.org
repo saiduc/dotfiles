@@ -962,16 +962,7 @@ Function to run jupyter-lab command and open xwidget buffer with client
 #+begin_src emacs-lisp
 (defun my/jupyter-lab ()
   (interactive)
-  (async-shell-command "jupyter lab --no-browser")
-  (switch-to-buffer-other-window "*Async Shell Command*")
-  (sit-for 7)
-  (search-backward "http://localhost")
-  (set-mark-command ())
-  (end-of-line)
-  (call-interactively 'kill-ring-save)
-  (setq yanked (car kill-ring))
-  (when (interactive-p) (message "%s" yanked))
-  (xwidget-webkit-browse-url yanked))
+  (async-shell-command "bash ~/dotfiles/emacs/.config/emacs/run-jupyter-lab.sh"))
 #+end_src
 
 * LaTeX
