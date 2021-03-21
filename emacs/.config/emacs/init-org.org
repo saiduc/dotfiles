@@ -315,15 +315,6 @@ I use company for all my autocompletion needs
   (add-hook 'shell-mode-hook (lambda () (company-mode -1))))
 #+END_SRC
 
-#+begin_src emacs-lisp
-(use-package company-box
-  :ensure t
-  :defer t
-  :diminish
-  :hook (company-mode . company-box-mode)
-  :init (setq company-box-doc-enable nil))
-#+end_src
-
 * Projectile
 I use projectile to manage projects
 #+BEGIN_SRC emacs-lisp
@@ -576,9 +567,9 @@ This gets org mode working with python, jupyter and emacs-lisp
 
 Tell Org mode to make pdfs from latex with particular process
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+;; (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
 ;; (setq org-latex-pdf-process '("latexmk -pdflatex='%latex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o -f %f"))
-;; (setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
+(setq org-latex-pdf-process (list "latexmk -f -pdf %f"))
 ;; (setq org-latex-pdf-process
 ;;       '("pdflatex -interaction nonstopmode -output-directory %o %f"
 ;; 	  "bibtex %b"
@@ -605,7 +596,7 @@ Make citations work when pdfs are made and make margins smaller
               menucolor=blue,
               urlcolor=blue"
 	       "hyperref" nil) t)
-(setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
+;; (setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
 #+end_src
 
 Allow export to beamer
@@ -876,10 +867,6 @@ Language servers handle most of my languages
   :config
   (define-key lsp-mode-map (kbd "M-]") 'lsp-find-definition)
   (define-key lsp-mode-map (kbd "M-[") 'xref-pop-marker-stack))
-
-(use-package company-lsp
-  :ensure t
-  :defer t)
 
 (use-package helm-lsp
   :ensure t
