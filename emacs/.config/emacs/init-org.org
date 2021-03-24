@@ -165,7 +165,7 @@ A nice collection of themes
 
 Load selected theme
 #+begin_src emacs-lisp
-(load-theme 'doom-dracula t)
+(load-theme 'modus-vivendi t)
 #+end_src
 
 * Mode Line
@@ -437,8 +437,8 @@ Dashboard is the starting page when opening emacs
   (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 15)
   			    (projects . 5)))
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-heading-icons nil)
+  (setq dashboard-set-file-icons nil)
   (setq dashboard-center-content t)
   (dashboard-setup-startup-hook))
 #+END_SRC
