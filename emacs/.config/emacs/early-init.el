@@ -23,3 +23,4 @@ during normal emacs operations.")
 
             ;; delete no longer necessary startup variable
             (makunbound 'default-file-name-handler-alist)))
+
