@@ -1063,3 +1063,4 @@ I diminish modes last since otherwise it doesn't seem to work
   (diminish 'visual-line-mode)
   (diminish 'highlight-indentation-mode))
 #+END_SRC
+
