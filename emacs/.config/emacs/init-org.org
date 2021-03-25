@@ -185,7 +185,15 @@ I am an ex-vim user so I use evil for my editing
   (setq evil-motion-state-tag "MOTION")
   (setq evil-emacs-state-tag "EMACS")
   (setq evil-want-C-i-jump nil)
-  :bind ("<escape>" . keyboard-escape-quit)
+  :bind (("<escape>" . keyboard-escape-quit)
+	   ("C-c h" . evil-window-left)
+	   ("C-c j" . evil-window-down)
+	   ("C-c k" . evil-window-up)
+	   ("C-c l" . evil-window-right)
+	   ("C-c H" . evil-window-move-far-left)
+	   ("C-c J" . evil-window-move-very-bottom)
+	   ("C-c K" . evil-window-move-very-top)
+	   ("C-c L" . evil-window-move-far-right))
   :config
   (evil-mode 1))
 #+end_src
@@ -281,12 +289,12 @@ Which key is useful for discoverability
 * Exec Path From Shell
 This simply gets the shell variable and path from default shell
 #+begin_src emacs-lisp
-(use-package exec-path-from-shell
-  :ensure t
-  :init
-  (setq exec-path-from-shell-check-startup-files nil)
-  :config
-  (when (memq window-system '(mac ns x))
+(when (memq window-system '(mac ns x))
+  (use-package exec-path-from-shell
+    :ensure t
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
+    :config
     (exec-path-from-shell-initialize)))
 #+end_src
 
@@ -298,7 +306,8 @@ brew install cmake libtool libvterm
 (use-package vterm
   :ensure t
   :defer t
-  :bind ("C-c t t" . vterm))
+  :bind (("C-c t t" . vterm)
+	    ("C-c t e" . eshell)))
 #+end_src
 
 * Perspective Mode
@@ -389,7 +398,10 @@ This gives a nice startup page when Emacs first runs
 * Dired
 This makes dired work as expected
 #+begin_src emacs-lisp
-(put 'dired-find-alternate-file 'disabled nil)
+(use-package dired
+  :defer t
+  :config
+  (put 'dired-find-alternate-file 'disabled nil))
 #+end_src
 
 * PDF Tools
@@ -638,7 +650,8 @@ This package provides snippet insertion
   :ensure t
   :defer t
   :diminish yas-minor-mode
-  :hook (prog-mode . yas-minor-mode))
+  :hook ((prog-mode . yas-minor-mode)
+         (latex-mode . yas-minor-mode)))
 #+end_src
 
 A collection of useful snippets
@@ -706,10 +719,13 @@ I use the pyright server for Python which needs npm installed
 (use-package lsp-pyright
   :ensure t
   :defer t
-  :hook (python-mode
-	  (python-mode . lsp-deferred)
-	  (conda-postactivate . (lambda () (lsp-restart-workspace)))
-	  (conda-postdeactivate . (lambda () (lsp-restart-workspace)))))
+  :hook ((python-mode . (lambda () (require 'lsp-pyright)))
+	   (python-mode . lsp-deferred))
+  :config
+  ;; these hooks can't go in the :hook section since lsp-restart-workspace
+  ;; is not available if lsp isn't active, so it messes up jupyter
+  (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
+  (add-hook 'conda-postdeactivate-hook (lambda () (lsp-restart-workspace))))
 #+end_src
 
 Conda handles switching virtual environments
@@ -739,6 +755,37 @@ Get nice sphinx doc generation
   :hook (python-mode . sphinx-doc-mode))
 #+end_src
 
+* Jupyter - FIX AUTOCOMPL
+I use Emacs Jupyter for jupyter notebooks
+#+begin_src emacs-lisp
+(use-package jupyter
+  :ensure t
+  :defer t
+  :after org
+  :init
+  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                       (:session . "py")
+                                                       (:kernel . "python3")))
+  (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
+
+  ;; function to load jupyter package and get kernelspecs from current python env
+  (defun my/get-jupyter-aliases ()
+    (require 'jupyter)
+    (org-babel-jupyter-aliases-from-kernelspecs))
+
+  :bind (:map jupyter-org-interaction-mode-map ("C-c h" . nil))
+  
+  :hook ((conda-postactivate . my/get-jupyter-aliases)
+	   (conda-postdeactivate . my/get/jupyter-aliases))
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (append org-babel-load-languages '((jupyter . t)))))
+
+;; keybinding goes here since we wan it even when package isn't loaded
+(global-set-key (kbd "C-c t j") 'jupyter-run-repl)
+#+end_src
+
 * LaTeX
 I use the TexLab language server for LaTeX
 Install using: brew install texlab
@@ -748,7 +795,14 @@ Install using: brew install texlab
   :defer t
   :hook ((tex-mode . lsp-deferred)
 	   (latex-mode . lsp-deferred)
-	   (bibtex-mode . lsp-deferred))
+	   (bibtex-mode . lsp-deferred)
+	   (tex-mode . (lambda () 
+			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
+			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
+	   (latex-mode . auto-fill-mode)
+	   (latex-mode . visual-line-mode)
+	   (latex-mode . display-fill-column-indicator-mode)
+	   (latex-mode . display-line-numbers-mode))
   :init
   (setq lsp-latex-lint-on-change t)
   (setq lsp-latex-lint-on-save t)
@@ -764,8 +818,17 @@ Install using: brew install texlab
   (defun my/latex-build ()
     (interactive)
     (save-buffer)
-    (lsp-latex-build))
+    (lsp-latex-build)))
+#+end_src
 
-  :bind (("C-c C-c" . my/latex-build)
-	   ("C-c C-v" . my/open-pdf)))
+* C/C++
+I use the clangd server for C++.
+Install using: brew install llvm
+Make sure llvm is on your path.
+#+begin_src emacs-lisp
+(use-package cc-mode
+  :defer t
+  :hook (c++-mode . lsp-deferred)
+  :init
+  (setq c-default-style "linux"))
 #+end_src
