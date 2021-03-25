@@ -14,8 +14,12 @@ These are some minor tweaks to the default look and behaviour of Emacs
 #+begin_src emacs-lisp
 ;; start emacs in home folder
 (cd "~")
+
 ;; show matching parentheses by default
 (show-paren-mode)
+
+;; autopair parentheses and quotations
+(electric-pair-mode 1)
 
 ;; disable auto-save and auto-backup
 (setq make-backup-files nil)
@@ -465,10 +469,21 @@ I use org mode extensively so this is quite a long section...
    '(org-document-title ((t :height 1.5)))
    )
 
+  
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (setq-local electric-pair-inhibit-predicate
+			`(lambda (c)
+			   (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+
   :hook ((org-mode . auto-fill-mode)
          (org-mode . visual-line-mode)
          (org-babel-afer-execute . org-display-inline-images)
-         (org-mode . display-line-numbers-mode))
+         (org-mode . display-line-numbers-mode)
+	   (org-mode . (lambda ()
+			 (setq-local electric-pair-inhibit-predicate
+				     `(lambda (c)
+					(if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
@@ -679,3 +694,5 @@ Custom keyboard shortcuts in org-agenda
       "]" 'org-agenda-manipulate-query-subtract
       )))
 #+end_src
+
+
