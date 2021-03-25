@@ -15,6 +15,9 @@ These are some minor tweaks to the default look and behaviour of Emacs
 ;; start emacs in home folder
 (cd "~")
 
+;; disable a weird warning that pops up in Emacs 27
+(setq byte-compile-warnings '(cl-functions))
+
 ;; show matching parentheses by default
 (show-paren-mode)
 
@@ -668,4 +671,101 @@ Use flycheck as the syntax checker
   :diminish flycheck-mode
   :init
   (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+#+end_src
+
+* LSP Mode
+Language servers handle most of my languages
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure t
+  :defer t
+  :diminish lsp-mode
+  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-l")
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-doc-lines 1)
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
+			      ("M-[" . xref-pop-marker-stack))))
+
+(use-package helm-lsp
+  :ensure t
+  :defer t
+  :commands helm-lsp-workspace-symbol)
+#+end_src
+
+* Python
+I use the pyright server for Python which needs npm installed
+#+begin_src emacs-lisp
+(use-package lsp-pyright
+  :ensure t
+  :defer t
+  :hook (python-mode
+	  (python-mode . lsp-deferred)
+	  (conda-postactivate . (lambda () (lsp-restart-workspace)))
+	  (conda-postdeactivate . (lambda () (lsp-restart-workspace)))))
+#+end_src
+
+Conda handles switching virtual environments
+#+BEGIN_SRC emacs-lisp
+(use-package conda
+  :ensure t
+  :defer t
+  :init
+  (setq conda-anaconda-home (expand-file-name "~/miniconda3"))
+  (setq conda-env-home-directory (expand-file-name "~/miniconda3"))
+  :config
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell))
+#+END_SRC
+
+Turn off annoying python start message
+#+begin_src emacs-lisp
+(setq python-indent-guess-indent-offset-verbose nil)
+#+end_src
+
+Get nice sphinx doc generation
+#+begin_src emacs-lisp
+(use-package sphinx-doc
+  :ensure t
+  :defer t
+  :diminish sphinx-doc-mode
+  :hook (python-mode . sphinx-doc-mode))
+#+end_src
+
+* LaTeX
+I use the TexLab language server for LaTeX
+Install using: brew install texlab
+#+begin_src emacs-lisp
+(use-package lsp-latex
+  :ensure t
+  :defer t
+  :hook ((tex-mode . lsp-deferred)
+	   (latex-mode . lsp-deferred)
+	   (bibtex-mode . lsp-deferred))
+  :init
+  (setq lsp-latex-lint-on-change t)
+  (setq lsp-latex-lint-on-save t)
+
+  ;; function to open pdf associated with tex file
+  (defun my/open-pdf ()
+    (interactive)
+    (buffer-file-name (other-buffer))
+    ;; can do find-file instead of browse-url to open inside emacs
+    (browse-url (replace-regexp-in-string ".tex" ".pdf" buffer-file-name)))
+  
+  ;; function to save and build latex file
+  (defun my/latex-build ()
+    (interactive)
+    (save-buffer)
+    (lsp-latex-build))
+
+  :bind (("C-c C-c" . my/latex-build)
+	   ("C-c C-v" . my/open-pdf)))
 #+end_src
