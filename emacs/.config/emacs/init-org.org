@@ -1,7 +1,7 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Sai Pandian
 #+EMAIL: saipandian97@gmail.com
-#+STARTUP: overview
+#+STARTUP: overview 
 
 * Setting up New Installation
 Make a small change to this file, delete the change, and then save the file.
@@ -132,21 +132,17 @@ Load selected theme
 #+end_src
 
 * Mode Line
-Change the font colours in the modeline
-#+begin_src emacs-lisp
-(set-face-attribute 'mode-line nil
-                    :background "#353644"
-                    :foreground "white"
-                    :overline nil
-                    :underline nil)
-#+end_src
-
 I use doom modeline since it is lightweight and pretty
 #+begin_src emacs-lisp
 (use-package doom-modeline
   :ensure t
   :diminish
   :init
+  (set-face-attribute 'mode-line nil
+                      :background "#353644"
+                      :foreground "white"
+                      :overline nil
+                      :underline nil)
   (setq doom-modeline-height 10)
   (setq doom-modeline-bar-width 1)
   (setq doom-modeline-icon nil)
@@ -240,9 +236,9 @@ I use company for all my autocompletion needs
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 15)
   :hook ((pdf-view-mode . (lambda () (company-mode -1)))
-	 (eshell-mode . (lambda () (company-mode -1)))
-	 (term-mode . (lambda () (company-mode -1)))
-	 (shell-mode . (lambda () (company-mode -1))))
+	   (eshell-mode . (lambda () (company-mode -1)))
+	   (term-mode . (lambda () (company-mode -1)))
+	   (shell-mode . (lambda () (company-mode -1))))
   :config
   (global-company-mode)
   (push ".fbd_latexmk" company-files-exclusions)
@@ -469,28 +465,49 @@ I use org mode extensively so this is quite a long section...
    '(org-document-title ((t :height 1.5)))
    )
 
-  
-(add-hook 'org-mode-hook
-	  (lambda ()
-	    (setq-local electric-pair-inhibit-predicate
-			`(lambda (c)
-			   (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-
   :hook ((org-mode . auto-fill-mode)
          (org-mode . visual-line-mode)
          (org-babel-afer-execute . org-display-inline-images)
          (org-mode . display-line-numbers-mode)
 	   (org-mode . (lambda ()
-			 (setq-local electric-pair-inhibit-predicate
-				     `(lambda (c)
-					(if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
-
+	                 (setq-local electric-pair-inhibit-predicate
+	          		     `(lambda (c)
+	          			(if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
+  
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c f" . my/list-org-files))
 
   :config
 
+  ;; better looking org-agenda
+  (setq org-agenda-custom-commands
+	'(("n" "Custom agenda view"
+	   (
+	    (agenda)
+	    (todo "TODO")
+	    (todo "WAIT")
+	    (todo "SOMEDAY")
+	    ))))
+  (setq org-agenda-prefix-format
+	(quote
+	 ((agenda . "%-20c%?-13t% s")
+          (timeline . "% s")
+          (todo . "%-20:c ")
+          (tags . "%-20c")
+          (search . "%-20c"))))
+
+  ;; evil bindings for org-agenda
+  (eval-after-load 'org-agenda
+    '(progn
+       (evil-set-initial-state 'org-agenda-mode 'normal)
+       (evil-define-key 'normal org-agenda-mode-map
+	 (kbd "<RET>") 'org-agenda-switch-to
+	 (kbd "\t") 'org-agenda-goto
+	 "q" 'org-agenda-quit
+	 "r" 'org-agenda-redo
+	 )))
+  
   ;; babel languages
   (org-babel-do-load-languages 
    'org-babel-load-languages 
@@ -593,106 +610,62 @@ Some capture templates that suit my workflow
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
+
 	("n" "Quick Note" entry (file "~/Dropbox/Org/Inbox.org")
 	 "* %?" :empty-lines 0)
+	
 	("e" "Quick Event" entry (file "~/Dropbox/Org/Inbox.org")
 	 "* %?\n%^T")
+	
 	("p" "Quick Task - Personal" entry (file "~/Dropbox/Org/Inbox.org")
 	 "* TODO %?" :empty-lines 0)
+	
 	("w" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
        "* TODO %?\n%i%a" :empty-lines 0)
+	
 	("f" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
 	 "** Monthly Finance Review [0/4] \n- [ ] Check Expenditure and Balance in Yolt\n- [ ] Update [[file+sys:~/Google Drive/Budgets/budget_20_21.xlsx][Budget Spreadsheet]]\n- [ ] Move Extra Revolut into Vault\n- [ ] Transfer money into Revolut\n- [ ] Mark TODO as DONE" :empty-lines 0 :jump-to-captured t :kill-buffer t)
 	))
 #+end_src
 
-* Org Agenda Customisation
-For a nice looking custom agenda
+* YASnippets
+This package provides snippet insertion
 #+begin_src emacs-lisp
-(setq org-agenda-custom-commands
-      '(("n" "Custom agenda view"
-	 (
-	  (agenda)
-	  (todo "TODO")
-	  (todo "WAIT")
-	  (todo "SOMEDAY")
-	  ))))
-
-(setq org-agenda-prefix-format
-      (quote
-       ((agenda . "%-20c%?-13t% s")
-        (timeline . "% s")
-        (todo . "%-20:c ")
-        (tags . "%-20c")
-        (search . "%-20c"))))
+(use-package yasnippet
+  :ensure t
+  :defer t
+  :diminish yas-minor-mode
+  :hook (prog-mode . yas-minor-mode))
 #+end_src
 
-Custom keyboard shortcuts in org-agenda
+A collection of useful snippets
 #+begin_src emacs-lisp
-(eval-after-load 'org-agenda
- '(progn
-    (evil-set-initial-state 'org-agenda-mode 'normal)
-    (evil-define-key 'normal org-agenda-mode-map
-      (kbd "<RET>") 'org-agenda-switch-to
-      (kbd "\t") 'org-agenda-goto
-      "q" 'org-agenda-quit
-      "r" 'org-agenda-redo
-      "S" 'org-save-all-org-buffers
-      "gj" 'org-agenda-goto-date
-      "gJ" 'org-agenda-clock-goto
-      "gm" 'org-agenda-bulk-mark
-      "go" 'org-agenda-open-link
-      "s" 'org-agenda-schedule
-      "+" 'org-agenda-priority-up
-      "," 'org-agenda-priority
-      "-" 'org-agenda-priority-down
-      "y" 'org-agenda-todo-yesterday
-      "n" 'org-agenda-add-note
-      "t" 'org-agenda-todo
-      ;; ":" 'org-agenda-set-tags
-      ";" 'org-timer-set-timer
-      "i" 'org-agenda-clock-in-avy
-      "O" 'org-agenda-clock-out-avy
-      "u" 'org-agenda-bulk-unmark
-      "x" 'org-agenda-exit
-      "j"  'org-agenda-next-line
-      "k"  'org-agenda-previous-line
-      "vt" 'org-agenda-toggle-time-grid
-      "va" 'org-agenda-archives-mode
-      "vw" 'org-agenda-week-view
-      "vl" 'org-agenda-log-mode
-      "vd" 'org-agenda-day-view
-      "vc" 'org-agenda-show-clocking-issues
-      "g/" 'org-agenda-filter-by-tag
-      "o" 'delete-other-windows
-      "gh" 'org-agenda-holiday
-      "gv" 'org-agenda-view-mode-dispatch
-      "f" 'org-agenda-later
-      "b" 'org-agenda-earlier
-      ;; "c" 'counsel-org-capture
-      "e" 'org-agenda-set-effort
-      "{" 'org-agenda-manipulate-query-add-re
-      "}" 'org-agenda-manipulate-query-subtract-re
-      "A" 'org-agenda-toggle-archive-tag
-      "." 'org-agenda-goto-today
-      "0" 'evil-digit-argument-or-evil-beginning-of-line
-      "<" 'org-agenda-filter-by-category
-      ">" 'org-agenda-date-prompt
-      "F" 'org-agenda-follow-mode
-      "D" 'org-agenda-deadline
-      "H" 'org-agenda-holidays
-      "J" 'org-agenda-next-date-line
-      "K" 'org-agenda-previous-date-line
-      "L" 'org-agenda-recenter
-      "P" 'org-agenda-show-priority
-      "R" 'org-agenda-clockreport-mode
-      "Z" 'org-agenda-sunrise-sunset
-      "T" 'org-agenda-show-tags
-      "X" 'org-agenda-clock-cancel
-      "[" 'org-agenda-manipulate-query-add
-      "g\\" 'org-agenda-filter-by-tag-refine
-      "]" 'org-agenda-manipulate-query-subtract
-      )))
+(use-package yasnippet-snippets
+  :ensure t
+  :defer t)
 #+end_src
 
+* Flyspell
+On the go spell-checking in Emacs You will need to install aspell on your system
+for this to work. On MacOS: brew install aspell
+#+begin_src emacs-lisp
+(use-package flyspell
+  :defer t
+  :diminish flyspell-mode
+  :init
+  (setq ispell-program-name "/usr/local/bin/aspell") 
+  (setq ispell-dictionary "british")
+  :hook ((latex-mode . flyspell-mode)
+	   (text-mode . flyspell-mode)))
+#+end_src
 
+* Flycheck
+Use flycheck as the syntax checker
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish flycheck-mode
+  :init
+  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+#+end_src
