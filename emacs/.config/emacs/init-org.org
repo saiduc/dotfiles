@@ -535,10 +535,6 @@ I use org mode extensively so this is quite a long section...
   (add-to-list 'org-modules 'org-habit t))
 #+end_src
 
-Set up org babel languages
-#+begin_src emacs-lisp
-#+end_src
-
 Set up LaTeX export classes and settings
 #+begin_src emacs-lisp
 (use-package ox-latex
@@ -725,6 +721,7 @@ I use the pyright server for Python which needs npm installed
 (use-package lsp-pyright
   :ensure t
   :defer t
+  :diminish eldoc-mode
   :hook ((python-mode . (lambda () (require 'lsp-pyright)))
 	   (python-mode . lsp-deferred))
   :config
@@ -830,4 +827,17 @@ Make sure llvm is on your path.
   :hook (c++-mode . lsp-deferred)
   :init
   (setq c-default-style "linux"))
+#+end_src
+
+* Auto Update Packages
+This package allows me to set autoupdate of packages
+#+begin_src emacs-lisp
+(use-package auto-package-update
+  :ensure t
+  :init
+  (setq auto-package-update-delete-old-versions t
+	  auto-package-update-prompt-before-update t
+	  auto-package-update-interval 7)
+  :config
+  (auto-package-update-maybe))
 #+end_src
