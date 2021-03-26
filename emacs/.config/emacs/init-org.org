@@ -782,6 +782,29 @@ I use Emacs Jupyter for jupyter notebooks
 	   (conda-postdeactivate . my/get/jupyter-aliases)))
 #+end_src
 
+Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
+This script will automatically download it.
+#+BEGIN_SRC emacs-lisp
+(shell-command "bash ~/dotfiles/scripts/oxipynb_download.sh")
+#+END_SRC
+
+Set up export to Jupyter notebooks
+#+begin_src emacs-lisp
+(use-package ox-ipynb
+  :defer t
+  :after org)
+#+end_src
+
+Function to run jupyter-lab command and open xwidget buffer with client
+#+begin_src emacs-lisp
+(defun my/jupyter-lab ()
+  (interactive)
+  (async-shell-command "bash ~/dotfiles/scripts/run_jupyter_in_emacs.sh")
+  (switch-to-buffer-other-window "*Async Shell Command*")
+  (delete-window))
+#+end_src
+
+
 * LaTeX
 I use the TexLab language server for LaTeX
 Install using: brew install texlab
