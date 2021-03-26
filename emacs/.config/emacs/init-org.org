@@ -482,7 +482,6 @@ I use org mode extensively so this is quite a long section...
 
   :hook ((org-mode . auto-fill-mode)
          (org-mode . visual-line-mode)
-         (org-babel-afer-execute . org-display-inline-images)
          (org-mode . display-line-numbers-mode)
 	   (org-mode . (lambda ()
 	                 (setq-local electric-pair-inhibit-predicate
@@ -494,6 +493,9 @@ I use org mode extensively so this is quite a long section...
          ("C-c f" . my/list-org-files))
 
   :config
+
+  ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
   ;; better looking org-agenda
   (setq org-agenda-custom-commands
@@ -522,15 +524,19 @@ I use org mode extensively so this is quite a long section...
 	 "q" 'org-agenda-quit
 	 "r" 'org-agenda-redo
 	 )))
-  
-  ;; babel languages
+
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
-     (python     . t)))
+     (python     . t)
+     (jupyter    . t)))
   
   (add-to-list 'org-modules 'org-tempo t)
   (add-to-list 'org-modules 'org-habit t))
+#+end_src
+
+Set up org babel languages
+#+begin_src emacs-lisp
 #+end_src
 
 Set up LaTeX export classes and settings
@@ -755,7 +761,7 @@ Get nice sphinx doc generation
   :hook (python-mode . sphinx-doc-mode))
 #+end_src
 
-* Jupyter - FIX AUTOCOMPL
+* Jupyter
 I use Emacs Jupyter for jupyter notebooks
 #+begin_src emacs-lisp
 (use-package jupyter
@@ -776,14 +782,7 @@ I use Emacs Jupyter for jupyter notebooks
   :bind (:map jupyter-org-interaction-mode-map ("C-c h" . nil))
   
   :hook ((conda-postactivate . my/get-jupyter-aliases)
-	   (conda-postdeactivate . my/get/jupyter-aliases))
-  :config
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   (append org-babel-load-languages '((jupyter . t)))))
-
-;; keybinding goes here since we wan it even when package isn't loaded
-(global-set-key (kbd "C-c t j") 'jupyter-run-repl)
+	   (conda-postdeactivate . my/get/jupyter-aliases)))
 #+end_src
 
 * LaTeX
