@@ -169,10 +169,10 @@ Magit is a wonderful git frontend for emacs
 
 * Evil
 I am an ex-vim user so I use evil for my editing
-
 #+begin_src emacs-lisp
 (use-package evil
   :ensure t
+  :defer 0.01
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
@@ -223,6 +223,7 @@ Port of vim commentary plugin
 #+begin_src emacs-lisp
 (use-package evil-commentary
   :ensure t
+  :after evil
   :diminish
   :config
   (evil-commentary-mode 1))
@@ -232,6 +233,7 @@ Port of vim surround plugin
 #+begin_src emacs-lisp
 (use-package evil-surround
   :ensure t
+  :after evil
   :config
   (global-evil-surround-mode 1))
 #+end_src
@@ -283,6 +285,7 @@ Which key is useful for discoverability
 #+begin_src emacs-lisp
 (use-package which-key
   :ensure t
+  :defer 0.01
   :diminish
   :init
   (setq which-key-idle-delay 2)
@@ -320,7 +323,7 @@ I use this for managing workspaces inside Emacs
 #+begin_src emacs-lisp
 (use-package perspective
   :ensure t
-  :defer t
+  :defer 0.01
   :bind
   (("C-x C-i" . persp-ibuffer)
    ("C-x k" . persp-kill-buffer*)
@@ -345,7 +348,7 @@ I use helm for completion
 (use-package helm
   :ensure t
   :diminish
-  :defer t
+  :defer 0.01
   :init
   (setq projectile-completion-system 'helm)
   (setq helm-buffers-fuzzy-matching t)
@@ -812,7 +815,7 @@ Install using: brew install texlab
 #+begin_src emacs-lisp
 (use-package lsp-latex
   :ensure t
-  ;; :defer t
+  :defer t
   :hook ((tex-mode . lsp)
 	   (tex-mode . (lambda () (require 'lsp-latex)))
 	   (latex-mode . lsp)
