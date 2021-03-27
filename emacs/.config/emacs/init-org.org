@@ -175,7 +175,7 @@ I am an ex-vim user so I use evil for my editing
 #+begin_src emacs-lisp
 (use-package evil
   :ensure t
-  ;; :defer 0.01
+  :defer 0.01
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
@@ -208,7 +208,9 @@ Evil collection fixes evil-mode in a lot of places
   :after evil
   :ensure t
   :config
-  (evil-collection-init))
+  (evil-collection-init)
+  ;; need to refresh dashboard so evil bindings work in it
+  (dashboard-refresh-buffer))
 #+end_src
 
 Undo-tree is a dependancy, but is not installed automatically for some reason
@@ -226,7 +228,7 @@ Port of vim commentary plugin
 #+begin_src emacs-lisp
 (use-package evil-commentary
   :ensure t
-  ;; :after evil
+  :after evil
   :diminish
   :config
   (evil-commentary-mode 1))
@@ -236,7 +238,7 @@ Port of vim surround plugin
 #+begin_src emacs-lisp
 (use-package evil-surround
   :ensure t
-  ;; :after evil
+  :after evil
   :config
   (global-evil-surround-mode 1))
 #+end_src
