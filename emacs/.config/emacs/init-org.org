@@ -74,6 +74,9 @@ These are some minor tweaks to the default look and behaviour of Emacs
 
 ;; set default wrap length
 (setq-default fill-column 80)
+
+;; maximise frame
+(toggle-frame-maximized)
 #+end_src
 
 * MacOS Specific
@@ -252,11 +255,6 @@ I use company for all my autocompletion needs
   (setq company-tooltip-limit 15)
   :hook ((prog-mode . company-mode)
 	   (tex-mode . company-mode))
-
-	 ;; (pdf-view-mode . (lambda () (company-mode -1)))
-	 ;;   (eshell-mode . (lambda () (company-mode -1)))
-	 ;;   (term-mode . (lambda () (company-mode -1)))
-	 ;;   (shell-mode . (lambda () (company-mode -1))))
   :config
   (company-mode 1)
   (push ".fbd_latexmk" company-files-exclusions)
@@ -315,7 +313,7 @@ brew install cmake libtool libvterm
   :ensure t
   :defer t
   :bind (("C-c t t" . vterm)
-	    ("C-c t e" . eshell)))
+	   ("C-c t e" . eshell)))
 #+end_src
 
 * Perspective Mode
@@ -615,8 +613,9 @@ I use Org Ref to handle citations in Org mode
 		      (require 'org-ref)
 		      (require 'org-ref-pdf)
 		      (require 'org-ref-url-utils)))
-  :bind (:map org-mode-map ("C-c [" . org-pageref-insert-ref-link))
   :config
+  ;; keybinding has to go here otherwise it doesn't work
+  (define-key org-mode-map (kbd "C-c [") 'org-pageref-insert-ref-link)
   (setq bibtex-completion-display-formats
 	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}"))))
 #+end_src
