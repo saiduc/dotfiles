@@ -782,17 +782,12 @@ I use Emacs Jupyter for jupyter notebooks
 	   (conda-postdeactivate . my/get/jupyter-aliases)))
 #+end_src
 
-Allow export to jupyter notebooks. This is a local file, available at [[https://github.com/jkitchin/ox-ipynb][ox-ipynb]] 
-This script will automatically download it.
-#+BEGIN_SRC emacs-lisp
-(shell-command "bash ~/dotfiles/scripts/oxipynb_download.sh")
-#+END_SRC
-
 Set up export to Jupyter notebooks
 #+begin_src emacs-lisp
 (use-package ox-ipynb
   :defer t
-  :after org)
+  :after org
+  :hook (org-mode . (lambda () (require 'ox-ipynb))))
 #+end_src
 
 Function to run jupyter-lab command and open xwidget buffer with client
@@ -803,7 +798,6 @@ Function to run jupyter-lab command and open xwidget buffer with client
   (switch-to-buffer-other-window "*Async Shell Command*")
   (delete-window))
 #+end_src
-
 
 * LaTeX
 I use the TexLab language server for LaTeX
@@ -852,15 +846,3 @@ Make sure llvm is on your path.
   (setq c-default-style "linux"))
 #+end_src
 
-* Auto Update Packages
-This package allows me to set autoupdate of packages
-#+begin_src emacs-lisp
-(use-package auto-package-update
-  :ensure t
-  :init
-  (setq auto-package-update-delete-old-versions t
-	  auto-package-update-prompt-before-update t
-	  auto-package-update-interval 7)
-  :config
-  (auto-package-update-maybe))
-#+end_src
