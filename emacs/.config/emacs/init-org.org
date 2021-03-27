@@ -175,7 +175,7 @@ I am an ex-vim user so I use evil for my editing
 #+begin_src emacs-lisp
 (use-package evil
   :ensure t
-  :defer 0.01
+  ;; :defer 0.01
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
   (setq evil-want-keybinding nil)
@@ -226,7 +226,7 @@ Port of vim commentary plugin
 #+begin_src emacs-lisp
 (use-package evil-commentary
   :ensure t
-  :after evil
+  ;; :after evil
   :diminish
   :config
   (evil-commentary-mode 1))
@@ -236,7 +236,7 @@ Port of vim surround plugin
 #+begin_src emacs-lisp
 (use-package evil-surround
   :ensure t
-  :after evil
+  ;; :after evil
   :config
   (global-evil-surround-mode 1))
 #+end_src
@@ -254,7 +254,8 @@ I use company for all my autocompletion needs
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 15)
   :hook ((prog-mode . company-mode)
-	   (tex-mode . company-mode))
+	   (tex-mode . company-mode)
+	   (org-mode . company-mode))
   :config
   (company-mode 1)
   (push ".fbd_latexmk" company-files-exclusions)
@@ -387,7 +388,7 @@ This gives a nice startup page when Emacs first runs
   :ensure t
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
+  ;; (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
   ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
@@ -600,6 +601,7 @@ I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
 (use-package org-ref
   :ensure t
+  :after org
   :init
   (setq bibtex-autokey-year-length 4
 	  bibtex-autokey-name-year-separator "-"
