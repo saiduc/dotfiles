@@ -163,7 +163,8 @@ Magit is a wonderful git frontend for emacs
 #+begin_src emacs-lisp
 (use-package magit
   :ensure t
-  :defer t)
+  :defer t
+  :bind ("C-x g" . magit-status))
 #+end_src
 
 * Evil
@@ -240,18 +241,22 @@ I use company for all my autocompletion needs
 #+begin_src emacs-lisp
 (use-package company
   :ensure t
+  :defer t
   :diminish
   :init
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 15)
-  :hook ((pdf-view-mode . (lambda () (company-mode -1)))
-	   (eshell-mode . (lambda () (company-mode -1)))
-	   (term-mode . (lambda () (company-mode -1)))
-	   (shell-mode . (lambda () (company-mode -1))))
+  :hook ((prog-mode . company-mode)
+	   (tex-mode . company-mode))
+
+	 ;; (pdf-view-mode . (lambda () (company-mode -1)))
+	 ;;   (eshell-mode . (lambda () (company-mode -1)))
+	 ;;   (term-mode . (lambda () (company-mode -1)))
+	 ;;   (shell-mode . (lambda () (company-mode -1))))
   :config
-  (global-company-mode)
+  (company-mode 1)
   (push ".fbd_latexmk" company-files-exclusions)
   (push ".aux" company-files-exclusions)
   (push ".log" company-files-exclusions)
@@ -807,11 +812,12 @@ Install using: brew install texlab
 #+begin_src emacs-lisp
 (use-package lsp-latex
   :ensure t
-  :defer t
-  :hook ((tex-mode . lsp-deferred)
-	   (latex-mode . lsp-deferred)
-	   (bibtex-mode . lsp-deferred)
-	   (tex-mode . (lambda () 
+  ;; :defer t
+  :hook ((tex-mode . lsp)
+	   (tex-mode . (lambda () (require 'lsp-latex)))
+	   (latex-mode . lsp)
+	   (bibtex-mode . lsp)
+	   (latex-mode . (lambda () 
 			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
 			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
 	   (latex-mode . auto-fill-mode)
