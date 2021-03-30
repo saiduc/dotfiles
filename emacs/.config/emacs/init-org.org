@@ -862,5 +862,3 @@ Make sure llvm is on your path.
   :init
   (setq c-default-style "linux"))
 #+end_src
-
-
