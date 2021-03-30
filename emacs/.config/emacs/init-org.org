@@ -124,6 +124,13 @@ Get proper characters on ISO-UK Macbook Pro keyboard
 (define-key key-translation-map (kbd "M-2") (kbd "€"))
 #+end_src
 
+* Diminish
+Diminish allows the hiding of minor modes in modeline
+#+begin_src emacs-lisp
+(use-package diminish
+  :ensure t)
+#+end_src
+
 * Themes
 A nice collection of themes
 #+begin_src emacs-lisp
@@ -862,3 +869,4 @@ Make sure llvm is on your path.
   :init
   (setq c-default-style "linux"))
 #+end_src
+
