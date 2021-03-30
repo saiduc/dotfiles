@@ -301,6 +301,7 @@ This simply gets the shell variable and path from default shell
 (when (memq window-system '(mac ns x))
   (use-package exec-path-from-shell
     :ensure t
+    :defer 0.01
     :init
     (setq exec-path-from-shell-check-startup-files nil)
     :config
@@ -391,10 +392,12 @@ This gives a nice startup page when Emacs first runs
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   ;; (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
-  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
-  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
+  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
   ;; (setq dashboard-set-init-info nil)
+
   (setq dashboard-items '((recents  . 15)
 			  (projects . 5)))
   (setq dashboard-set-heading-icons nil)
@@ -859,4 +862,5 @@ Make sure llvm is on your path.
   :init
   (setq c-default-style "linux"))
 #+end_src
+
 
