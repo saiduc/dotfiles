@@ -18,6 +18,9 @@ These are some minor tweaks to the default look and behaviour of Emacs
 ;; disable a weird warning that pops up in Emacs 27
 (setq byte-compile-warnings '(cl-functions))
 
+;; prevents random flickering sometimes
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+
 ;; show matching parentheses by default
 (show-paren-mode)
 
@@ -869,4 +872,3 @@ Make sure llvm is on your path.
   :init
   (setq c-default-style "linux"))
 #+end_src
-
