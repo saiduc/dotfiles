@@ -137,14 +137,14 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 Diminish allows the hiding of minor modes in modeline
 #+begin_src emacs-lisp
 (use-package diminish
-  :ensure t)
+  :straight t)
 #+end_src
 
 * Themes
 A nice collection of themes
 #+begin_src emacs-lisp
 (use-package doom-themes
-  :ensure t
+  :straight t
   :defer t)
 #+end_src
 
@@ -157,7 +157,7 @@ Load selected theme
 I use doom modeline since it is lightweight and pretty
 #+begin_src emacs-lisp
 (use-package doom-modeline
-  :ensure t
+  :straight t
   :diminish
   :init
   (set-face-attribute 'mode-line nil
@@ -181,7 +181,7 @@ I use doom modeline since it is lightweight and pretty
 Magit is a wonderful git frontend for emacs
 #+begin_src emacs-lisp
 (use-package magit
-  :ensure t
+  :straight t
   :defer t
   :bind ("C-x g" . magit-status))
 #+end_src
@@ -190,7 +190,7 @@ Magit is a wonderful git frontend for emacs
 I am an ex-vim user so I use evil for my editing
 #+begin_src emacs-lisp
 (use-package evil
-  :ensure t
+  :straight t
   :defer 0.01
   :init
   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
@@ -222,7 +222,7 @@ Evil collection fixes evil-mode in a lot of places
 #+begin_src emacs-lisp
 (use-package evil-collection
   :after evil
-  :ensure t
+  :straight t
   :config
   (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
@@ -232,7 +232,7 @@ Evil collection fixes evil-mode in a lot of places
 Undo-tree is a dependancy, but is not installed automatically for some reason
 #+begin_src emacs-lisp
 (use-package undo-tree
-  :ensure t
+  :straight t
   :after evil
   :diminish
   :config
@@ -243,7 +243,7 @@ Undo-tree is a dependancy, but is not installed automatically for some reason
 Port of vim commentary plugin
 #+begin_src emacs-lisp
 (use-package evil-commentary
-  :ensure t
+  :straight t
   :after evil
   :diminish
   :config
@@ -253,7 +253,7 @@ Port of vim commentary plugin
 Port of vim surround plugin
 #+begin_src emacs-lisp
 (use-package evil-surround
-  :ensure t
+  :straight t
   :after evil
   :config
   (global-evil-surround-mode 1))
@@ -263,7 +263,7 @@ Port of vim surround plugin
 I use company for all my autocompletion needs
 #+begin_src emacs-lisp
 (use-package company
-  :ensure t
+  :straight t
   :defer t
   :diminish
   :init
@@ -291,7 +291,7 @@ I use company for all my autocompletion needs
 I use projectile to manage projects
 #+begin_src emacs-lisp
 (use-package projectile
-  :ensure t
+  :straight t
   :defer t
   :bind-keymap
   ("C-x p" . projectile-command-map))
@@ -301,7 +301,7 @@ I use projectile to manage projects
 Which key is useful for discoverability
 #+begin_src emacs-lisp
 (use-package which-key
-  :ensure t
+  :straight t
   :defer 0.01
   :diminish
   :init
@@ -316,7 +316,7 @@ This simply gets the shell variable and path from default shell
 #+begin_src emacs-lisp
 (when (memq window-system '(mac ns x))
   (use-package exec-path-from-shell
-    :ensure t
+    :straight t
     :defer 0.01
     :init
     (setq exec-path-from-shell-check-startup-files nil)
@@ -330,14 +330,14 @@ need to have some dependencies installed for this, which can be done in mac with
 brew install cmake libtool libvterm
 #+begin_src emacs-lisp
 (use-package vterm
-  :ensure t
+  :straight t
   :defer t)
 #+end_src
 
 Multi-Vterm lets me manage multiple vterm buffers easily
 #+begin_src emacs-lisp
 (use-package multi-vterm
-  :ensure t
+  :straight t
   :defer t
   :bind (("C-c t t" . multi-vterm)
 	   ("C-c t e" . eshell)))
@@ -347,7 +347,7 @@ Multi-Vterm lets me manage multiple vterm buffers easily
 I use this for managing workspaces inside Emacs
 #+begin_src emacs-lisp
 (use-package perspective
-  :ensure t
+  :straight t
   :defer 0.01
   :bind
   (("C-x C-i" . persp-ibuffer)
@@ -371,7 +371,7 @@ I use this for managing workspaces inside Emacs
 I use helm for completion
 #+begin_src emacs-lisp
 (use-package helm
-  :ensure t
+  :straight t
   :diminish
   :defer 0.01
   :init
@@ -411,7 +411,7 @@ I use helm for completion
 This gives a nice startup page when Emacs first runs
 #+begin_src emacs-lisp
 (use-package dashboard
-  :ensure t
+  :straight t
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   ;; (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
@@ -443,7 +443,7 @@ This makes dired work as expected
 This lets me view PDFs in Emacs (better than simply with doc-view)
 #+begin_src emacs-lisp
 (use-package pdf-tools
-  :ensure t
+  :straight t
   :defer t
   :pin manual ;; don't reinstall when package updates
   :mode  ("\\.pdf\\'" . pdf-view-mode)
@@ -463,7 +463,7 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 I use org mode extensively so this is quite a long section...
 #+begin_src emacs-lisp
 (use-package org
-  :ensure t
+  :straight t
   :defer t
   :init
 
@@ -628,7 +628,7 @@ Set up LaTeX export classes and settings
 I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
 (use-package org-ref
-  :ensure t
+  :straight t
   :after org
   :init
   (setq bibtex-autokey-year-length 4
@@ -654,7 +654,7 @@ I use Org Ref to handle citations in Org mode
 This enables nice looking icons in org-headings
 #+begin_src emacs-lisp
 (use-package org-superstar
-  :ensure t
+  :straight t
   :defer t
   :init
   (setq org-superstar-configure-like-org-bullets t)
@@ -688,7 +688,7 @@ Some capture templates that suit my workflow
 This package provides snippet insertion
 #+begin_src emacs-lisp
 (use-package yasnippet
-  :ensure t
+  :straight t
   :defer t
   :diminish yas-minor-mode
   :hook ((prog-mode . yas-minor-mode)
@@ -698,7 +698,7 @@ This package provides snippet insertion
 A collection of useful snippets
 #+begin_src emacs-lisp
 (use-package yasnippet-snippets
-  :ensure t
+  :straight t
   :defer t)
 #+end_src
 
@@ -707,6 +707,7 @@ On the go spell-checking in Emacs You will need to install aspell on your system
 for this to work. On MacOS: brew install aspell
 #+begin_src emacs-lisp
 (use-package flyspell
+  :straight t
   :defer t
   :diminish flyspell-mode
   :init
@@ -720,7 +721,7 @@ for this to work. On MacOS: brew install aspell
 Use flycheck as the syntax checker
 #+begin_src emacs-lisp
 (use-package flycheck
-  :ensure t
+  :straight t
   :defer t
   :diminish flycheck-mode
   :init
@@ -731,7 +732,7 @@ Use flycheck as the syntax checker
 Language servers handle most of my languages
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :ensure t
+  :straight t
   :defer t
   :diminish lsp-mode
   :hook (lsp-mode . lsp-enable-which-key-integration)
@@ -749,7 +750,7 @@ Language servers handle most of my languages
 			      ("M-[" . xref-pop-marker-stack))))
 
 (use-package helm-lsp
-  :ensure t
+  :straight t
   :defer t
   :commands helm-lsp-workspace-symbol)
 #+end_src
@@ -758,7 +759,7 @@ Language servers handle most of my languages
 I use the pyright server for Python which needs npm installed
 #+begin_src emacs-lisp
 (use-package lsp-pyright
-  :ensure t
+  :straight t
   :defer t
   :diminish eldoc-mode
   :hook ((python-mode . (lambda () (require 'lsp-pyright)))
@@ -773,7 +774,7 @@ I use the pyright server for Python which needs npm installed
 Conda handles switching virtual environments
 #+BEGIN_SRC emacs-lisp
 (use-package conda
-  :ensure t
+  :straight t
   :defer t
   :init
   (setq conda-anaconda-home (expand-file-name "~/miniconda3"))
@@ -791,7 +792,7 @@ Turn off annoying python start message
 Get nice sphinx doc generation
 #+begin_src emacs-lisp
 (use-package sphinx-doc
-  :ensure t
+  :straight t
   :defer t
   :diminish sphinx-doc-mode
   :hook (python-mode . sphinx-doc-mode))
@@ -801,7 +802,7 @@ Get nice sphinx doc generation
 I use Emacs Jupyter for jupyter notebooks
 #+begin_src emacs-lisp
 (use-package jupyter
-  :ensure t
+  :straight t
   :defer t
   :after org
   :init
@@ -824,6 +825,7 @@ I use Emacs Jupyter for jupyter notebooks
 Set up export to Jupyter notebooks
 #+begin_src emacs-lisp
 (use-package ox-ipynb
+  :straight (ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb")
   :defer t
   :after org
   :hook (org-mode . (lambda () (require 'ox-ipynb))))
@@ -843,7 +845,7 @@ I use the TexLab language server for LaTeX
 Install using: brew install texlab
 #+begin_src emacs-lisp
 (use-package lsp-latex
-  :ensure t
+  :straight t
   :defer t
   :hook ((tex-mode . lsp)
 	   (tex-mode . (lambda () (require 'lsp-latex)))
