@@ -12,74 +12,74 @@ credentials.
 * Better Defaults
 These are some minor tweaks to the default look and behaviour of Emacs
 #+begin_src emacs-lisp
-;; start emacs in home folder
-(cd "~")
+  ;; start emacs in home folder
+  (cd "~")
 
-;; disable a weird warning that pops up in Emacs 27
-(setq byte-compile-warnings '(cl-functions))
+  ;; disable a weird warning that pops up in Emacs 27
+  (setq byte-compile-warnings '(cl-functions))
 
-;; prevents random flickering sometimes
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+  ;; prevents random flickering sometimes
+  (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
-;; show matching parentheses by default
-(show-paren-mode)
+  ;; show matching parentheses by default
+  (show-paren-mode)
 
-;; autopair parentheses and quotations
-(electric-pair-mode 1)
+  ;; autopair parentheses and quotations
+  (electric-pair-mode 1)
 
-;; disable auto-save and auto-backup
-(setq make-backup-files nil)
-(setq auto-save-default nil)
+  ;; disable auto-save and auto-backup
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
 
-;; turn off annoying Emacs splash screen
-(setq inhibit-splash-screen t)
+  ;; turn off annoying Emacs splash screen
+  (setq inhibit-splash-screen t)
 
-;; disable some warnings when compiling init file
-(setq warning-minimum-level :error)
+  ;; disable some warnings when compiling init file
+  (setq warning-minimum-level :error)
 
-;; allow y-or-n instead of yes-or-no
-(defalias 'yes-or-no-p 'y-or-n-p)
+  ;; allow y-or-n instead of yes-or-no
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; always follow symbolic links
-(setq vc-follow-symlinks t)
+  ;; always follow symbolic links
+  (setq vc-follow-symlinks t)
 
-;; scroll properly, not stupid emacs way
-(setq scroll-conservatively 101)
-(setq mouse-wheel-scroll-amount '(1))
-(setq mouse-wheel-progressive-speed nil)
+  ;; scroll properly, not stupid emacs way
+  (setq scroll-conservatively 101)
+  (setq mouse-wheel-scroll-amount '(1))
+  (setq mouse-wheel-progressive-speed nil)
 
-;; refresh buffers if they are changed outside of emacs
-(global-auto-revert-mode 1)
+  ;; refresh buffers if they are changed outside of emacs
+  (global-auto-revert-mode 1)
 
-;; show line number and ruler when programming, and enable code folding
-(add-hook 'prog-mode-hook (lambda () 
-			    (display-fill-column-indicator-mode 1)
-			    (display-line-numbers-mode 1)
-			    (hs-minor-mode 1)
-			    (diminish 'hs-minor-mode)))
+  ;; show line number and ruler when programming, and enable code folding
+  (add-hook 'prog-mode-hook (lambda () 
+			      (display-fill-column-indicator-mode 1)
+			      (display-line-numbers-mode 1)
+			      (hs-minor-mode 1)
+			      (diminish 'hs-minor-mode)))
 
-;; turn off bell
-(setq ring-bell-function 'ignore)
+  ;; turn off bell
+  (setq ring-bell-function 'ignore)
 
-;; create eshell alias for find-file function
-(defalias 'ff 'find-file)
+  ;; create eshell alias for find-file function
+  (defalias 'ff 'find-file)
 
-;; enable emacs server
-(server-mode 1)
+  ;; enable emacs server
+  (server-mode 1)
 
-;; turn off indicator for wrapping text
-(setf (cdr (assq 'continuation fringe-indicator-alist))
-      '(nil nil))
+  ;; turn off indicator for wrapping text
+  (setf (cdr (assq 'continuation fringe-indicator-alist))
+	'(nil nil))
 
-;; disable *Messages* buffer that is present on startup
-(setq-default message-log-max nil)
-(kill-buffer "*Messages*")
+  ;; disable *Messages* buffer that is present on startup
+  (setq-default message-log-max nil)
+  ;; (kill-buffer "*Messages*")
 
-;; set default wrap length
-(setq-default fill-column 80)
+  ;; set default wrap length
+  (setq-default fill-column 80)
 
-;; maximise frame
-(toggle-frame-maximized)
+  ;; maximise frame
+  (toggle-frame-maximized)
 #+end_src
 
 * MacOS Specific
@@ -434,6 +434,7 @@ This gives a nice startup page when Emacs first runs
 This makes dired work as expected
 #+begin_src emacs-lisp
 (use-package dired
+  :straight (:type built-in)
   :defer t
   :config
   (put 'dired-find-alternate-file 'disabled nil))
@@ -575,6 +576,7 @@ I use org mode extensively so this is quite a long section...
 Set up LaTeX export classes and settings
 #+begin_src emacs-lisp
 (use-package ox-latex
+  :straight (:type built-in)
   :defer t
   :after org
   :init
@@ -604,7 +606,7 @@ Set up LaTeX export classes and settings
 		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
 
   ;; for beamer presentations
-  (use-package ox-beamer)
+  (use-package ox-beamer :straight (:type built-in))
 
   ;; some default settings to make documents look nice
   (add-to-list 'org-latex-default-packages-alist
@@ -707,7 +709,7 @@ On the go spell-checking in Emacs You will need to install aspell on your system
 for this to work. On MacOS: brew install aspell
 #+begin_src emacs-lisp
 (use-package flyspell
-  :straight t
+  :straight (:type built-in)
   :defer t
   :diminish flyspell-mode
   :init
@@ -883,8 +885,16 @@ Install using: brew install llvm
 Make sure llvm is on your path.
 #+begin_src emacs-lisp
 (use-package cc-mode
+  :straight (:type built-in)
   :defer t
   :hook (c++-mode . lsp-deferred)
   :init
   (setq c-default-style "linux"))
+#+end_src
+
+* ESUP
+#+begin_src emacs-lisp
+(use-package esup
+  :straight t
+  :defer t)
 #+end_src
