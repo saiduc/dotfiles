@@ -3,12 +3,6 @@
 #+EMAIL: saipandian97@gmail.com
 #+STARTUP: overview 
 
-* Setting up New Installation
-Make a small change to this file, delete the change, and then save the file.
-Emacs will compile the file and install all necessary packages.
-You may need to change the locations of some paths and add your own api
-credentials. 
-
 * Better Defaults
 These are some minor tweaks to the default look and behaviour of Emacs
 #+begin_src emacs-lisp
