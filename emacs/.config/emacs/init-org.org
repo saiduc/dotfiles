@@ -407,10 +407,11 @@ This gives a nice startup page when Emacs first runs
 #+begin_src emacs-lisp
 (use-package dashboard
   :straight t
+  :diminish page-break-lines-mode
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  ;; (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
-  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
+  ;; (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
@@ -461,6 +462,7 @@ I use org mode extensively so this is quite a long section...
 (use-package org
   :straight t
   :defer t
+  :diminish auto-fill-function org-indent-mode visual-line-mode
   :init
 
   ;; agenda files, refile targets and drawer targets
@@ -887,9 +889,3 @@ Make sure llvm is on your path.
   (setq c-default-style "linux"))
 #+end_src
 
-* ESUP
-#+begin_src emacs-lisp
-(use-package esup
-  :straight t
-  :defer t)
-#+end_src
