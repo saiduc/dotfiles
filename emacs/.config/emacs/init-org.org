@@ -68,7 +68,6 @@ These are some minor tweaks to the default look and behaviour of Emacs
 ;; disable *Messages* buffer that is present on startup
 (setq-default message-log-max nil)
 (kill-buffer "*Messages*")
-(kill-buffer "*straight-process*")
 
 ;; set default wrap length
 (setq-default fill-column 80)
@@ -334,6 +333,8 @@ Multi-Vterm lets me manage multiple vterm buffers easily
 (use-package multi-vterm
   :straight t
   :defer t
+  :init
+  (setq multi-vterm-buffer-name "vterm")
   :bind (("C-c t t" . multi-vterm)
 	   ("C-c t e" . eshell)))
 #+end_src
@@ -410,8 +411,8 @@ This gives a nice startup page when Emacs first runs
   :diminish page-break-lines-mode
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
-  ;; (setq dashboard-startup-banner 'logo)
+  ;; (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
+  (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
@@ -739,6 +740,7 @@ Language servers handle most of my languages
   :init
   (setq lsp-keymap-prefix "C-l")
   (setq lsp-prefer-flymake nil)
+  (setq lsp-prefer-capf t)
   (setq lsp-modeline-diagnostics-enable nil)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
