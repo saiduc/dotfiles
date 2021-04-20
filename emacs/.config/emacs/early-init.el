@@ -20,7 +20,10 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
+;; Set font
+(setq frame-inhibit-implied-resize t) 
 (add-to-list 'default-frame-alist '(font . "Roboto Mono 14"))
 
+;; Some boilerplate init-time optimisation
 (setq default-file-name-handler-alist file-name-handler-alist
       file-name-handler-alist nil)
