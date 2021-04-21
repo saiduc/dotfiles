@@ -71,9 +71,6 @@ These are some minor tweaks to the default look and behaviour of Emacs
 
 ;; set default wrap length
 (setq-default fill-column 80)
-
-;; maximise frame
-(toggle-frame-maximized)
 #+end_src
 
 * MacOS Specific
