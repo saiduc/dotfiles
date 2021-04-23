@@ -60,8 +60,6 @@ Plug 'itchyny/lightline.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lervag/vimtex'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mhinz/vim-startify'
 
@@ -135,7 +133,6 @@ let g:startify_lists = [
 "                                 KEYBINDINGS
 " =============================================================================
 let mapleader=","
-nnoremap ; :Commands<CR>
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -144,10 +141,7 @@ nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <leader>s :set ft=
 nnoremap <C-t> :vsplit term://fish<CR>
 tnoremap <Esc> <C-\><C-n>
-nnoremap <C-p> :Files<CR>
-nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>t :tab sball<CR>
-nnoremap <C-S> :BLines<CR>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
