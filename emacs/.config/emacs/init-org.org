@@ -128,7 +128,8 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 Diminish allows the hiding of minor modes in modeline
 #+begin_src emacs-lisp
 (use-package diminish
-  :straight t)
+  :straight t
+  :defer t)
 #+end_src
 
 * Themes
@@ -160,9 +161,10 @@ I use doom modeline since it is lightweight and pretty
   (setq doom-modeline-bar-width 1)
   (setq doom-modeline-icon nil)
   (setq doom-modeline-minor-modes t)
-  (setq doom-modeline-perp-name t)
+  (setq doom-modeline-persp-name t)
   (setq doom-modeline-lsp t)
   (setq doom-modeline-env-version nil)
+  (setq inhibit-compacting-font-caches t)
   :config
   (doom-themes-org-config)
   (doom-modeline-mode 1))
@@ -375,11 +377,6 @@ I use helm for completion
   (setq helm-split-window-in-side-p t)
   (setq helm-move-to-line-cycle-in-source nil)
   (setq helm-display-header-line nil)
-  (add-to-list 'display-buffer-alist
-	       `(,(rx bos "*helm" (* not-newline) "*" eos)
-		 (display-buffer-in-side-window)
-		 (inhibit-same-window . t)
-		 (window-height . 0.3)))
   :bind
   (("C-x C-f" . helm-find-files)
    ("M-p" . helm-show-kill-ring)
@@ -398,6 +395,16 @@ I use helm for completion
 	 ("C-z" . helm-select-action)))
    :config
    (helm-mode 1))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package shackle
+  :straight t
+  :after helm
+  :init
+  (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.3)))
+  :config
+  (shackle-mode))
 #+end_src
 
 * Dashboard
@@ -580,7 +587,7 @@ Set up LaTeX export classes and settings
   (setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
 
   ;; tell org to make pdfs using latexmk
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+  (setq org-latex-pdf-process (list "latexmk -shell-escape -synctex=1 -bibtex -f -pdf %f"))
   :config
   ;; ieeetr class
   (add-to-list 'org-latex-classes
@@ -742,6 +749,7 @@ Language servers handle most of my languages
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
+  (setq read-process-output-max (* 1024 1024))
   ;; (setq lsp-modeline-code-actions-enable nil)
   ;; (setq lsp-headerline-breadcrumb-enable nil)
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)

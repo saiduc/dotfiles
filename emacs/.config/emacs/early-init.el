@@ -22,7 +22,7 @@
 (setq frame-inhibit-implied-resize t)
 (add-to-list 'default-frame-alist '(font . "Roboto Mono 14"))
 
-;; optimisations
+;; Optimisations
 (defvar default-file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
 (add-hook 'emacs-startup-hook
