@@ -252,6 +252,15 @@ Port of vim surround plugin
   (global-evil-surround-mode 1))
 #+end_src
 
+* General
+#+begin_src emacs-lisp
+(use-package general
+  :straight t
+  :defer 0.01
+  :config
+  (general-override-mode))
+#+end_src
+
 * Company
 I use company for all my autocompletion needs
 #+begin_src emacs-lisp
@@ -298,7 +307,7 @@ Which key is useful for discoverability
   :defer 0.01
   :diminish
   :init
-  (setq which-key-idle-delay 2)
+  (setq which-key-idle-delay 1)
   (setq which-key-idle-secondary-delay 0)
   :config
   (which-key-mode))
@@ -753,6 +762,7 @@ Language servers handle most of my languages
   (setq read-process-output-max (* 1024 1024))
   ;; (setq lsp-modeline-code-actions-enable nil)
   ;; (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-headerline-breadcrumb-icons-enable nil)
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
 			      ("M-[" . xref-pop-marker-stack))))
 
@@ -762,14 +772,41 @@ Language servers handle most of my languages
   :commands helm-lsp-workspace-symbol)
 #+end_src
 
+* DAP Mode
+DAP Mode is used for debugging
+#+begin_src emacs-lisp
+(use-package dap-mode
+  :straight t
+  :defer t
+  :hook ((lsp-mode . dap-mode)
+	   (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra))))
+  ;; :bind ((:map lsp-mode-map ("C-l d t" . dap-breakpoint-toggle)))
+  :init
+  (setq dap-auto-configure-features '(locals expressions))
+  :config
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "d" '(:ignore t :which-key "debug")
+   "dt" '(dap-breakpoint-toggle :which-key "toggle breakpoint")
+   "dd" '(dap-debug :which-key "start debugger")
+   "dh" '(dap-hydra :which-key "open hydra")
+   "dq" '(dap-delete-all-sessions :which-key "quit all dap sessions")))
+#+end_src
+
 * Apheleia
 I use this to format code (when the lsp-server can't do it by itself)
 #+begin_src emacs-lisp
 (use-package apheleia
   :straight (:host github :repo "raxod502/apheleia")
   :defer t
-  :diminish
-  :hook (prog-mode . apheleia-mode))
+  :hook ((prog-mode . apheleia-mode)
+	   (python-mode . (lambda ()
+			    (general-define-key
+			     :keymaps 'lsp-mode-map
+			     :prefix lsp-keymap-prefix
+			     "=" '(:ignore t :which-key "formatting")
+			     "==" '(apheleia-format-buffer :which-key "format buffer"))))))
 #+end_src
 
 * Python
@@ -780,7 +817,8 @@ I use the pyright server for Python which needs npm installed
   :defer t
   :diminish eldoc-mode
   :hook ((python-mode . (lambda () (require 'lsp-pyright)))
-	   (python-mode . lsp-deferred))
+	   (python-mode . lsp-deferred)
+	   (python-mode . (lambda () (require 'dap-python))))
   :config
   ;; these hooks can't go in the :hook section since lsp-restart-workspace
   ;; is not available if lsp isn't active, so it messes up jupyter
