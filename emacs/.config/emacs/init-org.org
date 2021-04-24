@@ -803,13 +803,11 @@ I use this to format code (when the lsp-server can't do it by itself)
 (use-package apheleia
   :straight (:host github :repo "raxod502/apheleia")
   :defer t
-  :hook ((prog-mode . apheleia-mode)
-	   (python-mode . (lambda ()
-			    (general-define-key
-			     :keymaps 'lsp-mode-map
-			     :prefix lsp-keymap-prefix
-			     "=" '(:ignore t :which-key "formatting")
-			     "==" '(apheleia-format-buffer :which-key "format buffer"))))))
+  :hook (python-mode . (lambda () (general-define-key
+				   :keymaps 'python-mode-map
+				   :prefix lsp-keymap-prefix
+				   "=" '(:ignore t :which-key "formatting")
+				   "==" '(apheleia-format-buffer :which-key "format buffer")))))
 #+end_src
 
 * Python
