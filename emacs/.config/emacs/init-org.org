@@ -780,7 +780,6 @@ DAP Mode is used for debugging
   :defer t
   :hook ((lsp-mode . dap-mode)
 	   (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra))))
-  ;; :bind ((:map lsp-mode-map ("C-l d t" . dap-breakpoint-toggle)))
   :init
   (setq dap-auto-configure-features '(locals expressions))
   :config
