@@ -289,16 +289,6 @@ I use company for all my autocompletion needs
   (delete 'company-dabbrev company-backends))
 #+end_src
 
-* Projectile
-I use projectile to manage projects
-#+begin_src emacs-lisp
-(use-package projectile
-  :straight t
-  :defer t
-  :bind-keymap
-  ("C-x p" . projectile-command-map))
-#+end_src
-
 * Which Key
 Which key is useful for discoverability
 #+begin_src emacs-lisp
@@ -377,7 +367,7 @@ I use helm for completion
 (use-package helm
   :straight t
   :diminish
-  :defer 0.01
+  :defer t
   :init
   (setq projectile-completion-system 'helm)
   (setq helm-buffers-fuzzy-matching t)
@@ -417,6 +407,20 @@ I use helm for completion
   (shackle-mode))
 #+end_src
 
+* Projectile
+I use projectile to manage projects
+#+begin_src emacs-lisp
+(use-package projectile
+  :straight t
+  :defer t
+  :bind-keymap
+  ("C-x p" . projectile-command-map)
+  :init
+  (setq projectile-completion-system 'helm)
+  :config
+  (require 'helm))
+#+end_src
+
 * Dashboard
 This gives a nice startup page when Emacs first runs
 #+begin_src emacs-lisp
@@ -432,8 +436,7 @@ This gives a nice startup page when Emacs first runs
   (setq dashboard-footer-messages '("Sai Pandian"))
   ;; (setq dashboard-set-init-info nil)
 
-  (setq dashboard-items '((recents  . 15)
-			  (projects . 5)))
+  (setq dashboard-items '((recents  . 25)))
   (setq dashboard-set-heading-icons nil)
   (setq dashboard-set-file-icons nil)
   (setq dashboard-center-content t)
@@ -643,6 +646,7 @@ I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
 (use-package org-ref
   :straight t
+  :defer t
   :after org
   :init
   (setq bibtex-autokey-year-length 4
@@ -901,10 +905,10 @@ Install using: brew install texlab
 (use-package lsp-latex
   :straight t
   :defer t
-  :hook ((tex-mode . lsp)
+  :hook ((tex-mode . lsp-deferred)
 	   (tex-mode . (lambda () (require 'lsp-latex)))
-	   (latex-mode . lsp)
-	   (bibtex-mode . lsp)
+	   (latex-mode . lsp-deferred)
+	   (bibtex-mode . lsp-deferred)
 	   (latex-mode . (lambda () 
 			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
 			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
