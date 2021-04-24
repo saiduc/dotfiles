@@ -386,7 +386,8 @@ I use helm for completion
    ("C-s" . helm-occur)
    ("C-x r b" . helm-bookmarks)
    (:map helm-find-files-map
-	 ("C-h" . helm-find-files-up-one-level))
+	 ("C-h" . helm-find-files-up-one-level)
+	 ("C-l" . helm-execute-persistent-action))
    (:map helm-map
 	 ("C-j" . helm-next-line)
 	 ("C-k" . helm-previous-line)
@@ -759,6 +760,16 @@ Language servers handle most of my languages
   :straight t
   :defer t
   :commands helm-lsp-workspace-symbol)
+#+end_src
+
+* Apheleia
+I use this to format code (when the lsp-server can't do it by itself)
+#+begin_src emacs-lisp
+(use-package apheleia
+  :straight (:host github :repo "raxod502/apheleia")
+  :defer t
+  :diminish
+  :hook (prog-mode . apheleia-mode))
 #+end_src
 
 * Python
