@@ -83,8 +83,8 @@ Some macOS specific options. Comment out if not on a macOS machine
 
 Get transparent header-bars
 #+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
+;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
+;; (add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 #+end_src
@@ -145,6 +145,20 @@ A nice collection of themes
   :defer t)
 #+end_src
 
+Darken other buffers
+#+begin_src emacs-lisp
+(use-package solaire-mode
+  :straight t
+  :defer t
+  :hook ((change-major-mode . turn-on-solaire-mode)
+	   (after-revert . turn-on-solaire-mode)
+	   (ediff-prepare-buffer . solaire-mode)
+	   (minibuffer-setup . solaire-mode-in-minibuffer))
+  :config
+  (setq solaire-mode-auto-swap-bg t)
+  (solaire-global-mode 1))
+#+end_src
+
 Load selected theme
 #+begin_src emacs-lisp
 (load-theme 'doom-dracula t)
@@ -203,8 +217,8 @@ I am an ex-vim user so I use evil for my editing
   (setq evil-motion-state-tag "MOTION")
   (setq evil-emacs-state-tag "EMACS")
   (setq evil-want-C-i-jump nil)
-  :bind (("<escape>" . keyboard-escape-quit)
-	   ("C-c h" . evil-window-left)
+  (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; make esc all-powerful
+  :bind (("C-c h" . evil-window-left)
 	   ("C-c j" . evil-window-down)
 	   ("C-c k" . evil-window-up)
 	   ("C-c l" . evil-window-right)
@@ -382,14 +396,13 @@ I use helm for completion
   (setq helm-split-window-in-side-p t)
   (setq helm-move-to-line-cycle-in-source nil)
   (setq helm-display-header-line nil)
-  (setq helm-candidate-number-limit 100)
   (setq helm-input-idle-delay 0.0)
   :bind
   (("C-x C-f" . helm-find-files)
    ("M-p" . helm-show-kill-ring)
-   ;; ("M-x" . helm-M-x)
-   ("C-x b" . helm-mini)
-   ("C-x C-b" . helm-mini)
+   ("M-x" . helm-M-x)
+   ("C-x b" . helm-buffers-list)
+   ("C-x C-b" . helm-buffers-list)
    ("C-s" . helm-occur)
    ("C-x r b" . helm-bookmarks)
    (:map helm-find-files-map
@@ -403,14 +416,6 @@ I use helm for completion
 	 ("C-z" . helm-select-action)))
    :config
    (helm-mode 1))
-#+end_src
-
-I find this is more responsive than helm-M-x
-#+begin_src emacs-lisp
-(use-package helm-smex
-  :straight t
-  :after helm
-  :bind ("M-x" . helm-smex))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -558,7 +563,6 @@ I use org mode extensively so this is quite a long section...
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c f" . my/list-org-files))
-
   :config
 
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
@@ -597,7 +601,6 @@ I use org mode extensively so this is quite a long section...
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
-     (python     . t)
      (jupyter    . t)))
   
   (add-to-list 'org-modules 'org-tempo t)
@@ -609,7 +612,7 @@ Set up LaTeX export classes and settings
 (use-package ox-latex
   :straight (:type built-in)
   :defer t
-  :after org
+  ;; :after org
   :init
   
   ;; set some nice margins
@@ -944,7 +947,6 @@ Set up export to Jupyter notebooks
 (use-package ox-ipynb
   :straight (ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb")
   :defer t
-  :after org
   :hook (org-mode . (lambda () (require 'ox-ipynb))))
 #+end_src
 
