@@ -5,6 +5,14 @@
 ;; --------------------------------------
 (let ((file-name-handler-alist nil))
 
+;; set gc cons high when using minibuffer
+(defun my/minibuffer-setup-hook ()
+  (setq gc-cons-threshold most-positive-fixnum))
+(defun my/minibuffer-exit-hook ()
+  (setq gc-cons-threshold default-gc-cons-threshold))
+(add-hook 'minibuffer-setup-hook #'my/minibuffer-setup-hook)
+(add-hook 'minibuffer-exit-hook #'my/minibuffer-exit-hook)
+
 
 ;; INSTALLING STRAIGHT & USE-PACKAGE
 ;; --------------------------------------
