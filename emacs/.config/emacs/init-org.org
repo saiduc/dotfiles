@@ -372,7 +372,7 @@ I use helm for completion
 (use-package helm
   :straight t
   :diminish
-  :defer t
+  :defer 0.01
   :init
   (setq projectile-completion-system 'helm)
   (setq helm-buffers-fuzzy-matching t)
@@ -465,7 +465,7 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 (use-package pdf-tools
   :straight t
   :defer t
-  :pin manual ;; don't reinstall when package updates
+  ;; :pin manual ;; don't reinstall when package updates
   :mode  ("\\.pdf\\'" . pdf-view-mode)
   :bind
   ((:map pdf-view-mode-map ("C-s" . isearch-forward)))
