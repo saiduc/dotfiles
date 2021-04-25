@@ -18,6 +18,11 @@ These are some minor tweaks to the default look and behaviour of Emacs
 ;; show matching parentheses by default
 (show-paren-mode)
 
+;; never just bury when running quit-window, always kill the buffer
+(defadvice quit-window (before quit-window-always-kill)
+  (ad-set-arg 0 t))
+(ad-activate 'quit-window)
+
 ;; autopair parentheses and quotations
 (electric-pair-mode 1)
 
@@ -742,8 +747,37 @@ Use flycheck as the syntax checker
   :straight t
   :defer t
   :diminish flycheck-mode
+  :hook (lsp-mode . flycheck-mode)
   :init
-  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  :config
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "e" '(:ignore t :which-key "errors")
+   "en" '(flycheck-next-error :which-key "next error")
+   "ep" '(flycheck-previous-error :which-key "previous error")
+   "es" '(flycheck-select-checker :which-key "select checker")
+   "el" '(lsp-treemacs-errors-list :which-key "list all errors")
+   "ex" '(flycheck-disable-checker :which-key "disable checker")
+   "ed" '(flycheck-display-error-at-point :which-key "display error at point")
+   "eb" '(flycheck-buffer :which-key "lint buffer")))
+#+end_src
+
+* Treemacs
+Provides tree view and other goodies (mainly just dependency for dap mode)
+#+begin_src emacs-lisp
+(use-package treemacs
+  :straight t
+  :defer t
+  :after lsp-mode
+  :commands treemacs)
+
+(use-package treemacs-all-the-icons
+  :straight t
+  :after treemacs
+  :config
+  (treemacs-load-theme "all-the-icons"))
 #+end_src
 
 * LSP Mode
@@ -757,9 +791,9 @@ Language servers handle most of my languages
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-l")
-  (setq lsp-prefer-flymake nil)
   (setq lsp-prefer-capf t)
   (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-prefer-flymake nil)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
@@ -769,11 +803,27 @@ Language servers handle most of my languages
   (setq lsp-headerline-breadcrumb-icons-enable nil)
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
 			      ("M-[" . xref-pop-marker-stack))))
+#+end_src
 
+I also set up some additional packages for integration with helm and treemacs
+#+begin_src emacs-lisp
 (use-package helm-lsp
   :straight t
   :defer t
   :commands helm-lsp-workspace-symbol)
+
+(use-package lsp-treemacs
+  :straight t
+  :after lsp-mode
+  :config
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "t" '(:ignore t :which-key "tree")
+   "tt" '(treemacs :which-key "toggle treemacs")
+   "ts" '(lsp-treemacs-symbols :which-key "show lsp-treemacs symbols")
+   "te" '(lsp-treemacs-errors-list :which-key "show lsp-treemacs errors"))
+  (lsp-treemacs-sync-mode 1))
 #+end_src
 
 * DAP Mode
