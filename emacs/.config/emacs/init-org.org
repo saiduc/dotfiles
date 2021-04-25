@@ -363,6 +363,7 @@ I use this for managing workspaces inside Emacs
   (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
   (setq  ido-ignore-buffers '("\\` " "^\*helm"))
   :config
+  (use-package ibuffer :straight (:type built-in))
   (persp-mode 1))
 #+end_src
 
@@ -381,10 +382,12 @@ I use helm for completion
   (setq helm-split-window-in-side-p t)
   (setq helm-move-to-line-cycle-in-source nil)
   (setq helm-display-header-line nil)
+  (setq helm-candidate-number-limit 100)
+  (setq helm-input-idle-delay 0.0)
   :bind
   (("C-x C-f" . helm-find-files)
    ("M-p" . helm-show-kill-ring)
-   ("M-x" . helm-M-x)
+   ;; ("M-x" . helm-M-x)
    ("C-x b" . helm-mini)
    ("C-x C-b" . helm-mini)
    ("C-s" . helm-occur)
@@ -400,6 +403,14 @@ I use helm for completion
 	 ("C-z" . helm-select-action)))
    :config
    (helm-mode 1))
+#+end_src
+
+I find this is more responsive than helm-M-x
+#+begin_src emacs-lisp
+(use-package helm-smex
+  :straight t
+  :after helm
+  :bind ("M-x" . helm-smex))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -651,7 +662,6 @@ I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
 (use-package org-ref
   :straight t
-  :defer t
   :after org
   :init
   (setq bibtex-autokey-year-length 4
@@ -862,6 +872,7 @@ I use this to format code (when the lsp-server can't do it by itself)
 
 * Python
 I use the pyright server for Python which needs npm installed
+To use dap mode with python, you need to run: pip install "ptvsd>=4.2"
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :straight t
