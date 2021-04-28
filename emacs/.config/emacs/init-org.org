@@ -146,20 +146,6 @@ A nice collection of themes
   :defer t)
 #+end_src
 
-Darken other buffers
-#+begin_src emacs-lisp
-(use-package solaire-mode
-  :straight t
-  :defer t
-  :hook ((change-major-mode . turn-on-solaire-mode)
-	   (after-revert . turn-on-solaire-mode)
-	   (ediff-prepare-buffer . solaire-mode)
-	   (minibuffer-setup . solaire-mode-in-minibuffer))
-  :config
-  (setq solaire-mode-auto-swap-bg t)
-  (solaire-global-mode 1))
-#+end_src
-
 Load selected theme
 #+begin_src emacs-lisp
 (load-theme 'doom-dracula t)
