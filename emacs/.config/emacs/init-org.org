@@ -83,8 +83,8 @@ Some macOS specific options. Comment out if not on a macOS machine
 
 Get transparent header-bars
 #+begin_src emacs-lisp
-;; (add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
-;; (add-to-list 'default-frame-alist '(ns-appearance . dark))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
 (setq ns-use-proxy-icon nil)
 (setq frame-title-format nil)
 #+end_src
@@ -119,8 +119,9 @@ Remap red close button to only hide the frame
 
 Get proper characters on ISO-UK Macbook Pro keyboard
 #+begin_src emacs-lisp
-(define-key key-translation-map (kbd "M-3") (kbd "#"))
-(define-key key-translation-map (kbd "M-2") (kbd "€"))
+(global-set-key (kbd "M-3") (kbd "#"))
+(global-set-key (kbd "M-2") (kbd "€"))
+(setq-default mac-right-option-modifier nil)
 #+end_src
 
 Disable mouse+scroll for zooming, since it messes up with trackpad
@@ -377,7 +378,11 @@ I use this for managing workspaces inside Emacs
   (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
   (setq  ido-ignore-buffers '("\\` " "^\*helm"))
   :config
-  (use-package ibuffer :straight (:type built-in))
+  (use-package ibuffer
+    :straight (:type built-in)
+    :config
+    (require 'ibuf-ext)
+    (add-to-list 'ibuffer-never-show-predicates "^\*helm"))
   (persp-mode 1))
 #+end_src
 
@@ -396,7 +401,7 @@ I use helm for completion
   (setq helm-split-window-in-side-p t)
   (setq helm-move-to-line-cycle-in-source nil)
   (setq helm-display-header-line nil)
-  (setq helm-input-idle-delay 0.0)
+  (setq helm-input-idle-delay 0)
   :bind
   (("C-x C-f" . helm-find-files)
    ("M-p" . helm-show-kill-ring)
@@ -435,11 +440,7 @@ I use projectile to manage projects
   :straight t
   :defer t
   :bind-keymap
-  ("C-x p" . projectile-command-map)
-  :init
-  (setq projectile-completion-system 'helm)
-  :config
-  (require 'helm))
+  ("C-x p" . projectile-command-map))
 #+end_src
 
 * Dashboard
@@ -483,12 +484,10 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   :defer t
   ;; :pin manual ;; don't reinstall when package updates
   :mode  ("\\.pdf\\'" . pdf-view-mode)
-  :bind
-  ((:map pdf-view-mode-map ("C-s" . isearch-forward)))
+  :bind (:map pdf-view-mode-map ("C-s" . isearch-forward))
   :init
   (setq-default pdf-view-display-size 'fit-page)
   (setq mouse-wheel-follow-mouse t)
-  (setq pdf-annot-activate-created-annotations t)
   (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
   :config
   (pdf-tools-install :no-query)
@@ -616,7 +615,11 @@ Set up LaTeX export classes and settings
   :init
   
   ;; set some nice margins
-  (setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
+  ;; (setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
+
+  ;; get nice formatting of source blocks
+  ;; TODO currently doesn't work with the margins, need to fix it
+  (setq org-latex-listings 'minted org-latex-packages-alist '(("" "minted")))
 
   ;; tell org to make pdfs using latexmk
   (setq org-latex-pdf-process (list "latexmk -shell-escape -synctex=1 -bibtex -f -pdf %f"))
@@ -702,7 +705,6 @@ Some capture templates that suit my workflow
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
-
 	("n" "Quick Note" entry (file "~/Dropbox/Org/Inbox.org")
 	 "* %?" :empty-lines 0)
 	
@@ -875,7 +877,7 @@ I use this to format code (when the lsp-server can't do it by itself)
 
 * Python
 I use the pyright server for Python which needs npm installed
-To use dap mode with python, you need to run: pip install "ptvsd>=4.2"
+To use dap mode with python, you need to run: pip install debugpy 
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :straight t
@@ -885,6 +887,7 @@ To use dap mode with python, you need to run: pip install "ptvsd>=4.2"
 	   (python-mode . lsp-deferred)
 	   (python-mode . (lambda () (require 'dap-python))))
   :config
+  (setq dap-python-debugger 'debugpy)
   ;; these hooks can't go in the :hook section since lsp-restart-workspace
   ;; is not available if lsp isn't active, so it messes up jupyter
   (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
