@@ -122,6 +122,8 @@ Get proper characters on ISO-UK Macbook Pro keyboard
 (global-set-key (kbd "M-3") (kbd "#"))
 (global-set-key (kbd "M-2") (kbd "€"))
 (setq-default mac-right-option-modifier nil)
+
+(global-set-key (kbd "s-w") 'ns-do-hide-emacs)
 #+end_src
 
 Disable mouse+scroll for zooming, since it messes up with trackpad
@@ -143,12 +145,8 @@ A nice collection of themes
 #+begin_src emacs-lisp
 (use-package doom-themes
   :straight t
-  :defer t)
-#+end_src
-
-Load selected theme
-#+begin_src emacs-lisp
-(load-theme 'doom-dracula t)
+  :defer t
+  :init (load-theme 'doom-dracula t))
 #+end_src
 
 * Mode Line
@@ -172,7 +170,6 @@ I use doom modeline since it is lightweight and pretty
   (setq doom-modeline-env-version nil)
   (setq inhibit-compacting-font-caches t)
   :config
-  (doom-themes-org-config)
   (doom-modeline-mode 1))
 #+end_src
 
@@ -220,8 +217,8 @@ I am an ex-vim user so I use evil for my editing
 Evil collection fixes evil-mode in a lot of places
 #+begin_src emacs-lisp
 (use-package evil-collection
-  :after evil
   :straight t
+  :after evil
   :config
   (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
@@ -322,7 +319,7 @@ This simply gets the shell variable and path from default shell
     (exec-path-from-shell-initialize)))
 #+end_src
 
-* Vterm
+* Terminals
 I use vterm as my terminal because it is a lot better than ansi-term. You will
 need to have some dependencies installed for this, which can be done in mac with: 
 brew install cmake libtool libvterm
@@ -396,6 +393,7 @@ I use helm for completion
    ("C-x C-b" . helm-buffers-list)
    ("C-s" . helm-occur)
    ("C-x r b" . helm-bookmarks)
+   ("C-x C-r" . helm-recentf)
    (:map helm-find-files-map
 	 ("C-h" . helm-find-files-up-one-level)
 	 ("C-l" . helm-execute-persistent-action))
@@ -487,6 +485,18 @@ I use org mode extensively so this is quite a long section...
   :straight t
   :defer t
   :diminish auto-fill-function org-indent-mode visual-line-mode
+  :hook ((org-mode . auto-fill-mode)
+         (org-mode . visual-line-mode)
+         (org-mode . display-line-numbers-mode)
+	   (org-mode . (lambda ()
+	                 (setq-local electric-pair-inhibit-predicate
+	          		     `(lambda (c)
+	          			(if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
+  
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c f" . my/list-org-files))
+  
   :init
 
   ;; agenda files, refile targets and drawer targets
@@ -505,7 +515,6 @@ I use org mode extensively so this is quite a long section...
   ;; make custom function to list all org files 
   (defun my/list-org-files ()
     (interactive)
-    (require 'helm)
     (projectile-find-file-in-directory "~/Dropbox/Org/"))
 
   ;; some general settings
@@ -537,17 +546,6 @@ I use org mode extensively so this is quite a long section...
    '(org-document-title ((t :height 1.5)))
    )
 
-  :hook ((org-mode . auto-fill-mode)
-         (org-mode . visual-line-mode)
-         (org-mode . display-line-numbers-mode)
-	   (org-mode . (lambda ()
-	                 (setq-local electric-pair-inhibit-predicate
-	          		     `(lambda (c)
-	          			(if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
-  
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c f" . my/list-org-files))
   :config
 
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
@@ -586,6 +584,8 @@ I use org mode extensively so this is quite a long section...
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
+     (python     . t)
+     (latex      . t)
      (jupyter    . t)))
   
   (add-to-list 'org-modules 'org-tempo t)
@@ -917,7 +917,8 @@ I use Emacs Jupyter for jupyter notebooks
   :init
   (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
                                                        (:session . "py")
-                                                       (:kernel . "python3")))
+                                                       (:kernel . "python3")
+						         (:pandoc . "t")))
   (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 
   ;; function to load jupyter package and get kernelspecs from current python env
