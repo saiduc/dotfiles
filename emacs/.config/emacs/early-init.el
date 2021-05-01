@@ -7,7 +7,7 @@
 
 ;; make garbage collector high at startup
 (setq gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6)
+      gc-cons-percentage 0.9)
 
 ;; restore gc threshold after startup
 (add-hook 'emacs-startup-hook
@@ -20,7 +20,7 @@
 
 ;; Set font
 (setq frame-inhibit-implied-resize t)
-(add-to-list 'default-frame-alist '(font . "Roboto Mono 14"))
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono 14"))
 
 ;; Optimisations
 (defvar default-file-name-handler-alist file-name-handler-alist)
