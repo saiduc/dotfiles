@@ -1,10 +1,7 @@
 /emacs/.config/emacs/*
 !/emacs/.config/emacs/init.el
-!/emacs/.config/emacs/init-org.org
 !/emacs/.config/emacs/early-init.el
-!/emacs/.config/emacs/dashboard_banner.png
-!/emacs/.config/emacs/lisp
-!/emacs/.config/emacs/lisp/*
+!/emacs/.config/emacs/init-org.org
 /nvim/.config/nvim/*
 !/nvim/.config/nvim/init.vim
 !/nvim/.config/nvim/coc-settings.json

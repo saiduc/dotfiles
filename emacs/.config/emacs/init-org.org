@@ -26,9 +26,10 @@ These are some minor tweaks to the default look and behaviour of Emacs
 ;; autopair parentheses and quotations
 (electric-pair-mode 1)
 
-;; disable auto-save and auto-backup
+;; disable auto-save, auto-backup and lockfiles
 (setq make-backup-files nil)
 (setq auto-save-default nil)
+(setq create-lockfiles nil)
 
 ;; turn off annoying Emacs splash screen
 (setq inhibit-splash-screen t)
@@ -130,6 +131,13 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 #+begin_src emacs-lisp
 (global-unset-key (kbd "<C-wheel-down>"))
 (global-unset-key (kbd "<C-wheel-up>"))
+#+end_src
+
+* No Littering
+This package stops packages from cluttering the Emacs folder with random files
+#+begin_src emacs-lisp
+(use-package no-littering
+  :straight t)
 #+end_src
 
 * Diminish
@@ -424,7 +432,9 @@ I use projectile to manage projects
   :straight t
   :defer t
   :bind-keymap
-  ("C-x p" . projectile-command-map))
+  ("C-x p" . projectile-command-map)
+  :config
+  (projectile-mode 1))
 #+end_src
 
 * Dashboard
@@ -585,7 +595,6 @@ I use org mode extensively so this is quite a long section...
    'org-babel-load-languages 
    '((emacs-lisp . t)
      (python     . t)
-     (latex      . t)
      (jupyter    . t)))
   
   (add-to-list 'org-modules 'org-tempo t)

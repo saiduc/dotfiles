@@ -40,11 +40,11 @@
 (defun my/tangle-dotfiles ()
    "If the current file is this file, the code blocks are tangled"
    (when (equal (buffer-file-name) (expand-file-name "~/dotfiles/emacs/.config/emacs/init-org.org"))
-     (org-babel-tangle nil "~/dotfiles/emacs/.config/emacs/init-org.el")
-     (byte-compile-file "~/dotfiles/emacs/.config/emacs/init-org.el")))
+     (org-babel-tangle nil "~/dotfiles/emacs/.config/emacs/init-compiled/init-org.el")
+     (byte-compile-file "~/dotfiles/emacs/.config/emacs/init-compiled/init-org.el")))
 (add-hook 'after-save-hook #'my/tangle-dotfiles)
 
-(load-file "~/dotfiles/emacs/.config/emacs/init-org.elc")
+(load-file "~/dotfiles/emacs/.config/emacs/init-compiled/init-org.elc")
 
 
 ;; SET CUSTOM.EL LOCATION
