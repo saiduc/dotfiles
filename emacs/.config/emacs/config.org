@@ -373,7 +373,8 @@ I use this for managing workspaces inside Emacs
     :straight (:type built-in)
     :config
     (require 'ibuf-ext)
-    (add-to-list 'ibuffer-never-show-predicates "^\*helm"))
+    (add-to-list 'ibuffer-never-show-predicates "^\*helm")
+    (add-to-list 'ibuffer-never-show-predicates "\\` "))
   (persp-mode 1))
 #+end_src
 
@@ -387,12 +388,12 @@ I use helm for completion
   :init
   (setq projectile-completion-system 'helm)
   (setq helm-buffers-fuzzy-matching t)
-  (setq helm-M-x-fuzzy-match t)
-  (setq helm-apropos-fuzzy-match t)
+  (setq helm-apropos-fuzzy-match nil)
   (setq helm-split-window-in-side-p t)
   (setq helm-move-to-line-cycle-in-source nil)
   (setq helm-display-header-line nil)
   (setq helm-input-idle-delay 0)
+  (setq helm-grep-input-idle-delay 0)
   :bind
   (("C-x C-f" . helm-find-files)
    ("M-p" . helm-show-kill-ring)
@@ -445,13 +446,11 @@ This gives a nice startup page when Emacs first runs
   :diminish page-break-lines-mode
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  ;; (setq dashboard-startup-banner "~/.config/emacs/dashboard_banner.png")
   (setq dashboard-startup-banner 'logo)
   (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
   ;; (setq dashboard-set-init-info nil)
-
   (setq dashboard-items '((recents  . 25)))
   (setq dashboard-set-heading-icons nil)
   (setq dashboard-set-file-icons nil)
@@ -747,7 +746,8 @@ for this to work. On MacOS: brew install aspell
   (setq ispell-program-name "/usr/local/bin/aspell") 
   (setq ispell-dictionary "british")
   :hook ((latex-mode . flyspell-mode)
-	   (text-mode . flyspell-mode)))
+	   (text-mode . flyspell-mode)
+	   (org-mode . (lambda () (flyspell-mode -1)))))
 #+end_src
 
 * Flycheck
@@ -928,17 +928,19 @@ I use Emacs Jupyter for jupyter notebooks
                                                        (:session . "py")
                                                        (:kernel . "python3")
 						         (:pandoc . "t")))
-  (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 
   ;; function to load jupyter package and get kernelspecs from current python env
-  (defun my/get-jupyter-aliases ()
+  (defun my/jupyter-refresh-kernelspecs ()
+    "Refresh Jupyter kernelspecs"
+    (interactive)
     (require 'jupyter)
-    (org-babel-jupyter-aliases-from-kernelspecs))
+    (jupyter-available-kernelspecs t))
+
+  (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
 
   :bind (:map jupyter-org-interaction-mode-map ("C-c h" . nil))
-  
-  :hook ((conda-postactivate . my/get-jupyter-aliases)
-	   (conda-postdeactivate . my/get/jupyter-aliases)))
+  :hook ((conda-postactivate . my/jupyter-refresh-kernelspecs)
+	   (conda-postdeactivate . my/jupyter-refresh-kernelspecs)))
 #+end_src
 
 Set up export to Jupyter notebooks
@@ -1007,4 +1009,3 @@ Make sure llvm is on your path.
   :init
   (setq c-default-style "linux"))
 #+end_src
-
