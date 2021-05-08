@@ -219,6 +219,7 @@ I am an ex-vim user so I use evil for my editing
 	   ("C-c K" . evil-window-move-very-top)
 	   ("C-c L" . evil-window-move-far-right))
   :config
+  (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
 #+end_src
 
@@ -231,17 +232,6 @@ Evil collection fixes evil-mode in a lot of places
   (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
   (dashboard-refresh-buffer))
-#+end_src
-
-Undo-tree is a dependancy, but is not installed automatically for some reason
-#+begin_src emacs-lisp
-(use-package undo-tree
-  :straight t
-  :after evil
-  :diminish
-  :config
-  (evil-set-undo-system 'undo-tree)
-  (global-undo-tree-mode 1))
 #+end_src
 
 Port of vim commentary plugin
@@ -431,6 +421,7 @@ I use projectile to manage projects
 #+begin_src emacs-lisp
 (use-package projectile
   :straight t
+  :diminish
   :defer t
   :bind-keymap
   ("C-x p" . projectile-command-map)
@@ -958,6 +949,47 @@ Function to run jupyter-lab command and open xwidget buffer with client
   (async-shell-command "bash ~/dotfiles/scripts/run_jupyter_in_emacs.sh")
   (switch-to-buffer-other-window "*Async Shell Command*")
   (delete-window))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package ein-notebook
+  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
+  :defer t
+  :hook ((ein:ipynb-mode . (lambda ()
+			       (display-fill-column-indicator-mode -1)
+			       (company-mode -1)))
+	   (poly-ein-mode .  (lambda ()
+			       (display-fill-column-indicator-mode -1)
+			       (company-mode -1))))
+  :init
+  (setq ein:worksheet-enable-undo t)
+  (setq ein:output-area-inlined-images t)
+  (setq ein:markdown-header-scaling t)
+  (setq ein:markdown-enable-math t)
+  (setq ein:shr-env
+	'((shr-table-horizontal-line ?-)
+          (shr-table-vertical-line ?|)
+          (shr-table-corner ?+)))
+  :bind (:map ein:notebook-mode-map
+	      (("M-d" . ein:worksheet-kill-cell-km)
+	       ("M-y" . ein:worksheet-copy-cell-km)
+             ("M-p" . ein:worksheet-yank-cell-km)
+             ("M-d" . ein:worksheet-kill-cell-km)
+             ("M-o" . ein:worksheet-insert-cell-below-km)
+             ("M-O" . ein:worksheet-insert-cell-above-km)
+             ("C-j" . ein:worksheet-goto-next-input-km)
+             ("C-k" . ein:worksheet-goto-prev-input-km)
+             ("M-h" . ein:notebook-worksheet-move-prev-km)
+             ("M-j" . ein:worksheet-move-cell-down-km)
+             ("M-k" . ein:worksheet-move-cell-up-km)
+             ("M-l" . ein:notebook-worksheet-move-next-km)
+	       ("M-t" . ein:worksheet-toggle-output-km)
+	       ("C-c x" . ein:worksheet-clear-output-km)
+	       ("C-c X" . ein:worksheet-clear-all-output-km)
+	       ("C-o" . ein:console-open-km)
+	       ("M-s" . ein:worksheet-split-cell-at-point-km)
+	       ("M-u" . ein:worksheet-toggle-cell-type)
+	       ("C-c q" . ein:notebook-kernel-interrupt-command-km))))
 #+end_src
 
 * LaTeX
