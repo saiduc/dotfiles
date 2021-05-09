@@ -133,6 +133,46 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 (global-unset-key (kbd "<C-wheel-up>"))
 #+end_src
 
+* Pretty Package Loading
+This prints a little message whenever it is loading a package first time
+#+begin_src emacs-lisp
+(defvar pacakge-loading-notice-list
+  '(org
+    org-ref
+    yasnippet
+    flyspell
+    exec-path-from-shell
+    evil
+    evil-collection
+    helm
+    jupyter
+    company))
+
+(defun package-loading-notice (old &rest r)
+  (let* ((elt (car r))
+         (mode
+          (when (stringp elt)
+            (let ((ret (assoc-default elt auto-mode-alist 'string-match)))
+              (and (symbolp ret) (symbol-name ret)))))
+         (pkg
+          (cond ((symbolp elt) elt)
+                ((stringp mode) (intern (string-remove-suffix "-mode" mode)))
+                (t nil))))
+    (if (not (member pkg pacakge-loading-notice-list))
+        (apply old r)
+      (let ((msg (capitalize (format " %s loading ..." pkg))))
+        (setq pacakge-loading-notice-list
+              (delq pkg pacakge-loading-notice-list))
+        (unless pacakge-loading-notice-list
+          (advice-remove 'require #'package-loading-notice)
+          (advice-remove 'find-file #'package-loading-notice))
+        (message msg)
+        (let ((ret (apply old r))) ret)))))
+
+(advice-add 'require :around #'package-loading-notice)
+(advice-add 'find-file-noselect :around #'package-loading-notice)
+#+end_src
+
 * No Littering
 This package stops packages from cluttering the Emacs folder with random files
 #+begin_src emacs-lisp
