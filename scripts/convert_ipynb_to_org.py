@@ -35,6 +35,12 @@ if __name__ == "__main__":
     with fileinput.FileInput(org_new, inplace=True) as file:
         for line in file:
             print(line.replace("#+END_SRC", "#+end_src"), end='')
+    with fileinput.FileInput(org_new, inplace=True) as file:
+        for line in file:
+            print(line.replace("#+begin_example", "#+begin_src jupyter-python"), end='')
+    with fileinput.FileInput(org_new, inplace=True) as file:
+        for line in file:
+            print(line.replace("#+end_example", "#+end_src"), end='')
 
     # remove old org file
     call(["rm", org])
