@@ -795,6 +795,7 @@ Language servers handle most of my languages
 			      ("M-[" . xref-pop-marker-stack))))
 #+end_src
 
+
 Posframe is necesary to show signatures in a popup
 #+begin_src emacs-lisp
 (use-package posframe
