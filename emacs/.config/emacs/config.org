@@ -133,46 +133,6 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 (global-unset-key (kbd "<C-wheel-up>"))
 #+end_src
 
-* Pretty Package Loading
-This prints a little message whenever it is loading a package first time
-#+begin_src emacs-lisp
-(defvar pacakge-loading-notice-list
-  '(org
-    org-ref
-    yasnippet
-    flyspell
-    exec-path-from-shell
-    evil
-    evil-collection
-    helm
-    jupyter
-    company))
-
-(defun package-loading-notice (old &rest r)
-  (let* ((elt (car r))
-         (mode
-          (when (stringp elt)
-            (let ((ret (assoc-default elt auto-mode-alist 'string-match)))
-              (and (symbolp ret) (symbol-name ret)))))
-         (pkg
-          (cond ((symbolp elt) elt)
-                ((stringp mode) (intern (string-remove-suffix "-mode" mode)))
-                (t nil))))
-    (if (not (member pkg pacakge-loading-notice-list))
-        (apply old r)
-      (let ((msg (capitalize (format " %s loading ..." pkg))))
-        (setq pacakge-loading-notice-list
-              (delq pkg pacakge-loading-notice-list))
-        (unless pacakge-loading-notice-list
-          (advice-remove 'require #'package-loading-notice)
-          (advice-remove 'find-file #'package-loading-notice))
-        (message msg)
-        (let ((ret (apply old r))) ret)))))
-
-(advice-add 'require :around #'package-loading-notice)
-(advice-add 'find-file-noselect :around #'package-loading-notice)
-#+end_src
-
 * No Littering
 This package stops packages from cluttering the Emacs folder with random files
 #+begin_src emacs-lisp
@@ -445,6 +405,7 @@ I use helm for completion
    (helm-mode 1))
 #+end_src
 
+Binds helm to bottom 0.3 of screen
 #+begin_src emacs-lisp
 (use-package shackle
   :straight t
@@ -541,7 +502,7 @@ I use org mode extensively so this is quite a long section...
   ;; make custom function to list all org files 
   (defun my/list-org-files ()
     (interactive)
-    (projectile-find-file-in-directory "~/Dropbox/Org/"))
+    (project-switch-project "~/Dropbox/Org"))
 
   ;; some general settings
   (setq org-outline-path-complete-in-steps nil)
@@ -603,6 +564,7 @@ I use org mode extensively so this is quite a long section...
 	 (kbd "\t") 'org-agenda-goto
 	 "q" 'org-agenda-quit
 	 "r" 'org-agenda-redo
+	 "gr" 'org-agenda-redo
 	 "f" 'org-agenda-later
 	 "b" 'org-agenda-earlier
 	 )))
@@ -824,12 +786,20 @@ Language servers handle most of my languages
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
+  (setq lsp-signature-function 'lsp-signature-posframe)
   (setq read-process-output-max (* 1024 1024))
   ;; (setq lsp-modeline-code-actions-enable nil)
   ;; (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-headerline-breadcrumb-icons-enable nil)
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
 			      ("M-[" . xref-pop-marker-stack))))
+#+end_src
+
+Posframe is necesary to show signatures in a popup
+#+begin_src emacs-lisp
+(use-package posframe
+  :straight t
+  :defer t)
 #+end_src
 
 I also set up some additional packages for integration with helm and treemacs
