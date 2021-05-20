@@ -9,6 +9,9 @@
 export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --glob "!.git/*"'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+# Created by `pipx` on 2021-05-19 18:55:06
+set PATH $PATH /Users/saipandian/.local/bin
+
 # Path to curl
 export PATH="/usr/local/opt/curl/bin:$PATH"
 
