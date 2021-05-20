@@ -3,7 +3,7 @@
 (advice-add 'package--ensure-init-file :override 'ignore)
 
 ;; set gc threshold during normal operation
-(defvar default-gc-cons-threshold 1000000)
+(defvar default-gc-cons-threshold (* 50 1000 1000))
                                   
 ;; make garbage collector high at startup
 (setq gc-cons-threshold most-positive-fixnum
