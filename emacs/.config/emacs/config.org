@@ -940,52 +940,6 @@ I use Emacs Jupyter for jupyter notebooks
 	   (conda-postdeactivate . my/jupyter-refresh-kernelspecs)))
 #+end_src
 
-#+begin_src emacs-lisp
-(use-package ein-notebook
-  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
-  :defer t
-  :hook ((ein:ipynb-mode . (lambda ()
-			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1)))
-	   (poly-ein-mode .  (lambda ()
-			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1))))
-  :init
-  (setq ein:worksheet-enable-undo t)
-  (setq ein:output-area-inlined-images t)
-  (setq ein:markdown-header-scaling nil)
-  (setq ein:markdown-enable-math t)
-  (custom-set-faces 
-   '(ein-cell-input-area ((t (:foreground "#23242F"))))
-   '(ein:cell-input-area ((t (:extend t :background "#23242F")))))
-  
-  (setq ein:shr-env
-        '((shr-table-horizontal-line ?-)
-          (shr-table-vertical-line ?|)
-          (shr-table-corner ?+)))
-  :bind (:map ein:notebook-mode-map
-	      (("M-d" . ein:worksheet-kill-cell-km)
-	       ("M-y" . ein:worksheet-copy-cell-km)
-             ("M-p" . ein:worksheet-yank-cell-km)
-             ("M-d" . ein:worksheet-kill-cell-km)
-             ("M-o" . ein:worksheet-insert-cell-below-km)
-             ("M-O" . ein:worksheet-insert-cell-above-km)
-             ("C-j" . ein:worksheet-goto-next-input-km)
-             ("C-k" . ein:worksheet-goto-prev-input-km)
-             ("M-h" . ein:notebook-worksheet-move-prev-km)
-             ("M-j" . ein:worksheet-move-cell-down-km)
-             ("M-k" . ein:worksheet-move-cell-up-km)
-             ("M-l" . ein:notebook-worksheet-move-next-km)
-	       ("M-t" . ein:worksheet-toggle-output-km)
-	       ("C-c x" . ein:worksheet-clear-output-km)
-	       ("C-c X" . ein:worksheet-clear-all-output-km)
-	       ("C-o" . ein:console-open-km)
-	       ("M-s" . ein:worksheet-split-cell-at-point-km)
-	       ("M-u" . ein:worksheet-toggle-cell-type)
-	       ("C-c q" . ein:notebook-kernel-interrupt-command))))
-#+end_src
-
-
 Set up export to Jupyter notebooks
 #+begin_src emacs-lisp
 (use-package ox-ipynb
