@@ -17,7 +17,6 @@
 ;; INSTALLING STRAIGHT & USE-PACKAGE
 ;; --------------------------------------
 (setq straight-check-for-modifications nil)
-(setq straight-enable-package-integration nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
