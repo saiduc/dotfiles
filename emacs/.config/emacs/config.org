@@ -166,8 +166,9 @@ Get ligatures working with appropriate fonts
 #+begin_src emacs-lisp
 (use-package ligature
   :straight (:host github :repo "mickeynp/ligature.el")
+  :defer t
+  :hook (prog-mode . ligature-mode)
   :config
-  (ligature-set-ligatures 'eww-mode '("ff" "fi" "ffi"))
   (ligature-set-ligatures 'prog-mode '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
                                        ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
                                        "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
@@ -180,8 +181,7 @@ Get ligatures working with appropriate fonts
                                        "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
                                        "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
                                        "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
-                                       "\\\\" "://"))
-  (global-ligature-mode t))
+                                       "\\\\" "://")))
 #+end_src
 
 * Mode Line
