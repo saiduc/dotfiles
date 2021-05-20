@@ -61,7 +61,6 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'lervag/vimtex'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'mhinz/vim-startify'
 
 call plug#end()
 
@@ -75,16 +74,10 @@ unlet plug_install
 " =============================================================================
 "                                PLUGIN CONFIGS
 " =============================================================================
+
+" vimtex
 let g:tex_flavor = "latex"              " makes default tex favour latex
 let g:vimtex_viewer_method='skim'       " open with skim pdf viewer
-
-" always show gutter
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
 
 " allows tab in autocompletion
 inoremap <silent><expr> <TAB>
@@ -113,22 +106,6 @@ function! s:show_documentation()
   endif
 endfunction
 
-" for python: :CocInstall coc-pyright
-" for latex:  :CocInstall coc-vimtex
-" for cpp:    :CocInstall coc-clangd
-"
-
-" disable random quotes
-let g:startify_custom_header = ["   Welcome"]
-
-" show most recent fles
-let g:startify_lists = [
-  \ { 'type': 'files',     'header': ['   Recent Files']            },
-  \ ]
-
-" =============================================================================
-
-
 " =============================================================================
 "                                 KEYBINDINGS
 " =============================================================================
@@ -141,15 +118,13 @@ nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <leader>s :set ft=
 nnoremap <C-t> :vsplit term://fish<CR>
 tnoremap <Esc> <C-\><C-n>
-nnoremap <leader>t :tab sball<CR>
+vnoremap < <gv
+vnoremap > >gv
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
-vnoremap < <gv
-vnoremap > >gv
-" =============================================================================
 
 " =============================================================================
 "                                  APPEARANCE 
@@ -158,4 +133,3 @@ vnoremap > >gv
 let g:lightline = { 'colorscheme': 'dracula' }
 colorscheme dracula                     " set vim theme
 set termguicolors                       " makes some themes work in terminal
-" =============================================================================
