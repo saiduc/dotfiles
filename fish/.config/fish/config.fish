@@ -5,9 +5,10 @@
 #                         GENERAL SETTINGS AND PATHS
 # =============================================================================
 
-# fzf stuff
-export FZF_DEFAULT_COMMAND='rg --files --hidden --no-ignore --glob "!.git/*"'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+eval /Users/saipandian/miniconda3/bin/conda "shell.fish" "hook" $argv | source
+# <<< conda initialize <<<
 
 # Created by `pipx` on 2021-05-19 18:55:06
 set PATH $PATH /Users/saipandian/.local/bin
@@ -20,11 +21,6 @@ export PATH="/usr/local/opt/llvm/bin:$PATH"
 
 # Path to homebrew's sbin
 export PATH="/usr/local/sbin:$PATH"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-eval /Users/saipandian/miniconda3/bin/conda "shell.fish" "hook" $argv | source
-# <<< conda initialize <<<
 
 # Disable welcome message
 set fish_greeting
