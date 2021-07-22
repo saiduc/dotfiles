@@ -187,26 +187,26 @@ Get ligatures working with appropriate fonts
 * Mode Line
 I use doom modeline since it is lightweight and pretty
 #+begin_src emacs-lisp
-(use-package doom-modeline
-  :straight t
-  :diminish
-  :init
-  (set-face-attribute 'mode-line nil
-                      :background "#353644"
-                      :foreground "white"
-                      :overline nil
-                      :underline nil)
-  (setq doom-modeline-height 10)
-  (setq doom-modeline-bar-width 1)
-  (setq doom-modeline-icon nil)
-  (setq doom-modeline-minor-modes t)
-  (setq doom-modeline-persp-name nil)
-  (setq doom-modeline-lsp t)
-  (setq doom-modeline-env-version nil)
-  (setq inhibit-compacting-font-caches t)
-  (setq doom-modeline-buffer-encoding nil)
-  :config
-  (doom-modeline-mode 1))
+  (use-package doom-modeline
+    :straight t
+    :diminish
+    :init
+    (set-face-attribute 'mode-line nil
+			:background "#353644"
+			:foreground "white"
+			:overline nil
+			:underline nil)
+    (setq doom-modeline-height 10)
+    (setq doom-modeline-bar-width 1)
+    (setq doom-modeline-icon nil)
+    (setq doom-modeline-minor-modes t)
+    (setq doom-modeline-persp-name nil)
+    (setq doom-modeline-lsp t)
+    (setq doom-modeline-env-version nil)
+    (setq inhibit-compacting-font-caches t)
+    (setq doom-modeline-buffer-encoding nil)
+    :config
+    (doom-modeline-mode 1))
 #+end_src
 
 * Magit
@@ -256,6 +256,7 @@ Evil collection fixes evil-mode in a lot of places
 (use-package evil-collection
   :straight t
   :after evil
+  :diminish evil-collection-unimpaired-mode
   :config
   (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
@@ -307,6 +308,7 @@ I use company for all my autocompletion needs
 	   (org-mode . company-mode))
   :config
   (company-mode 1)
+  (company-tng-mode)
   (push ".fbd_latexmk" company-files-exclusions)
   (push ".aux" company-files-exclusions)
   (push ".log" company-files-exclusions)
@@ -453,8 +455,8 @@ This gives a nice startup page when Emacs first runs
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-startup-banner 'logo)
-  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
-  ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
+  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
   ;; (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 25)))
@@ -517,7 +519,12 @@ I use org mode extensively so this is quite a long section...
   :init
 
   ;; agenda files, refile targets and drawer targets
-  (setq org-agenda-files (directory-files-recursively "~/Dropbox/Org/" "\\.org$"))
+  (setq org-agenda-files (apply 'append
+				(list
+				 (directory-files-recursively "~/Dropbox/Org/University" "\\.org$")
+			         (directory-files-recursively "~/Dropbox/Org/Personal" "\\.org$")
+				 (directory-files-recursively "~/Dropbox/Org/Work" "\\.org$")
+				 '("~/Dropbox/Org/Inbox.org"))))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
   (setq org-log-into-drawer "LOGBOOK")
 
@@ -871,6 +878,7 @@ This displays indent guides
 #+begin_src emacs-lisp
 (use-package highlight-indent-guides
   :straight t
+  :diminish
   :defer t
   :init
   (setq highlight-indent-guides-method 'bitmap)
