@@ -733,7 +733,7 @@ Some capture templates that suit my workflow
 #+end_src
 
 * YASnippets
-This package provides snippet insertion
+This package provides quick snippet insertion
 #+begin_src emacs-lisp
 (use-package yasnippet
   :straight t
