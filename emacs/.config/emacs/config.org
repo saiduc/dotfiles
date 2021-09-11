@@ -1,7 +1,7 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Sai Pandian
 #+EMAIL: saipandian97@gmail.com
-#+STARTUP: overview
+#+STARTUP: content
 
 * General
 ** Better Defaults
@@ -555,12 +555,14 @@ I use org mode extensively so this is quite a long section...
 	 "b" 'org-agenda-earlier
 	 )))
 
+  ;; org babel stuff
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
      (ein        . t)
      (python     . t)))
-     
+  (add-to-list 'org-structure-template-alist '("j" . "src ein-python"))
+  (setq org-babel-default-header-args:ein-python '((:results . "output")))
   
   (add-to-list 'org-modules 'org-tempo t)
   (add-to-list 'org-modules 'org-habit t))
@@ -629,27 +631,27 @@ Set up LaTeX export classes and settings
 ** Org Ref
 I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
-(use-package org-ref
-  :straight t
-  :after org
-  :init
-  (setq bibtex-autokey-year-length 4
-	  bibtex-autokey-name-year-separator "-"
-	  bibtex-autokey-year-title-separator "-"
-	  bibtex-autokey-titleword-separator "-"
-	  bibtex-autokey-titlewords 2
-	  bibtex-autokey-titlewords-stretch 1
-	  bibtex-autokey-titleword-length 5)
-  (setq helm-bibtex-full-frame nil)
-  :hook (org-mode . (lambda ()
-		      (require 'org-ref)
-		      (require 'org-ref-pdf)
-		      (require 'org-ref-url-utils)))
-  :config
-  ;; keybinding has to go here otherwise it doesn't work
-  (define-key org-mode-map (kbd "C-c [") 'org-ref-insert-ref-link)
-  (setq bibtex-completion-display-formats
-	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}"))))
+;; (use-package org-ref
+;;   :straight t
+;;   :after org
+;;   :init
+;;   (setq bibtex-autokey-year-length 4
+;; 	  bibtex-autokey-name-year-separator "-"
+;; 	  bibtex-autokey-year-title-separator "-"
+;; 	  bibtex-autokey-titleword-separator "-"
+;; 	  bibtex-autokey-titlewords 2
+;; 	  bibtex-autokey-titlewords-stretch 1
+;; 	  bibtex-autokey-titleword-length 5)
+;;   (setq helm-bibtex-full-frame nil)
+;;   :hook (org-mode . (lambda ()
+;; 		      (require 'org-ref)
+;; 		      (require 'org-ref-pdf)
+;; 		      (require 'org-ref-url-utils)))
+;;   :config
+;;   ;; keybinding has to go here otherwise it doesn't work
+;;   (define-key org-mode-map (kbd "C-c [") 'org-ref-insert-ref-link)
+;;   (setq bibtex-completion-display-formats
+;; 	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}"))))
 #+end_src
 
 ** Org Superstar
@@ -978,10 +980,6 @@ Get nice sphinx doc generation
   ;; suppress all warnings
   (setq warning-suppress-log-types '((ein) (ein)))
   (setq warning-suppress-types '((ein)))
-
-  ;; ein org babel settings
-  (setq org-babel-default-header-args:ein-python '((:results . "output")))
-  (add-to-list 'org-structure-template-alist '("j" . "src ein-python"))
 
   ;; evil keybindings
   :bind (:map ein:notebook-mode-map
