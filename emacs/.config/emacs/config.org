@@ -3,7 +3,8 @@
 #+EMAIL: saipandian97@gmail.com
 #+STARTUP: overview
 
-* Better Defaults
+* General
+** Better Defaults
 These are some minor tweaks to the default look and behaviour of Emacs
 #+begin_src emacs-lisp
 ;; start emacs in home folder
@@ -82,7 +83,7 @@ These are some minor tweaks to the default look and behaviour of Emacs
 (setq-default fill-column 80)
 #+end_src
 
-* MacOS Specific
+** MacOS Specific
 Some macOS specific options. Comment out if not on a macOS machine
 
 Get transparent header-bars
@@ -136,14 +137,25 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 (global-unset-key (kbd "<C-wheel-up>"))
 #+end_src
 
-* No Littering
+** No Littering
 This package stops packages from cluttering the Emacs folder with random files
 #+begin_src emacs-lisp
 (use-package no-littering
   :straight t)
 #+end_src
 
-* Diminish
+** Dired
+This makes dired work as expected
+#+begin_src emacs-lisp
+(use-package dired
+  :straight (:type built-in)
+  :defer t
+  :config
+  (put 'dired-find-alternate-file 'disabled nil))
+#+end_src
+
+* User Interface
+** Diminish
 Diminish allows the hiding of minor modes in modeline
 #+begin_src emacs-lisp
 (use-package diminish
@@ -151,7 +163,7 @@ Diminish allows the hiding of minor modes in modeline
   :defer t)
 #+end_src
 
-* Themes
+** Themes
 A nice collection of themes
 #+begin_src emacs-lisp
 (use-package doom-themes
@@ -161,7 +173,7 @@ A nice collection of themes
   (load-theme 'doom-dracula t))
 #+end_src
 
-* Ligatures
+** Ligatures
 Get ligatures working with appropriate fonts
 #+begin_src emacs-lisp
 (use-package ligature
@@ -184,7 +196,7 @@ Get ligatures working with appropriate fonts
                                        "\\\\" "://")))
 #+end_src
 
-* Mode Line
+** Mode Line
 I use doom modeline since it is lightweight and pretty
 #+begin_src emacs-lisp
   (use-package doom-modeline
@@ -209,16 +221,108 @@ I use doom modeline since it is lightweight and pretty
     (doom-modeline-mode 1))
 #+end_src
 
-* Magit
-Magit is a wonderful git frontend for emacs
+** Helm
+I use helm for completion
 #+begin_src emacs-lisp
-(use-package magit
+(use-package helm
   :straight t
-  :defer t
-  :bind ("C-x g" . magit-status))
+  :diminish
+  :defer 0.01
+  :init
+  (setq helm-buffers-fuzzy-matching t)
+  (setq helm-apropos-fuzzy-match nil)
+  (setq helm-split-window-in-side-p t)
+  (setq helm-move-to-line-cycle-in-source nil)
+  (setq helm-display-header-line nil)
+  (setq helm-input-idle-delay 0)
+  (setq helm-grep-input-idle-delay 0)
+  :bind
+  (("C-x C-f" . helm-find-files)
+   ("M-p" . helm-show-kill-ring)
+   ("M-x" . helm-M-x)
+   ("C-x b" . helm-buffers-list)
+   ("C-x C-b" . helm-buffers-list)
+   ("C-s" . helm-occur)
+   ("C-x r b" . helm-bookmarks)
+   ("C-x C-r" . helm-recentf)
+   (:map helm-find-files-map
+	 ("C-h" . helm-find-files-up-one-level)
+	 ("C-l" . helm-execute-persistent-action))
+   (:map helm-map
+	 ("C-j" . helm-next-line)
+	 ("C-k" . helm-previous-line)
+	 ("<tab" . helm-execute-persistent-action)
+	 ("C-i" . helm-execute-persistent-action)
+	 ("C-z" . helm-select-action)))
+   :config
+   (helm-mode 1))
 #+end_src
 
-* Evil
+Binds helm to bottom 0.3 of screen
+#+begin_src emacs-lisp
+(use-package shackle
+  :straight t
+  :after helm
+  :init
+  (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.3)))
+  :config
+  (shackle-mode))
+#+end_src
+
+** Dashboard
+This gives a nice startup page when Emacs first runs
+#+begin_src emacs-lisp
+(use-package dashboard
+  :straight t
+  :diminish page-break-lines-mode
+  :init
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq dashboard-startup-banner 'logo)
+  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
+  (setq dashboard-footer-messages '("Sai Pandian"))
+  ;; (setq dashboard-set-init-info nil)
+  (setq dashboard-items '((recents  . 25)))
+  (setq dashboard-set-heading-icons nil)
+  (setq dashboard-set-file-icons nil)
+  (setq dashboard-center-content t)
+  :hook (dashboard-mode . (lambda () (diminish 'page-break-lines-mode)))
+  :config
+  (dashboard-setup-startup-hook))
+#+end_src
+
+** Perspective Mode
+I use this for managing workspaces inside Emacs
+#+begin_src emacs-lisp
+(use-package perspective
+  :straight t
+  :defer 0.01
+  :bind
+  (("C-x C-i" . persp-ibuffer)
+   ("C-x k" . persp-kill-buffer*)
+   ("C-x C-k" . persp-kill-buffer*)
+   ("C-x x h" . persp-prev)
+   ("C-x x l" . persp-next)
+   ("C-x x s" . persp-switch)
+   ("C-x x i" . persp-import)
+   ("C-x x r" . persp-rename)
+   ("C-x x C-l" . persp-state-load)
+   ("C-x x C-s" . persp-state-save))
+  :init
+  ;; (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
+  (setq  ido-ignore-buffers '("\\` " "^\*helm"))
+  :config
+  (use-package ibuffer
+    :straight (:type built-in)
+    :config
+    (require 'ibuf-ext)
+    (add-to-list 'ibuffer-never-show-predicates "^\*helm")
+    (add-to-list 'ibuffer-never-show-predicates "\\` "))
+  (persp-mode 1))
+#+end_src
+
+* Key Bindings
+** Evil
 I am an ex-vim user so I use evil for my editing
 #+begin_src emacs-lisp
 (use-package evil
@@ -282,7 +386,7 @@ Port of vim surround plugin
   (global-evil-surround-mode 1))
 #+end_src
 
-* General
+** General
 #+begin_src emacs-lisp
 (use-package general
   :straight t
@@ -291,36 +395,7 @@ Port of vim surround plugin
   (general-override-mode))
 #+end_src
 
-* Company
-I use company for all my autocompletion needs
-#+begin_src emacs-lisp
-(use-package company
-  :straight t
-  :defer t
-  :diminish
-  :init
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1)
-  (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 15)
-  :hook ((prog-mode . company-mode)
-	   (tex-mode . company-mode)
-	   (org-mode . company-mode))
-  :config
-  (company-mode 1)
-  (company-tng-mode)
-  (push ".fbd_latexmk" company-files-exclusions)
-  (push ".aux" company-files-exclusions)
-  (push ".log" company-files-exclusions)
-  (push ".pdf" company-files-exclusions)
-  (push ".bcf" company-files-exclusions)
-  (push ".gz" company-files-exclusions)
-  (push ".blg" company-files-exclusions)
-  (push ".fls" company-files-exclusions)
-  (delete 'company-dabbrev company-backends))
-#+end_src
-
-* Which Key
+** Which Key
 Which key is useful for discoverability
 #+begin_src emacs-lisp
 (use-package which-key
@@ -334,7 +409,8 @@ Which key is useful for discoverability
   (which-key-mode))
 #+end_src
 
-* Exec Path From Shell
+* Shells
+** Exec Path From Shell
 This simply gets the shell variable and path from default shell
 #+begin_src emacs-lisp
 (when (memq window-system '(mac ns x))
@@ -347,7 +423,7 @@ This simply gets the shell variable and path from default shell
     (exec-path-from-shell-initialize)))
 #+end_src
 
-* Terminals
+** Terminals
 I use vterm as my terminal because it is a lot better than ansi-term. You will
 need to have some dependencies installed for this, which can be done in mac with: 
 brew install cmake libtool libvterm
@@ -368,135 +444,8 @@ Multi-Vterm lets me manage multiple vterm buffers easily
 	   ("C-c t e" . eshell)))
 #+end_src
 
-* Perspective Mode
-I use this for managing workspaces inside Emacs
-#+begin_src emacs-lisp
-(use-package perspective
-  :straight t
-  :defer 0.01
-  :bind
-  (("C-x C-i" . persp-ibuffer)
-   ("C-x k" . persp-kill-buffer*)
-   ("C-x C-k" . persp-kill-buffer*)
-   ("C-x x h" . persp-prev)
-   ("C-x x l" . persp-next)
-   ("C-x x s" . persp-switch)
-   ("C-x x i" . persp-import)
-   ("C-x x r" . persp-rename)
-   ("C-x x C-l" . persp-state-load)
-   ("C-x x C-s" . persp-state-save))
-  :init
-  ;; (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
-  (setq  ido-ignore-buffers '("\\` " "^\*helm"))
-  :config
-  (use-package ibuffer
-    :straight (:type built-in)
-    :config
-    (require 'ibuf-ext)
-    (add-to-list 'ibuffer-never-show-predicates "^\*helm")
-    (add-to-list 'ibuffer-never-show-predicates "\\` "))
-  (persp-mode 1))
-#+end_src
-
-* Helm
-I use helm for completion
-#+begin_src emacs-lisp
-(use-package helm
-  :straight t
-  :diminish
-  :defer 0.01
-  :init
-  (setq helm-buffers-fuzzy-matching t)
-  (setq helm-apropos-fuzzy-match nil)
-  (setq helm-split-window-in-side-p t)
-  (setq helm-move-to-line-cycle-in-source nil)
-  (setq helm-display-header-line nil)
-  (setq helm-input-idle-delay 0)
-  (setq helm-grep-input-idle-delay 0)
-  :bind
-  (("C-x C-f" . helm-find-files)
-   ("M-p" . helm-show-kill-ring)
-   ("M-x" . helm-M-x)
-   ("C-x b" . helm-buffers-list)
-   ("C-x C-b" . helm-buffers-list)
-   ("C-s" . helm-occur)
-   ("C-x r b" . helm-bookmarks)
-   ("C-x C-r" . helm-recentf)
-   (:map helm-find-files-map
-	 ("C-h" . helm-find-files-up-one-level)
-	 ("C-l" . helm-execute-persistent-action))
-   (:map helm-map
-	 ("C-j" . helm-next-line)
-	 ("C-k" . helm-previous-line)
-	 ("<tab" . helm-execute-persistent-action)
-	 ("C-i" . helm-execute-persistent-action)
-	 ("C-z" . helm-select-action)))
-   :config
-   (helm-mode 1))
-#+end_src
-
-Binds helm to bottom 0.3 of screen
-#+begin_src emacs-lisp
-(use-package shackle
-  :straight t
-  :after helm
-  :init
-  (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.3)))
-  :config
-  (shackle-mode))
-#+end_src
-
-* Dashboard
-This gives a nice startup page when Emacs first runs
-#+begin_src emacs-lisp
-(use-package dashboard
-  :straight t
-  :diminish page-break-lines-mode
-  :init
-  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (setq dashboard-startup-banner 'logo)
-  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
-  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
-  (setq dashboard-footer-messages '("Sai Pandian"))
-  ;; (setq dashboard-set-init-info nil)
-  (setq dashboard-items '((recents  . 25)))
-  (setq dashboard-set-heading-icons nil)
-  (setq dashboard-set-file-icons nil)
-  (setq dashboard-center-content t)
-  :hook (dashboard-mode . (lambda () (diminish 'page-break-lines-mode)))
-  :config
-  (dashboard-setup-startup-hook))
-#+end_src
-
-* Dired
-This makes dired work as expected
-#+begin_src emacs-lisp
-(use-package dired
-  :straight (:type built-in)
-  :defer t
-  :config
-  (put 'dired-find-alternate-file 'disabled nil))
-#+end_src
-
-* PDF Tools
-This lets me view PDFs in Emacs (better than simply with doc-view)
-#+begin_src emacs-lisp
-(use-package pdf-tools
-  :straight t
-  :defer t
-  ;; :pin manual ;; don't reinstall when package updates
-  :mode  ("\\.pdf\\'" . pdf-view-mode)
-  :bind (:map pdf-view-mode-map ("C-s" . isearch-forward))
-  :init
-  (setq-default pdf-view-display-size 'fit-page)
-  (setq mouse-wheel-follow-mouse t)
-  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
-  :config
-  (pdf-tools-install :no-query)
-  (require 'pdf-occur))
-#+end_src
-
-* Org Mode
+* Writing & Org
+** Org Mode
 I use org mode extensively so this is quite a long section...
 #+begin_src emacs-lisp
 (use-package org
@@ -677,7 +626,7 @@ Set up LaTeX export classes and settings
 	 org-latex-default-packages-alist)))
 #+end_src
 
-* Org Ref
+** Org Ref
 I use Org Ref to handle citations in Org mode
 #+begin_src emacs-lisp
 (use-package org-ref
@@ -703,7 +652,7 @@ I use Org Ref to handle citations in Org mode
 	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}"))))
 #+end_src
 
-* Org Superstar
+** Org Superstar
 This enables nice looking icons in org-headings
 #+begin_src emacs-lisp
 (use-package org-superstar
@@ -714,7 +663,7 @@ This enables nice looking icons in org-headings
   :hook (org-mode . org-superstar-mode))
 #+end_src
 
-* Org Capture Templates
+** Org Capture Templates
 Some capture templates that suit my workflow
 #+begin_src emacs-lisp
 (setq org-capture-templates
@@ -736,7 +685,80 @@ Some capture templates that suit my workflow
 	))
 #+end_src
 
-* YASnippets
+** Flyspell
+On the go spell-checking in Emacs You will need to install aspell on your system
+for this to work. On MacOS: brew install aspell
+#+begin_src emacs-lisp
+(use-package flyspell
+  :straight (:type built-in)
+  :defer t
+  :diminish flyspell-mode
+  :init
+  (setq ispell-program-name "/usr/local/bin/aspell") 
+  (setq ispell-dictionary "british")
+  :hook ((latex-mode . flyspell-mode)
+	   (text-mode . flyspell-mode)
+	   (org-mode . (lambda () (flyspell-mode -1)))))
+#+end_src
+
+** PDF Tools
+This lets me view PDFs in Emacs (better than simply with doc-view)
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :straight t
+  :defer t
+  ;; :pin manual ;; don't reinstall when package updates
+  :mode  ("\\.pdf\\'" . pdf-view-mode)
+  :bind (:map pdf-view-mode-map ("C-s" . isearch-forward))
+  :init
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq mouse-wheel-follow-mouse t)
+  (setq pdf-view-midnight-colors '("#ffffff" . "#000000"))
+  :config
+  (pdf-tools-install :no-query)
+  (require 'pdf-occur))
+#+end_src
+
+* Programming
+** Magit
+Magit is a wonderful git frontend for emacs
+#+begin_src emacs-lisp
+(use-package magit
+  :straight t
+  :defer t
+  :bind ("C-x g" . magit-status))
+#+end_src
+
+** Company
+I use company for all my autocompletion needs
+#+begin_src emacs-lisp
+(use-package company
+  :straight t
+  :defer t
+  :diminish
+  :init
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-tooltip-align-annotations t)
+  (setq company-tooltip-limit 15)
+  :hook ((prog-mode . company-mode)
+	   (tex-mode . company-mode)
+	   (org-mode . company-mode))
+  :config
+  (company-mode 1)
+  (company-tng-mode)
+  (push ".fbd_latexmk" company-files-exclusions)
+  (push ".aux" company-files-exclusions)
+  (push ".log" company-files-exclusions)
+  (push ".pdf" company-files-exclusions)
+  (push ".bcf" company-files-exclusions)
+  (push ".gz" company-files-exclusions)
+  (push ".blg" company-files-exclusions)
+  (push ".fls" company-files-exclusions)
+  (delete 'company-dabbrev company-backends))
+#+end_src
+
+** YASnippets
 This package provides quick snippet insertion
 #+begin_src emacs-lisp
 (use-package yasnippet
@@ -754,23 +776,7 @@ A collection of useful snippets
   :defer t)
 #+end_src
 
-* Flyspell
-On the go spell-checking in Emacs You will need to install aspell on your system
-for this to work. On MacOS: brew install aspell
-#+begin_src emacs-lisp
-(use-package flyspell
-  :straight (:type built-in)
-  :defer t
-  :diminish flyspell-mode
-  :init
-  (setq ispell-program-name "/usr/local/bin/aspell") 
-  (setq ispell-dictionary "british")
-  :hook ((latex-mode . flyspell-mode)
-	   (text-mode . flyspell-mode)
-	   (org-mode . (lambda () (flyspell-mode -1)))))
-#+end_src
-
-* Flycheck
+** Flycheck
 Use flycheck as the syntax checker
 #+begin_src emacs-lisp
 (use-package flycheck
@@ -794,7 +800,7 @@ Use flycheck as the syntax checker
    "eb" '(flycheck-buffer :which-key "lint buffer")))
 #+end_src
 
-* Treemacs
+** Treemacs
 Provides tree view and other goodies (mainly just dependency for dap mode)
 #+begin_src emacs-lisp
 (use-package treemacs
@@ -810,7 +816,7 @@ Provides tree view and other goodies (mainly just dependency for dap mode)
   (treemacs-load-theme "all-the-icons"))
 #+end_src
 
-* LSP Mode
+** LSP Mode
 Language servers handle most of my languages
 #+begin_src emacs-lisp
 (use-package lsp-mode
@@ -856,7 +862,7 @@ I also set up some additional packages for integration with helm and treemacs
   (lsp-treemacs-sync-mode 1))
 #+end_src
 
-* DAP Mode
+** DAP Mode
 DAP Mode is used for debugging
 #+begin_src emacs-lisp
 (use-package dap-mode
@@ -877,7 +883,7 @@ DAP Mode is used for debugging
    "dq" '(dap-delete-all-sessions :which-key "quit all dap sessions")))
 #+end_src
 
-* Highlight Indent Guides
+** Highlight Indent Guides
 This displays indent guides
 #+begin_src emacs-lisp
 (use-package highlight-indent-guides
@@ -889,7 +895,7 @@ This displays indent guides
   :hook (prog-mode . highlight-indent-guides-mode))
 #+end_src
 
-* Apheleia
+** Apheleia
 I use this to format code (when the lsp-server can't do it by itself)
 #+begin_src emacs-lisp
 (use-package apheleia
@@ -902,7 +908,7 @@ I use this to format code (when the lsp-server can't do it by itself)
 				   "==" '(apheleia-format-buffer :which-key "format buffer")))))
 #+end_src
 
-* Python
+** Python
 I use the pyright server for Python which needs npm installed
 To use dap mode with python, you need to run: pip install debugpy 
 #+begin_src emacs-lisp
@@ -948,7 +954,7 @@ Get nice sphinx doc generation
   :hook (python-mode . sphinx-doc-mode))
 #+end_src
 
-* Emacs IPython Notebook
+** Emacs IPython Notebook
 #+begin_src emacs-lisp
 (use-package ein-notebook
   :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
@@ -1000,7 +1006,7 @@ Get nice sphinx doc generation
 	       ("C-c q" . ein:notebook-kernel-interrupt-command))))
 #+end_src
 
-* LaTeX
+** LaTeX
 I use the TexLab language server for LaTeX
 Install using: brew install texlab
 #+begin_src emacs-lisp
@@ -1037,7 +1043,7 @@ Install using: brew install texlab
     (lsp-latex-build)))
 #+end_src
 
-* C/C++
+** C/C++
 I use the clangd server for C++.
 Install using: brew install llvm
 Make sure llvm is on your path.
