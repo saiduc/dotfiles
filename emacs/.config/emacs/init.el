@@ -30,6 +30,7 @@
        (eval-print-last-sexp)))
    (load bootstrap-file nil 'nomessage))
 
+(straight-package-neutering-mode 1)
 (straight-use-package 'use-package)
 (require 'use-package)
 (setq straight-use-package-by-default t)

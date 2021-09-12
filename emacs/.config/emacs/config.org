@@ -345,7 +345,7 @@ I use this for managing workspaces inside Emacs
    ("C-x x C-s" . persp-state-save))
   :init
   ;; (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
-  (setq  ido-ignore-buffers '("\\` " "^\*helm"))
+  ;; (setq  ido-ignore-buffers '("\\` " "^\*helm"))
   :config
   (use-package ibuffer
     :straight (:type built-in))
@@ -774,10 +774,10 @@ I use company for all my autocompletion needs
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 15)
+  (setq company-tooltip-limit 8)
   :hook ((prog-mode . company-mode)
-	   (tex-mode . company-mode)
-	   (org-mode . company-mode))
+	     (tex-mode  . company-mode)
+	     (org-mode  . company-mode))
   :config
   (company-mode 1)
   (company-tng-mode)
@@ -877,10 +877,10 @@ Language servers handle most of my languages
 
 I also set up some additional packages for integration with helm and treemacs
 #+begin_src emacs-lisp
-(use-package helm-lsp
-  :straight t
-  :defer t
-  :commands helm-lsp-workspace-symbol)
+;; (use-package helm-lsp
+;;   :straight t
+;;   :defer t
+;;   :commands helm-lsp-workspace-symbol)
 
 (use-package lsp-treemacs
   :straight t
