@@ -170,32 +170,32 @@ A nice collection of themes
   :straight t
   :defer t
   :init
-  (load-theme 'doom-dracula t))
+  (load-theme 'doom-one t))
 #+end_src
 
 ** Mode Line
 I use doom modeline since it is lightweight and pretty
 #+begin_src emacs-lisp
-  (use-package doom-modeline
-    :straight t
-    :diminish
-    :init
-    (set-face-attribute 'mode-line nil
-			:background "#353644"
-			:foreground "white"
-			:overline nil
-			:underline nil)
-    (setq doom-modeline-height 10)
-    (setq doom-modeline-bar-width 1)
-    (setq doom-modeline-icon nil)
-    (setq doom-modeline-minor-modes t)
-    (setq doom-modeline-persp-name nil)
-    (setq doom-modeline-lsp t)
-    (setq doom-modeline-env-version nil)
-    (setq inhibit-compacting-font-caches t)
-    (setq doom-modeline-buffer-encoding nil)
-    :config
-    (doom-modeline-mode 1))
+(use-package doom-modeline
+  :straight t
+  :diminish
+  :init
+  ;; (set-face-attribute 'mode-line nil
+  ;; 		      :background "#353644"
+  ;; 		      :foreground "white"
+  ;; 		      :overline nil
+  ;; 		      :underline nil)
+  (setq doom-modeline-height 10)
+  (setq doom-modeline-bar-width 1)
+  (setq doom-modeline-icon nil)
+  (setq doom-modeline-minor-modes t)
+  (setq doom-modeline-persp-name nil)
+  (setq doom-modeline-lsp t)
+  (setq doom-modeline-env-version nil)
+  (setq inhibit-compacting-font-caches t)
+  (setq doom-modeline-buffer-encoding nil)
+  :config
+  (doom-modeline-mode 1))
 #+end_src
 
 ** Dashboard
@@ -268,19 +268,6 @@ Allow spaces in vertico completion
   (setq completion-styles '(orderless)
         completion-category-defaults nil
         completion-category-overrides '((file (styles basic partial-completion)))))
-#+end_src
-
-Give extra information in vertico completion buffers
-#+begin_src emacs-lisp
-(use-package marginalia
-  :straight t
-  :after vertico
-  :custom ((marginalia-align-offset 1)
-           (marginalia-margin-threshold 200)
-           (marginalia-separator-threshold 120)
-           (marginalia-truncate-width 100))
-  :config
-  (marginalia-mode))
 #+end_src
 
 ** Perspective Mode
@@ -705,12 +692,13 @@ I use company for all my autocompletion needs
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 8)
+  (setq tab-always-indent 'complete)
   :hook ((prog-mode . company-mode)
-	     (tex-mode  . company-mode)
-	     (org-mode  . company-mode))
+	     (tex-mode  . company-mode))
   :config
   (company-mode 1)
   (company-tng-mode)
+  ;; remove some company files which pollute completions when having pdf open
   (push ".fbd_latexmk" company-files-exclusions)
   (push ".aux" company-files-exclusions)
   (push ".log" company-files-exclusions)
@@ -718,8 +706,8 @@ I use company for all my autocompletion needs
   (push ".bcf" company-files-exclusions)
   (push ".gz" company-files-exclusions)
   (push ".blg" company-files-exclusions)
-  (push ".fls" company-files-exclusions)
-  (delete 'company-dabbrev company-backends))
+  (push ".fls" company-files-exclusions))
+  ;; (delete 'company-dabbrev company-backends))
 #+end_src
 
 ** Flycheck
@@ -896,6 +884,8 @@ Get nice sphinx doc generation
 #+end_src
 
 ** Emacs IPython Notebook
+Jupyter notebook support in Emacs. For dataframes, do:
+pd.set_option('expand_frame_repr', False)
 #+begin_src emacs-lisp
 (use-package ein-notebook
   :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
@@ -910,7 +900,7 @@ Get nice sphinx doc generation
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
   (setq ein:output-area-inlined-images t) ;; allow inline images
-  (setq ein:markdown-header-scaling nil) ;; disable different sized headings
+  (setq ein:markdown-header-scaling t) ;; disable different sized headings
   (setq ein:markdown-enable-math t) ;; allow latex math in markdown cells
   (custom-set-faces  ;; make background of cells darker and change font colour
    '(ein-cell-input-area ((t (:foreground "#23242F"))))
