@@ -321,7 +321,8 @@ I am an ex-vim user so I use evil for my editing
 	   ("C-c H" . evil-window-move-far-left)
 	   ("C-c J" . evil-window-move-very-bottom)
 	   ("C-c K" . evil-window-move-very-top)
-	   ("C-c L" . evil-window-move-far-right))
+	   ("C-c L" . evil-window-move-far-right)
+	   ("M-p"   . (lambda () (interactive) (yank-pop))))
   :config
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
@@ -694,7 +695,8 @@ I use company for all my autocompletion needs
   (setq company-tooltip-limit 8)
   (setq tab-always-indent 'complete)
   :hook ((prog-mode . company-mode)
-	     (tex-mode  . company-mode))
+	     (tex-mode  . company-mode)
+	     (org-mode  . company-mode))
   :config
   (company-mode 1)
   (company-tng-mode)
@@ -706,8 +708,8 @@ I use company for all my autocompletion needs
   (push ".bcf" company-files-exclusions)
   (push ".gz" company-files-exclusions)
   (push ".blg" company-files-exclusions)
-  (push ".fls" company-files-exclusions))
-  ;; (delete 'company-dabbrev company-backends))
+  (push ".fls" company-files-exclusions)
+  (delete 'company-dabbrev company-backends))
 #+end_src
 
 ** Flycheck
@@ -893,10 +895,10 @@ pd.set_option('expand_frame_repr', False)
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1)))
-	   (poly-ein-mode .  (lambda ()
+			       (company-mode 1)))
+	     (poly-ein-mode .  (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1))))
+			       (company-mode 1))))
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
   (setq ein:output-area-inlined-images t) ;; allow inline images
@@ -914,16 +916,16 @@ pd.set_option('expand_frame_repr', False)
   :bind (:map ein:notebook-mode-map
 	      (("M-d" . ein:worksheet-kill-cell-km)
 	       ("M-y" . ein:worksheet-copy-cell-km)
-             ("M-p" . ein:worksheet-yank-cell-km)
-             ("M-d" . ein:worksheet-kill-cell-km)
-             ("M-o" . ein:worksheet-insert-cell-below-km)
-             ("M-O" . ein:worksheet-insert-cell-above-km)
-             ("C-j" . ein:worksheet-goto-next-input-km)
-             ("C-k" . ein:worksheet-goto-prev-input-km)
-             ("M-h" . ein:notebook-worksheet-move-prev-km)
-             ("M-j" . ein:worksheet-move-cell-down-km)
-             ("M-k" . ein:worksheet-move-cell-up-km)
-             ("M-l" . ein:notebook-worksheet-move-next-km)
+           ("M-p" . ein:worksheet-yank-cell-km)
+           ("M-d" . ein:worksheet-kill-cell-km)
+           ("M-o" . ein:worksheet-insert-cell-below-km)
+           ("M-O" . ein:worksheet-insert-cell-above-km)
+           ("C-j" . ein:worksheet-goto-next-input-km)
+           ("C-k" . ein:worksheet-goto-prev-input-km)
+           ("M-h" . ein:notebook-worksheet-move-prev-km)
+           ("M-j" . ein:worksheet-move-cell-down-km)
+           ("M-k" . ein:worksheet-move-cell-up-km)
+           ("M-l" . ein:notebook-worksheet-move-next-km)
 	       ("M-t" . ein:worksheet-toggle-output-km)
 	       ("C-c x" . ein:worksheet-clear-output-km)
 	       ("C-c X" . ein:worksheet-clear-all-output-km)
@@ -931,6 +933,25 @@ pd.set_option('expand_frame_repr', False)
 	       ("M-s" . ein:worksheet-split-cell-at-point-km)
 	       ("M-u" . ein:worksheet-toggle-cell-type)
 	       ("C-c q" . ein:notebook-kernel-interrupt-command))))
+#+end_src
+
+Elpy provides autocompletion in ein cells. I remove everything other than
+completion, since I don't use Elpy for any of its IDE features. This package is
+disabled temporarily, since I currently don't need completion in Jupyter.
+#+begin_src emacs-lisp
+;; (use-package elpy
+;;   :straight t
+;;   :defer t
+;;   :hook ((ein:ipynb-mode . elpy-enable)
+;; 	     (poly-ein-mode . elpy-enable))
+;;   :init
+;;   (setq elpy-rpc-error-timeout 30)
+;;   :config
+;;   (remove-hook 'elpy-modules 'elpy-module-flymake)
+;;   (remove-hook 'elpy-modules 'elpy-module-pyvenv)
+;;   (remove-hook 'elpy-modules 'elpy-module-django)
+;;   (remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
+;;   (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 #+end_src
 
 ** LaTeX
