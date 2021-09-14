@@ -532,10 +532,11 @@ I use org mode extensively so this is quite a long section...
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
-     (ein        . t)
+     ;; (ein        . t)
      (python     . t)))
-  (add-to-list 'org-structure-template-alist '("j" . "src ein-python"))
-  (setq org-babel-default-header-args:ein-python '((:results . "raw drawer")))
+  ;; (add-to-list 'org-structure-template-alist '("j" . "src ein-python"))
+  ;; (setq org-babel-default-header-args:ein-python '((:results . "raw drawer")))
+  ;; ein is commented as I don't currently use org-mode for jupyter replacement
 
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
@@ -678,7 +679,18 @@ Magit is a wonderful git frontend for emacs
 (use-package magit
   :straight t
   :defer t
-  :bind ("C-x g" . magit-status))
+  :bind ("C-x g" . magit-status)
+  :init
+  ;; add some code to auto kill magit diff buffers after committing
+  (defun kill-magit-diff-buffer-in-current-repo (&rest _)
+    "Delete the magit-diff buffer related to the current repo"
+    (let ((magit-diff-buffer-in-current-repo
+           (magit-mode-get-buffer 'magit-diff-mode)))
+      (kill-buffer magit-diff-buffer-in-current-repo)))
+  :hook (git-commit-setup . (lambda ()
+			      (add-hook 'with-editor-post-finish-hook
+					#'kill-magit-diff-buffer-in-current-repo
+					nil t))))
 #+end_src
 
 ** Company
