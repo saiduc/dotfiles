@@ -157,7 +157,7 @@ A nice collection of themes
   :straight t
   :defer t
   :init
-  (load-theme 'doom-one t))
+  (load-theme 'doom-dracula t))
 #+end_src
 
 ** Mode Line
@@ -219,8 +219,10 @@ Vertico is a good replacement for helm
   (setq enable-recursive-minibuffers t)
   (setq read-extended-command-predicate
         #'command-completion-default-include-p)
+  (setq completion-auto-help nil)
   :bind
   (("C-x C-b" . switch-to-buffer)
+   ("C-x C-k" . kill-buffer)
    (:map vertico-map
 	("C-j" . vertico-next)
 	("C-k" . vertico-previous)
@@ -672,6 +674,7 @@ Some general hooks and settings for programming
 	     (prog-mode . electric-pair-mode)
 	     (prog-mode . (lambda () (diminish 'hs-minor-mode)))))
 #+end_src
+
 ** Magit
 Magit is a wonderful git frontend for emacs
 #+begin_src emacs-lisp
@@ -692,7 +695,7 @@ Magit is a wonderful git frontend for emacs
 					nil t))))
 #+end_src
 
-** Company
+** Auto-Completion
 I use company for all my autocompletion needs
 #+begin_src emacs-lisp
 (use-package company
@@ -723,28 +726,49 @@ I use company for all my autocompletion needs
   (delete 'company-dabbrev company-backends))
 #+end_src
 
-** Flycheck
+** Syntax Checking
 Use flycheck as the syntax checker
 #+begin_src emacs-lisp
-(use-package flycheck
-  :straight t
+;; (use-package flycheck
+;;   :straight t
+;;   :defer t
+;;   :diminish flycheck-mode
+;;   :hook (lsp-mode . flycheck-mode)
+;;   :init
+;;   (setq flycheck-check-syntax-automatically '(mode-enabled save))
+;;   :config
+;;   (general-define-key
+;;    :keymaps 'lsp-mode-map
+;;    :prefix lsp-keymap-prefix
+;;    "e" '(:ignore t :which-key "errors")
+;;    "en" '(flycheck-next-error :which-key "next error")
+;;    "ep" '(flycheck-previous-error :which-key "previous error")
+;;    "es" '(flycheck-select-checker :which-key "select checker")
+;;    "el" '(lsp-treemacs-errors-list :which-key "list all errors")
+;;    "ex" '(flycheck-disable-checker :which-key "disable checker")
+;;    "ed" '(flycheck-display-error-at-point :which-key "display error at point")
+;;    "eb" '(flycheck-buffer :which-key "lint buffer")))
+#+end_src
+
+I am replacing flycheck with the built-in flymake
+#+begin_src emacs-lisp
+(use-package flymake
+  :straight (:type built-in)
   :defer t
-  :diminish flycheck-mode
-  :hook (lsp-mode . flycheck-mode)
+  :diminish flymake-mode
   :init
-  (setq flycheck-check-syntax-automatically '(mode-enabled save))
+  (setq flymake-start-on-flymake-mode t)
+  (setq flymake-no-changes-timeout 0.5)
   :config
   (general-define-key
    :keymaps 'lsp-mode-map
    :prefix lsp-keymap-prefix
    "e" '(:ignore t :which-key "errors")
-   "en" '(flycheck-next-error :which-key "next error")
-   "ep" '(flycheck-previous-error :which-key "previous error")
-   "es" '(flycheck-select-checker :which-key "select checker")
+   "en" '(flymake-goto-next-error :which-key "next error")
+   "ep" '(flymake-goto-prev-error :which-key "previous error")
    "el" '(lsp-treemacs-errors-list :which-key "list all errors")
-   "ex" '(flycheck-disable-checker :which-key "disable checker")
-   "ed" '(flycheck-display-error-at-point :which-key "display error at point")
-   "eb" '(flycheck-buffer :which-key "lint buffer")))
+   "et" '(flymake-mode :which-key "toggle linting")
+   "eb" '(flymake-running-backends :which-key "list running backends")))
 #+end_src
 
 ** Treemacs
@@ -776,7 +800,7 @@ Language servers handle most of my languages
   (setq lsp-keymap-prefix "C-l")
   (setq lsp-prefer-capf t)
   (setq lsp-modeline-diagnostics-enable nil)
-  (setq lsp-prefer-flymake nil)
+  (setq lsp-prefer-flymake t)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
