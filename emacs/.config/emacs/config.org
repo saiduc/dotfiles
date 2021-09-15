@@ -276,8 +276,7 @@ I use this for managing workspaces inside Emacs
   :init
   ;; (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
   :config
-  (use-package ibuffer
-    :straight (:type built-in))
+  (use-package ibuffer :straight (:type built-in))
   (persp-mode 1))
 #+end_src
 
@@ -473,16 +472,6 @@ I use org mode extensively so this is quite a long section...
   (setq org-todo-keywords
         '((sequence "TODO" "WAIT" "SOMEDAY" "|" "DONE" "CANCELLED")))
 
-  ;; heading sizes
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.2))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-   '(org-document-title ((t :height 1.5)))
-   )
-
   :config
 
   ;; better looking org-agenda
@@ -612,20 +601,36 @@ Some capture templates that suit my workflow
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
-	("n" "Quick Note" entry (file "~/Dropbox/Org/Inbox.org")
-	 "* %?" :empty-lines 0)
+
+	("p" "Personal")
+
+	("pt" "Quick Task" entry (file+olp "~/Dropbox/Org/Inbox.org" "Tasks")
+	 "** TODO %?" :kill-buffer t)
 	
-	("e" "Quick Event" entry (file "~/Dropbox/Org/Inbox.org")
-	 "* %?\n%^T")
+	("pe" "Quick Event" entry (file+olp "~/Dropbox/Org/Inbox.org" "Events")
+	 "** %?\n%^T" :kill-buffer t)
+
+	("pn" "Quick Note" entry (file+olp "~/Dropbox/Org/Inbox.org" "Notes")
+	 "** %?" :kill-buffer t)
+
+	("pf" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
+	 "** Monthly Finance Review [0/4]
+         - [ ] Check Expenditure and Balance in Yolt
+         - [ ] Update [[file+sys:~/Google Drive/Budgets/budget_20_21.xlsx][Budget Spreadsheet]]
+         - [ ] Move Extra Revolut into Vault
+         - [ ] Transfer money into Revolut
+         - [ ] Mark TODO as DONE"
+	 :immediate-finish t :jump-to-captured t)
 	
-	("p" "Quick Task - Personal" entry (file "~/Dropbox/Org/Inbox.org")
-	 "* TODO %?" :empty-lines 0)
+	("w" "Work")
+
+	("wp" "Project Task")
+
+	("we" "Event")
 	
-	("w" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
-       "* TODO %?\n%i%a" :empty-lines 0)
+	("wt" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
+       "* TODO %?\n %i %a" )
 	
-	("f" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
-	 "** Monthly Finance Review [0/4] \n- [ ] Check Expenditure and Balance in Yolt\n- [ ] Update [[file+sys:~/Google Drive/Budgets/budget_20_21.xlsx][Budget Spreadsheet]]\n- [ ] Move Extra Revolut into Vault\n- [ ] Transfer money into Revolut\n- [ ] Mark TODO as DONE" :empty-lines 0 :jump-to-captured t :kill-buffer t)
 	))
 #+end_src
 
@@ -707,7 +712,7 @@ I use company for all my autocompletion needs
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 8)
-  (setq tab-always-indent 'complete)
+  (setq tab-always-indent t)
   :hook ((prog-mode . company-mode)
 	     (tex-mode  . company-mode)
 	     (org-mode  . company-mode))
@@ -727,29 +732,6 @@ I use company for all my autocompletion needs
 #+end_src
 
 ** Syntax Checking
-Use flycheck as the syntax checker
-#+begin_src emacs-lisp
-;; (use-package flycheck
-;;   :straight t
-;;   :defer t
-;;   :diminish flycheck-mode
-;;   :hook (lsp-mode . flycheck-mode)
-;;   :init
-;;   (setq flycheck-check-syntax-automatically '(mode-enabled save))
-;;   :config
-;;   (general-define-key
-;;    :keymaps 'lsp-mode-map
-;;    :prefix lsp-keymap-prefix
-;;    "e" '(:ignore t :which-key "errors")
-;;    "en" '(flycheck-next-error :which-key "next error")
-;;    "ep" '(flycheck-previous-error :which-key "previous error")
-;;    "es" '(flycheck-select-checker :which-key "select checker")
-;;    "el" '(lsp-treemacs-errors-list :which-key "list all errors")
-;;    "ex" '(flycheck-disable-checker :which-key "disable checker")
-;;    "ed" '(flycheck-display-error-at-point :which-key "display error at point")
-;;    "eb" '(flycheck-buffer :which-key "lint buffer")))
-#+end_src
-
 I am replacing flycheck with the built-in flymake
 #+begin_src emacs-lisp
 (use-package flymake
