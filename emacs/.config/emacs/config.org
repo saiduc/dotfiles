@@ -7,67 +7,68 @@
 ** Better Defaults
 These are some minor tweaks to the default look and behaviour of Emacs
 #+begin_src emacs-lisp
-;; start emacs in home folder
-(cd "~")
+(use-package emacs
+  :straight nil
+  :init
 
-;; disable a weird warning that pops up in Emacs 27
-(setq byte-compile-warnings '(cl-functions))
+  ;; start emacs in home folder
+  (cd "~")
 
-;; prevents random flickering sometimes
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+  ;; prevents random flickering sometimes
+  (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
-;; never just bury when running quit-window, always kill the buffer
-(defadvice quit-window (before quit-window-always-kill)
-  (ad-set-arg 0 t))
-(ad-activate 'quit-window)
+  ;; never just bury when running quit-window, always kill the buffer
+  (defadvice quit-window (before quit-window-always-kill)
+    (ad-set-arg 0 t))
+  (ad-activate 'quit-window)
 
-;; disable auto-save, auto-backup and lockfiles
-(setq make-backup-files nil)
-(setq auto-save-default nil)
-(setq create-lockfiles nil)
+  ;; disable auto-save, auto-backup and lockfiles
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq create-lockfiles nil)
 
-;; turn off annoying Emacs splash screen
-(setq inhibit-splash-screen t)
+  ;; turn off annoying Emacs splash screen
+  (setq inhibit-splash-screen t)
 
-;; disable some warnings when compiling init file
-(setq warning-minimum-level :error)
+  ;; disable some warnings when compiling init file
+  (setq warning-minimum-level :error)
 
-;; allow y-or-n instead of yes-or-no
-(defalias 'yes-or-no-p 'y-or-n-p)
+  ;; allow y-or-n instead of yes-or-no
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; always follow symbolic links
-(setq vc-follow-symlinks t)
+  ;; always follow symbolic links
+  (setq vc-follow-symlinks t)
 
-;; scroll properly, not stupid emacs way
-(setq scroll-conservatively 101)
-(setq mouse-wheel-scroll-amount '(1))
-(setq mouse-wheel-progressive-speed nil)
+  ;; scroll properly, not stupid emacs way
+  (setq scroll-conservatively 101)
+  (setq mouse-wheel-scroll-amount '(1))
+  (setq mouse-wheel-progressive-speed nil)
 
-;; refresh buffers if they are changed outside of emacs
-(global-auto-revert-mode 1)
+  ;; refresh buffers if they are changed outside of emacs
+  (global-auto-revert-mode 1)
 
-;; highlight current line
-(global-hl-line-mode 1)
+  ;; highlight current line
+  (global-hl-line-mode 1)
 
-;; turn off bell
-(setq ring-bell-function 'ignore)
+  ;; turn off bell
+  (setq ring-bell-function 'ignore)
 
-;; create eshell alias for find-file function
-(defalias 'ff 'find-file)
+  ;; create eshell alias for find-file function
+  (defalias 'ff 'find-file)
 
-;; enable emacs server
-(server-mode 1)
+  ;; enable emacs server
+  (server-mode 1)
 
-;; turn off indicator for wrapping text
-(setf (cdr (assq 'continuation fringe-indicator-alist))
-      '(nil nil))
+  ;; turn off indicator for wrapping text
+  (setf (cdr (assq 'continuation fringe-indicator-alist))
+	'(nil nil))
+  
+  ;; disable *Messages* buffer that is present on startup
+  (setq-default message-log-max nil)
+  (kill-buffer "*Messages*")
 
-;; disable *Messages* buffer that is present on startup
-(setq-default message-log-max nil)
-(kill-buffer "*Messages*")
-
-;; set default wrap length
-(setq-default fill-column 80)
+  ;; set default wrap length
+  (setq-default fill-column 80))
 #+end_src
 
 ** MacOS Specific
@@ -103,7 +104,7 @@ Remap red close button to only hide the frame
 	(delete-frame frame t)
       ;; Not (save-buffers-kill-emacs) but instead:
       (ns-do-hide-emacs))))
-      ;; can change to (suspend-frame) on non mac systems
+;; can change to (suspend-frame) on non mac systems
 (when (eq system-type 'darwin)
   (advice-add 'handle-delete-frame :override
 	      #'handle-delete-frame-without-kill-emacs))
@@ -122,6 +123,12 @@ Disable mouse+scroll for zooming, since it messes up with trackpad
 #+begin_src emacs-lisp
 (global-unset-key (kbd "<C-wheel-down>"))
 (global-unset-key (kbd "<C-wheel-up>"))
+#+end_src
+
+Fix tramp slowness on macos
+#+begin_src emacs-lisp
+(put 'temporary-file-directory 'standard-value
+     (list temporary-file-directory))
 #+end_src
 
 ** No Littering
@@ -194,10 +201,10 @@ This gives a nice startup page when Emacs first runs
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-startup-banner 'logo)
-  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
-  ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
+  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
-  (setq dashboard-set-init-info nil)
+  ;; (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 25)))
   (setq dashboard-set-heading-icons nil)
   (setq dashboard-set-file-icons nil)
@@ -601,35 +608,35 @@ Some capture templates that suit my workflow
 #+begin_src emacs-lisp
 (setq org-capture-templates
       '(
-
+	
 	("p" "Personal")
-
-	("pt" "Quick Task" entry (file+olp "~/Dropbox/Org/Inbox.org" "Tasks")
+	
+	("pt" "Quick Task" entry (file+headline "~/Dropbox/Org/Inbox.org" "Tasks")
 	 "** TODO %?" :kill-buffer t)
 	
-	("pe" "Quick Event" entry (file+olp "~/Dropbox/Org/Inbox.org" "Events")
+	("pe" "Quick Event" entry (file+headline "~/Dropbox/Org/Inbox.org" "Events")
 	 "** %?\n%^T" :kill-buffer t)
-
-	("pn" "Quick Note" entry (file+olp "~/Dropbox/Org/Inbox.org" "Notes")
+	
+	("pn" "Quick Note" entry (file+headline "~/Dropbox/Org/Inbox.org" "Notes")
 	 "** %?" :kill-buffer t)
-
+	
 	("pf" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
-	 "** Monthly Finance Review [0/4]
-         - [ ] Check Expenditure and Balance in Yolt
-         - [ ] Update [[file+sys:~/Google Drive/Budgets/budget_20_21.xlsx][Budget Spreadsheet]]
-         - [ ] Move Extra Revolut into Vault
-         - [ ] Transfer money into Revolut
+	 "** Monthly Finance Review [0/7]
+         - [ ] Check Transactions in Starling, Barclays and Amex
+         - [ ] Download Bank statements for Starling and Amex
+         - [ ] Import Bank Statements into Homebank
+         - [ ] Review Imports and Correct Errors
+         - [ ] Download Vanguard statement
+         - [ ] Import Vanguard statement into Homebank
          - [ ] Mark TODO as DONE"
 	 :immediate-finish t :jump-to-captured t)
 	
 	("w" "Work")
-
+	
 	("wp" "Project Task")
-
-	("we" "Event")
 	
 	("wt" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
-       "* TODO %?\n %i %a" )
+	 "* TODO %?\n %i %a" )
 	
 	))
 #+end_src
@@ -912,10 +919,10 @@ pd.set_option('expand_frame_repr', False)
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode 1)))
+			       (company-mode -1)))
 	     (poly-ein-mode .  (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode 1))))
+			       (company-mode -1))))
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
   (setq ein:output-area-inlined-images t) ;; allow inline images
@@ -948,8 +955,9 @@ pd.set_option('expand_frame_repr', False)
 	       ("C-c X" . ein:worksheet-clear-all-output-km)
 	       ("C-o" . ein:console-open-km)
 	       ("M-s" . ein:worksheet-split-cell-at-point-km)
-	       ("M-u" . ein:worksheet-toggle-cell-type)
-	       ("C-c q" . ein:notebook-kernel-interrupt-command))))
+	       ("M-u" . ein:worksheet-toggle-cell-type-km)
+	       ("C-c q" . ein:notebook-kernel-interrupt-command)
+	       ("C-<return>" . ein:worksheet-execute-cell-km))))
 #+end_src
 
 Elpy provides autocompletion in ein cells. I remove everything other than
