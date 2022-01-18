@@ -71,66 +71,6 @@ These are some minor tweaks to the default look and behaviour of Emacs
   (setq-default fill-column 80))
 #+end_src
 
-** MacOS Specific
-Some macOS specific options. Comment out if not on a macOS machine
-
-Get transparent header-bars
-#+begin_src emacs-lisp
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar .t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark))
-(setq ns-use-proxy-icon nil)
-(setq frame-title-format nil)
-#+end_src
-
-Open new files from Finder in previously opened frame
-#+begin_src emacs-lisp
-(setq ns-pop-up-frames nil)
-#+end_src
-
-Remap red close button to only hide the frame
-#+begin_src emacs-lisp
-(defun handle-delete-frame-without-kill-emacs (event)
-  "Handle delete-frame events from the X server."
-  (interactive "e")
-  (let ((frame (posn-window (event-start event)))
-	(i 0)
-	(tail (frame-list)))
-    (while tail
-      (and (frame-visible-p (car tail))
-	   (not (eq (car tail) frame))
-	   (setq i (1+ i)))
-      (setq tail (cdr tail)))
-    (if (> i 0)
-	(delete-frame frame t)
-      ;; Not (save-buffers-kill-emacs) but instead:
-      (ns-do-hide-emacs))))
-;; can change to (suspend-frame) on non mac systems
-(when (eq system-type 'darwin)
-  (advice-add 'handle-delete-frame :override
-	      #'handle-delete-frame-without-kill-emacs))
-#+end_src
-
-Get proper characters on ISO-UK Macbook Pro keyboard
-#+begin_src emacs-lisp
-(global-set-key (kbd "M-3") (kbd "#"))
-(global-set-key (kbd "M-2") (kbd "€"))
-(setq-default mac-right-option-modifier nil)
-
-(global-set-key (kbd "s-w") 'ns-do-hide-emacs)
-#+end_src
-
-Disable mouse+scroll for zooming, since it messes up with trackpad
-#+begin_src emacs-lisp
-(global-unset-key (kbd "<C-wheel-down>"))
-(global-unset-key (kbd "<C-wheel-up>"))
-#+end_src
-
-Fix tramp slowness on macos
-#+begin_src emacs-lisp
-(put 'temporary-file-directory 'standard-value
-     (list temporary-file-directory))
-#+end_src
-
 ** No Littering
 This package stops packages from cluttering the Emacs folder with random files
 #+begin_src emacs-lisp
@@ -252,6 +192,15 @@ Make vertico behave like ido in find-file (with return to enter folders)
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+#+end_src
+
+More information in Vertico buffers
+#+begin_src emacs-lisp
+(use-package marginalia
+  :straight t
+  :after vertico
+  :config
+  (marginalia-mode))
 #+end_src
 
 Allow spaces in vertico completion

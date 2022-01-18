@@ -17,10 +17,11 @@
 ;; Prevent the glimpse of un-styled Emacs by disabling these UI elements early.
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
+(menu-bar-mode -1)
 
 ;; Set font
 (setq frame-inhibit-implied-resize t)
-(add-to-list 'default-frame-alist '(font . "JetBrains Mono 14"))
+(add-to-list 'default-frame-alist '(font . "JetBrains Mono 11"))
 
 ;; Optimisations
 (defvar default-file-name-handler-alist file-name-handler-alist)
