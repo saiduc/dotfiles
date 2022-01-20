@@ -6,9 +6,8 @@
 local set = vim.opt
 set.number = true                  -- line number	
 set.fileencoding = 'utf-8'         -- required
-set.wildignorecase = true          -- ignore case in wildmenu
-set.wildmenu = true                -- autocompletion of commands
 set.mouse = 'a'                    -- mouse use in all modes
+set.wildmenu = false               -- turn wildmenu off
 set.showmatch = true               -- shows paired parentheses on mouse hover
 set.confirm = true                 -- asks to save changes when exiting
 set.splitbelow = true              -- sets default horizontal split below

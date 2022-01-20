@@ -14,9 +14,10 @@ return require('packer').startup(function(use)
     use 'nvim-lualine/lualine.nvim'
     use 'windwp/nvim-autopairs'
     use 'lervag/vimtex'
+    use 'gelguy/wilder.nvim'
     use {'neoclide/coc.nvim', branch='master', run='yarn install --frozen-lockfile'}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
-    use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/plenary.nvim', 'nvim-treesitter/nvim-treesitter'}}}
+    use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
 
 -- Automatically set up your configuration after cloning packer.nvim
 if packer_bootstrap then require('packer').sync() end
@@ -37,6 +38,24 @@ require('nvim-tree').setup{}
 
 vim.g['tex_flavor'] = 'latex'
 vim.g['vimtex_viewer_method'] = 'skim'
+
+require('luatab').setup{}
+
+vim.api.nvim_exec(
+[[
+call wilder#setup({
+      \ 'modes': [':'],
+      \ 'next_key': '<C-j>',
+      \ 'previous_key': '<C-k>',
+      \ })
+call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+      \ 'highlighter': wilder#basic_highlighter(),
+      \ 'min_width': '100%',
+      \ 'max_height': '30%',
+      \ 'reverse': 0,
+      \ })))
+]],
+true)
 
 
 end)
