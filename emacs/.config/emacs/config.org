@@ -465,80 +465,13 @@ I use org mode extensively so this is quite a long section...
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
-     ;; (ein        . t)
      (python     . t)))
-  ;; (add-to-list 'org-structure-template-alist '("j" . "src ein-python"))
-  ;; (setq org-babel-default-header-args:ein-python '((:results . "raw drawer")))
-  ;; ein is commented as I don't currently use org-mode for jupyter replacement
 
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
 
   (add-to-list 'org-modules 'org-tempo t)
   (add-to-list 'org-modules 'org-habit t))
-#+end_src
-
-Set up LaTeX export classes and settings
-#+begin_src emacs-lisp
-(use-package ox-latex
-  :straight (:type built-in)
-  :defer t
-  ;; :after org
-  :init
-  
-  ;; margins for binding
-  ;; (setq org-latex-packages-alist '(("a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=15mm" "geometry" nil)))
-
-  ;; general margins
-  (setq org-latex-packages-alist '(("tmargin=0.85in, bmargin=0.85in, lmargin=0.85in, rmargin=0.85in" "geometry" nil)))
-
-
-  ;; org table captions are above
-  (setq org-latex-caption-above '(table))
-
-  ;; tell org to make pdfs using latexmk
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -synctex=1 -bibtex -f -pdf %f"))
-
-  :config
-
-  ;; ieeetr class
-  (add-to-list 'org-latex-classes
-	       '("ieeetr"
-		 "\\documentclass[journal]{IEEEtran}"
-		 ("\\section{%s}" . "\\section*{%s}")
-		 ("\\subsection{%s}" . "\\subsection*{%s}")
-		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-		 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
-  ;; thesis class
-  (add-to-list 'org-latex-classes
-	       '("thesis"
-		 "\\documentclass[12pt, twoside, openright]{report}"
-		 ("\\chapter{%s}" . "\\chapter*{%s}")
-		 ("\\section{%s}" . "\\section*{%s}")
-		 ("\\subsection{%s}" . "\\subsection*{%s}")
-		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-
-  ;; for beamer presentations
-  (use-package ox-beamer :straight (:type built-in))
-
-  ;; some default settings to make documents look nice
-  (add-to-list 'org-latex-default-packages-alist
-	       '("linktocpage,
-                pdfstartview=FitH,
-                colorlinks, 
-                linkcolor=blue,
-                anchorcolor=blue, 
-                citecolor=blue,
-                filecolor=blue,
-                menucolor=blue,
-                urlcolor=blue"
-	         "hyperref" nil) t)
-  (setq org-latex-default-packages-alist
-	(-remove-item
-	 '("" "hyperref" nil)
-	 org-latex-default-packages-alist)))
 #+end_src
 
 ** Org Superstar
@@ -568,17 +501,6 @@ Some capture templates that suit my workflow
 	
 	("pn" "Quick Note" entry (file+headline "~/Dropbox/Org/Inbox.org" "Notes")
 	 "** %?" :kill-buffer t)
-	
-	("pf" "Monthly Finance Review" entry (file+olp+datetree "~/Dropbox/Org/Personal/Finance.org" "Monthly Review Log")
-	 "** Monthly Finance Review [0/7]
-         - [ ] Check Transactions in Starling, Barclays and Amex
-         - [ ] Download Bank statements for Starling and Amex
-         - [ ] Import Bank Statements into Homebank
-         - [ ] Review Imports and Correct Errors
-         - [ ] Download Vanguard statement
-         - [ ] Import Vanguard statement into Homebank
-         - [ ] Mark TODO as DONE"
-	 :immediate-finish t :jump-to-captured t)
 	
 	("w" "Work")
 	
