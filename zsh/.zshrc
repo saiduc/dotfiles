@@ -35,6 +35,6 @@ alias ca="conda activate"
 alias cde="conda deactivate"
 alias ec='emacsclient -n'
 alias ex='emacsclient -n'
-alias vim='vi'
+alias vim='nvim'
 
 
