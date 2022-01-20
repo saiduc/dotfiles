@@ -3,8 +3,6 @@
 !/emacs/.config/emacs/early-init.el
 !/emacs/.config/emacs/config.org
 !/emacs/.config/emacs/init-org.org
-/nvim/.config/nvim/*
-!/nvim/.config/nvim/init.vim
-!/nvim/.config/nvim/coc-settings.json
+/nvim/.config/nvim/plugin
 /*/.DS_Store
 .DS_Store
