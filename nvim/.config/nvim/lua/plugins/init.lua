@@ -14,7 +14,7 @@ return require('packer').startup(function(use)
     use 'nvim-lualine/lualine.nvim'
     use 'windwp/nvim-autopairs'
     use 'lervag/vimtex'
-    use 'gelguy/wilder.nvim'
+    use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
     use {'neoclide/coc.nvim', branch='master', run='yarn install --frozen-lockfile'}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
@@ -41,21 +41,20 @@ vim.g['vimtex_viewer_method'] = 'skim'
 
 require('luatab').setup{}
 
-vim.api.nvim_exec(
+vim.cmd
 [[
 call wilder#setup({
       \ 'modes': [':'],
-      \ 'next_key': '<C-j>',
-      \ 'previous_key': '<C-k>',
+      \ 'next_key': '<Tab>',
+      \ 'previous_key': '<S-Tab>',
       \ })
-call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+call wilder#set_option('renderer', wilder#wildmenu_renderer({
       \ 'highlighter': wilder#basic_highlighter(),
-      \ 'min_width': '100%',
-      \ 'max_height': '30%',
-      \ 'reverse': 0,
-      \ })))
-]],
-true)
+      \ 'separator': ' · ',
+      \ 'left': [' ', wilder#wildmenu_spinner(), ' '],
+      \ 'right': [' ', wilder#wildmenu_index()],
+      \ }))
+]]
 
 
 end)
