@@ -13,6 +13,7 @@ return require('packer').startup(function(use)
     use 'b3nj5m1n/kommentary'
     use 'nvim-lualine/lualine.nvim'
     use 'windwp/nvim-autopairs'
+    use 'github/copilot.vim'
     use 'lervag/vimtex'
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
     use {'neoclide/coc.nvim', branch='master', run='yarn install --frozen-lockfile'}

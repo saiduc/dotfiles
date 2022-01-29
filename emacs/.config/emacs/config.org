@@ -43,6 +43,7 @@ These are some minor tweaks to the default look and behaviour of Emacs
   (setq scroll-conservatively 101)
   (setq mouse-wheel-scroll-amount '(1))
   (setq mouse-wheel-progressive-speed nil)
+  (pixel-scroll-precision-mode 1)
 
   ;; refresh buffers if they are changed outside of emacs
   (global-auto-revert-mode 1)
@@ -199,6 +200,8 @@ More information in Vertico buffers
 (use-package marginalia
   :straight t
   :after vertico
+  :init
+  (setq marginalia-align 'right)
   :config
   (marginalia-mode))
 #+end_src
