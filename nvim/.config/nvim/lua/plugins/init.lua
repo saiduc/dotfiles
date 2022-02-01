@@ -15,6 +15,7 @@ return require('packer').startup(function(use)
     use 'windwp/nvim-autopairs'
     use 'github/copilot.vim'
     use 'lervag/vimtex'
+    use 'akinsho/toggleterm.nvim'
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
     use {'neoclide/coc.nvim', branch='master', run='yarn install --frozen-lockfile'}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
@@ -25,16 +26,13 @@ if packer_bootstrap then require('packer').sync() end
 
 
 -- Plugin configurations
-require('lualine').setup{options={icons_enabled = false}}
+
+require('nvim-web-devicons').setup{default=true;}
+
+require('lualine').setup{}
 
 require('nvim-autopairs').setup{}
 
-vim.g["nvim_tree_show_icons"] = {
-  git = 0,
-  folders = 0,
-  files = 0,
-  folder_arrows = 0,
-}
 require('nvim-tree').setup{}
 
 vim.g['tex_flavor'] = 'latex'
@@ -56,6 +54,8 @@ call wilder#set_option('renderer', wilder#wildmenu_renderer({
       \ 'right': [' ', wilder#wildmenu_index()],
       \ }))
 ]]
+
+require("toggleterm").setup{open_mapping = [[<C-t>]]}
 
 
 end)
