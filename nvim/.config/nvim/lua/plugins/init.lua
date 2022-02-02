@@ -15,7 +15,6 @@ return require('packer').startup(function(use)
     use 'github/copilot.vim'
     use 'lervag/vimtex'
     use 'akinsho/toggleterm.nvim'
-    use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
     use {'neoclide/coc.nvim', branch='release', run={':CocInstall coc-pyright', ':CocInstall coc-vimtex'}}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
@@ -36,9 +35,7 @@ end
 function dir_exists(path) return file_exists(path .. "/") end
 local ran_sync = dir_exists('/home/saipandian/.config/nvim/plugin')
 if not ran_sync then 
-    print('hello')
     require('packer').sync()
-	
 end
 
 
@@ -56,21 +53,8 @@ vim.g['vimtex_viewer_method'] = 'skim'
 
 require('luatab').setup{}
 
-vim.cmd
-[[
-call wilder#setup({
-      \ 'modes': [':'],
-      \ 'next_key': '<Tab>',
-      \ 'previous_key': '<S-Tab>',
-      \ })
-call wilder#set_option('renderer', wilder#wildmenu_renderer({
-      \ 'highlighter': wilder#basic_highlighter(),
-      \ 'separator': ' · ',
-      \ 'left': [' ', wilder#wildmenu_spinner(), ' '],
-      \ 'right': [' ', wilder#wildmenu_index()],
-      \ }))
-]]
 
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
+
 
 end)
