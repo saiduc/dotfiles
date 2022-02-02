@@ -8,6 +8,7 @@ set.number = true                  -- line number
 set.fileencoding = 'utf-8'         -- required
 set.mouse = 'a'                    -- mouse use in all modes
 set.wildmenu = true                -- turn wildmenu on
+set.wildignorecase = true          -- ignore case
 set.showmatch = true               -- shows paired parentheses on mouse hover
 set.confirm = true                 -- asks to save changes when exiting
 set.splitbelow = true              -- sets default horizontal split below
