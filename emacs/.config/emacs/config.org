@@ -142,10 +142,10 @@ This gives a nice startup page when Emacs first runs
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-startup-banner 'logo)
-  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
-  (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
+  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-footer-messages '("Sai Pandian"))
-  ;; (setq dashboard-set-init-info nil)
+  (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 25)))
   (setq dashboard-set-heading-icons nil)
   (setq dashboard-set-file-icons nil)
@@ -579,6 +579,18 @@ Magit is a wonderful git frontend for emacs
 			      (add-hook 'with-editor-post-finish-hook
 					#'kill-magit-diff-buffer-in-current-repo
 					nil t))))
+#+end_src
+
+** Treesitter
+I use treesitter for syntax highlighting
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :straight t
+  :defer t
+  :diminish
+  :hook (prog-mode . tree-sitter-hl-mode)
+  :config
+  (use-package tree-sitter-langs :straight t))
 #+end_src
 
 ** Auto-Completion
