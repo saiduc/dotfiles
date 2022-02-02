@@ -6,7 +6,6 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 
--- Install plugins here
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     use 'Mofiqul/dracula.nvim'
@@ -21,12 +20,29 @@ return require('packer').startup(function(use)
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
 
+
+-- Put this at the end after all plugins
 -- Automatically set up your configuration after cloning packer.nvim
-if packer_bootstrap then require('packer').sync() end
+function file_exists(file)
+  local isok, errstr, errcode = os.rename(file, file)
+  if isok == nil then
+     if errcode == 20 then 
+        return true
+     end
+     return false
+  end
+  return true
+end
+function dir_exists(path) return file_exists(path .. "/") end
+local ran_sync = dir_exists('/home/saipandian/.config/nvim/plugin')
+if not ran_sync then 
+    print('hello')
+    require('packer').sync()
+	
+end
 
 
 -- Plugin configurations
-
 require('nvim-web-devicons').setup{default=true;}
 
 require('lualine').setup{}
@@ -56,6 +72,5 @@ call wilder#set_option('renderer', wilder#wildmenu_renderer({
 ]]
 
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
-
 
 end)
