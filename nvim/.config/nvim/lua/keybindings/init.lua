@@ -10,6 +10,7 @@ nnoremap <C-H> <C-W><C-H>
 tnoremap <Esc> <C-\><C-n>
 vnoremap < <gv
 vnoremap > >gv
+nnoremap <leader>t :vsplit term://zsh<CR>
 
 " PLUGIN-SPECIFIC KEYBINDINGS
 " -----------------------------

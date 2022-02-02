@@ -26,6 +26,7 @@ vim.api.nvim_exec(
 autocmd FileType tex set textwidth=80
 autocmd FileType text set textwidth=80
 autocmd FileType markdown set textwidth=80
+autocmd TermOpen * setlocal nonumber norelativenumber
 ]],
 true)
 
