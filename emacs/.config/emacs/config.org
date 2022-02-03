@@ -585,10 +585,10 @@ Magit is a wonderful git frontend for emacs
 I use treesitter for syntax highlighting
 #+begin_src emacs-lisp
 (use-package tree-sitter
-  :straight t
   :defer t
+  :straight t
   :diminish
-  :hook (prog-mode . tree-sitter-hl-mode)
+  :hook (python-mode . tree-sitter-hl-mode)
   :config
   (use-package tree-sitter-langs :straight t))
 #+end_src
