@@ -15,6 +15,7 @@ return require('packer').startup(function(use)
     use 'github/copilot.vim'
     use 'lervag/vimtex'
     use 'akinsho/toggleterm.nvim'
+    use {'nvim-treesitter/nvim-treesitter', run=':TSUpdate'}
     use {'neoclide/coc.nvim', branch='release', run={':CocInstall coc-pyright', ':CocInstall coc-vimtex'}}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
@@ -55,6 +56,10 @@ require('luatab').setup{}
 
 
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
+
+require'nvim-treesitter.configs'.setup{
+	ensure_installed={"python", "latex"},
+	highlight = {enable=true, additional_vim_regex_highlighting=true}}
 
 
 end)
