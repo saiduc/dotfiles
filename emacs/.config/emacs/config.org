@@ -108,6 +108,15 @@ A nice collection of themes
   (load-theme 'doom-dracula t))
 #+end_src
 
+** Solaire Mode
+Makes themes look better
+#+begin_src emacs-lisp
+(use-package solaire-mode
+  :straight t
+  :config
+  (solaire-global-mode 1))
+#+end_src
+
 ** Mode Line
 I use doom modeline since it is lightweight and pretty
 #+begin_src emacs-lisp
