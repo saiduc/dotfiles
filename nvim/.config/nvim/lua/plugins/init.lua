@@ -58,7 +58,8 @@ require('luatab').setup{}
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
 
 require'nvim-treesitter.configs'.setup{
-	ensure_installed={"python", "latex"},
+	ensure_installed={"python", "latex", "lua"},
+	sync_install = true,
 	highlight = {enable=true, additional_vim_regex_highlighting=true}}
 
 

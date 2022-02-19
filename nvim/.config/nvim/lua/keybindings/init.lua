@@ -7,9 +7,13 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+inoremap <C-J> <C-W><C-J>
+inoremap <C-K> <C-W><C-K>
+inoremap <C-L> <C-W><C-L>
+inoremap <C-H> <C-W><C-H>
 tnoremap <Esc> <C-\><C-n>
-vnoremap < <gv
 vnoremap > >gv
+vnoremap < <gv
 nnoremap <leader>t :vsplit term://zsh<CR>
 
 " PLUGIN-SPECIFIC KEYBINDINGS
@@ -20,7 +24,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
+nmap <silent> <leader>rn <Plug>(coc-rename)
 
 " allow tab to autocomplete
 function! s:check_back_space() abort
