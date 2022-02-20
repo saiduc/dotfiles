@@ -650,7 +650,7 @@ I am replacing flycheck with the built-in flymake
    "e" '(:ignore t :which-key "errors")
    "en" '(flymake-goto-next-error :which-key "next error")
    "ep" '(flymake-goto-prev-error :which-key "previous error")
-   "el" '(lsp-treemacs-errors-list :which-key "list all errors")
+   "el" '(flymake-show-buffer-diagnostics :which-key "list all errors")
    "et" '(flymake-mode :which-key "toggle linting")
    "eb" '(flymake-running-backends :which-key "list running backends")))
 #+end_src
@@ -688,6 +688,8 @@ Language servers handle most of my languages
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
+  (setq lsp-signature-posframe-params '(:height 2 :width 60 :min-width 30))
+  (setq lsp-signature-function 'lsp-signature-posframe)
   (setq read-process-output-max (* 1024 1024))
   ;; (setq lsp-modeline-code-actions-enable nil)
   ;; (setq lsp-headerline-breadcrumb-enable nil)
@@ -710,6 +712,13 @@ I also set up integration with treemacs
    "ts" '(lsp-treemacs-symbols :which-key "show lsp-treemacs symbols")
    "te" '(lsp-treemacs-errors-list :which-key "show lsp-treemacs errors"))
   (lsp-treemacs-sync-mode 1))
+#+end_src
+
+Posframe is necesary to show signatures in a popup
+#+begin_src emacs-lisp
+(use-package posframe
+  :straight t
+  :defer t)
 #+end_src
 
 ** DAP Mode
@@ -824,8 +833,8 @@ pd.set_option('expand_frame_repr', False)
   (setq ein:markdown-header-scaling t) ;; disable different sized headings
   (setq ein:markdown-enable-math t) ;; allow latex math in markdown cells
   (custom-set-faces  ;; make background of cells darker and change font colour
-   '(ein-cell-input-area ((t (:foreground "#23242F"))))
-   '(ein:cell-input-area ((t (:extend t :background "#23242F")))))
+   '(ein-codecell-input-area ((t (:foreground "#23242F"))))
+   '(ein:codecell-input-area ((t (:extend t :background "#23242F")))))
 
   ;; suppress all warnings
   (setq warning-suppress-log-types '((ein) (ein)))
