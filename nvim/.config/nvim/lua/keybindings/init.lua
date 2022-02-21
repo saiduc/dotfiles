@@ -25,6 +25,7 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> <leader>rn <Plug>(coc-rename)
+nmap <silent> <leader>ac <Plug>(coc-codeaction)
 
 " allow tab to autocomplete
 function! s:check_back_space() abort
