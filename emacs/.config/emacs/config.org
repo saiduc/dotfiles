@@ -503,23 +503,14 @@ Some capture templates that suit my workflow
 (setq org-capture-templates
       '(
 	
-	("p" "Personal")
-	
-	("pt" "Quick Task" entry (file+headline "~/Dropbox/Org/Inbox.org" "Tasks")
+	("t" "Task" entry (file+headline "~/Dropbox/Org/Inbox.org" "Tasks")
 	 "** TODO %?" :kill-buffer t)
 	
-	("pe" "Quick Event" entry (file+headline "~/Dropbox/Org/Inbox.org" "Events")
+	("e" "Event" entry (file+headline "~/Dropbox/Org/Inbox.org" "Events")
 	 "** %?\n%^T" :kill-buffer t)
 	
-	("pn" "Quick Note" entry (file+headline "~/Dropbox/Org/Inbox.org" "Notes")
+	("n" "Note" entry (file+headline "~/Dropbox/Org/Inbox.org" "Notes")
 	 "** %?" :kill-buffer t)
-	
-	("w" "Work")
-	
-	("wp" "Project Task")
-	
-	("wt" "Quick Task - Work" entry (file "~/Dropbox/Org/Inbox.org")
-	 "* TODO %?\n %i %a" )
 	
 	))
 #+end_src
