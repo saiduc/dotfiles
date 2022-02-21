@@ -51,8 +51,9 @@ require('nvim-tree').setup{}
 
 vim.g['tex_flavor'] = 'latex'
 vim.g['vimtex_viewer_method'] = 'skim'
+
+vim.g['coc_config_home'] = '~/.config/nvim/coc-settings.json'
 vim.g['coc_filetype_map'] = '{"tex": "latex"}'
--- vim.api.nvim_exec( [[ autocmd FileType tex :CocEnable ]], true)
 
 require('luatab').setup{}
 
