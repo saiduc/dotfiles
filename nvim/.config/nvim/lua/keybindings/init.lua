@@ -44,5 +44,25 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
 " file tree keybindings
 noremap <C-n> :NvimTreeToggle<CR>
 
+" neogit
+nnoremap <leader>gg :Neogit<CR>
+
+" wilder keybindings
+let s:wilder_started = 0
+autocmd CmdlineLeave * let s:wilder_started = 0
+function! s:start_wilder() abort
+  let s:wilder_started = 1
+  return wilder#next()
+endfunction
+function! s:in_context(check_started) abort
+  if a:check_started && !s:wilder_started
+    return 0
+  endif
+  return wilder#in_context()
+endfunction
+cnoremap <expr> <Tab> <SID>in_context(0) ? <SID>start_wilder() : '<Tab>'
+cnoremap <expr> <Right> <SID>in_context(1) ? wilder#next() : '<Right>'
+cnoremap <expr> <Left> <SID>in_context(1) ? wilder#previous() : '<Left>'
+
 ]],
 true) 

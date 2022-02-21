@@ -22,6 +22,7 @@ return require('packer').startup(function(use)
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
+    use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
 
 
 -- Auto install plugins if not installed already
@@ -53,5 +54,19 @@ vim.g['coc_filetype_map'] = '{"tex": "latex"}'
 require('nvim-tree').setup{}
 
 require('luatab').setup{}
+
+require('neogit').setup{}
+
+vim.api.nvim_exec(
+[[
+call wilder#setup({
+      \ 'modes': [':'],
+      \ 'next_key': '<Tab>',
+      \ 'previous_key': '<S-Tab>',
+      \ 'accept_key': '/',
+      \ })
+call wilder#set_option('use_python_remote_plugin', 0)
+]],
+true) 
 
 end)
