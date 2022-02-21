@@ -21,6 +21,7 @@ return require('packer').startup(function(use)
     use {'neoclide/coc.nvim', branch='release', run=':CocInstall coc-pyright coc-vimtex coc-ltex'}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
+    use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
 
 
 -- Auto install plugins if not installed already
