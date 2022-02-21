@@ -4,8 +4,10 @@ local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
   packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
+vim.cmd[[packadd packer.nvim]]
 
 
+-- Vim Plugins list
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
     use 'Mofiqul/dracula.nvim'
@@ -21,21 +23,8 @@ return require('packer').startup(function(use)
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
 
 
--- Put this at the end after all plugins
--- Automatically set up your configuration after cloning packer.nvim
-function file_exists(file)
-  local isok, errstr, errcode = os.rename(file, file)
-  if isok == nil then
-     if errcode == 20 then 
-        return true
-     end
-     return false
-  end
-  return true
-end
-function dir_exists(path) return file_exists(path .. "/") end
-local ran_sync = dir_exists('/home/saipandian/.config/nvim/plugin')
-if not ran_sync then 
+-- Auto install plugins if not installed already
+if packer_bootstrap then
     require('packer').sync()
 end
 
@@ -47,16 +36,8 @@ require('lualine').setup{}
 
 require('nvim-autopairs').setup{}
 
-require('nvim-tree').setup{}
-
 vim.g['tex_flavor'] = 'latex'
 vim.g['vimtex_viewer_method'] = 'skim'
-
-vim.g['coc_config_home'] = '~/.config/nvim/'
-vim.g['coc_filetype_map'] = '{"tex": "latex"}'
-
-require('luatab').setup{}
-
 
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
 
@@ -65,5 +46,11 @@ require'nvim-treesitter.configs'.setup{
 	sync_install = true,
 	highlight = {enable=true, additional_vim_regex_highlighting=true}}
 
+vim.g['coc_config_home'] = '~/.config/nvim/'
+vim.g['coc_filetype_map'] = '{"tex": "latex"}'
+
+require('nvim-tree').setup{}
+
+require('luatab').setup{}
 
 end)
