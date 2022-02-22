@@ -82,10 +82,17 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-inoremap <C-J> <C-W><C-J>
-inoremap <C-K> <C-W><C-K>
-inoremap <C-L> <C-W><C-L>
-inoremap <C-H> <C-W><C-H>
+
+inoremap <C-J> <ESC><C-W><C-J>i
+inoremap <C-K> <ESC><C-W><C-K>i
+inoremap <C-L> <ESC><C-W><C-L>i
+inoremap <C-H> <ESC><C-W><C-H>i
+
+tnoremap <C-J> <C-\><C-n><C-W><C-J>
+tnoremap <C-K> <C-\><C-n><C-W><C-K>
+tnoremap <C-L> <C-\><C-n><C-W><C-L>
+tnoremap <C-H> <C-\><C-n><C-W><C-H>
+
 tnoremap <Esc> <C-\><C-n>
 vnoremap > >gv
 vnoremap < <gv
