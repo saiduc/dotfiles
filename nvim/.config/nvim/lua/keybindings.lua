@@ -125,8 +125,8 @@ function! s:in_context(check_started) abort
   return wilder#in_context()
 endfunction
 cnoremap <expr> <Tab> <SID>in_context(0) ? <SID>start_wilder() : '<Tab>'
-cnoremap <expr> <Right> <SID>in_context(1) ? wilder#next() : '<Right>'
-cnoremap <expr> <Left> <SID>in_context(1) ? wilder#previous() : '<Left>'
+cnoremap <expr> <Up> <SID>in_context(1) ? wilder#previous() : '<Up>'
+cnoremap <expr> <Down> <SID>in_context(1) ? wilder#next() : '<Down>'
 
 
 " registers keybindings

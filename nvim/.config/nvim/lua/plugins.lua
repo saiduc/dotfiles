@@ -23,7 +23,8 @@ return require('packer').startup(function(use)
     use {'kyazdani42/nvim-tree.lua', requires='kyazdani42/nvim-web-devicons'}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
-    use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
+    use {'romgrk/fzy-lua-native', run="make"}
+    use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins', requires='kyazdani42/nvim-web-devicons'}
     use "tversteeg/registers.nvim"
     use 'folke/which-key.nvim'
 
@@ -70,9 +71,37 @@ call wilder#setup({
       \ 'previous_key': '<S-Tab>',
       \ })
 call wilder#set_option('use_python_remote_plugin', 0)
-call wilder#set_option('pipeline', [wilder#branch(wilder#cmdline_pipeline({'fuzzy': 1}))])
+call wilder#set_option('pipeline', [
+      \   wilder#branch(
+      \     wilder#cmdline_pipeline({
+      \       'fuzzy': 1,
+      \       'fuzzy_filter': wilder#lua_fzy_filter(),
+      \     }),
+      \     wilder#vim_search_pipeline(),
+      \   ),
+      \ ])
+call wilder#set_option('renderer', wilder#popupmenu_renderer(
+      \   wilder#popupmenu_border_theme({
+      \      'highlights': {
+      \      'border': 'Normal',
+      \   },
+      \   'border': 'rounded',
+      \   'highlighter': wilder#lua_fzy_highlighter(),
+      \   'left': [
+      \     ' ',
+      \     wilder#popupmenu_devicons(),
+      \   ],
+      \   'right': [
+      \     ' ',
+      \     wilder#popupmenu_scrollbar(),
+      \   ],
+      \   'min_width': '100%',
+      \   'max_height': '20%'
+      \ })))
 ]],
-true) 
+true)
+
+
 
 vim.g['registers_show_empty_registers'] = 0
 vim.g['registers_hide_only_whitespace'] = 1
