@@ -44,9 +44,9 @@ vim.g['vimtex_viewer_method'] = 'skim'
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
 
 require'nvim-treesitter.configs'.setup{
-	ensure_installed={"python", "latex", "lua"},
-	sync_install = true,
-	highlight = {enable=true, additional_vim_regex_highlighting=true}}
+        ensure_installed={"python", "latex", "lua"},
+        sync_install = true,
+        highlight = {enable=true, additional_vim_regex_highlighting=true}}
 
 vim.g['coc_config_home'] = '~/.config/nvim/'
 vim.g['coc_filetype_map'] = '{"tex": "latex"}'
