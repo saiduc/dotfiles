@@ -45,7 +45,7 @@ whichkey.register
                 v = {"<cmd> vsplit <cr>", "Vertical Split"},
                 h = {"<cmd> split <cr>", "Horizontal Split"},
                 T = {"<cmd> windo wincmd T <cr>", "Maximise Window"},
-                q = {"cmd quit <cr>", "Close Window"},
+                q = {"<cmd> quit <cr>", "Close Window"},
                 h = {"<cmd> windo wincmd h <cr>", "Focus Left"},
                 j = {"<cmd> windo wincmd j <cr>", "Focus Below"},
                 k = {"<cmd> windo wincmd k <cr>", "Focus Above"},
