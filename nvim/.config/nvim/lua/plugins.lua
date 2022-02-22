@@ -120,7 +120,8 @@ require('telescope').setup{
         ["<C-k>"] = "move_selection_previous",
         ["<C-t>"] = "select_tab",
         ["<C-h>"] = "select_horizontal",
-        ["<C-v>"] = "select_vertical"
+        ["<C-v>"] = "select_vertical",
+        ["<tab>"] = "select_default"
       }
     }
   },
