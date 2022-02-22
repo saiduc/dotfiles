@@ -23,8 +23,9 @@ whichkey.register
                 d = {"<cmd> Telescope find_files <cr>", "Search Files in Directory"},
                 g = {"<cmd> Telescope git_files <cr>", "Git Files"},
                 r = {"<cmd> Telescope oldfiles <cr>", "Recent Files"},
+                s = {"<cmd> Telescope current_buffer_fuzzy_find <cr>", "Search in File"},
                 t = {"<cmd> NvimTreeToggle <cr>", "Toggle File Tree"},
-                s = {"<cmd> w <cr>", "Save File"},
+                w = {"<cmd> w <cr>", "Write File"},
         }
 }, {prefix="<leader>"})
 
