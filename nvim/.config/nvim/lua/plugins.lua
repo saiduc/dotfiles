@@ -23,11 +23,12 @@ return require('packer').startup(function(use)
     use {'kyazdani42/nvim-tree.lua', requires='kyazdani42/nvim-web-devicons'}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
-    use {'romgrk/fzy-lua-native', run="make"}
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins', requires='kyazdani42/nvim-web-devicons'}
     use 'folke/which-key.nvim'
     use {'nvim-telescope/telescope.nvim', requires='nvim-lua/plenary.nvim'}
+    use {'romgrk/fzy-lua-native', run="make"}
     use "nvim-telescope/telescope-file-browser.nvim"
+    use "nvim-telescope/telescope-fzy-native.nvim"
     use {"AckslD/nvim-neoclip.lua", requires='nvim-telescope/telescope.nvim'}
 
 -- Auto install plugins if not installed already
@@ -117,7 +118,9 @@ require('telescope').setup{
   }
 }
 
-require("telescope").load_extension "file_browser"
+require('telescope').load_extension('fzy_native')
+
+require("telescope").load_extension("file_browser")
 
 require("neoclip").setup({
       preview = false,
@@ -138,6 +141,7 @@ require("neoclip").setup({
         },
       }})
 
-require("telescope").load_extension "neoclip"
+require("telescope").load_extension("neoclip")
+
 
 end)
