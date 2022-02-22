@@ -39,18 +39,12 @@ end
 -- Plugin configurations
 require('nvim-web-devicons').setup{default=true;}
 
-local function print_tabs()
-  return [[TABS]]
-end
 require('lualine').setup{
         options={
                 theme='dracula'
         },
         tabline={
                 lualine_a = {{
-                        print_tabs
-                }},
-                lualine_b = {{
                         'tabs',
                         mode = 1
                 }},
