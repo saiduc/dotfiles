@@ -19,11 +19,11 @@ whichkey.register
 ({
         f = {
                 name = "File",
-                f = {":e ", "Open File in Window"},
-                t = {":tabnew ", "Open File in New Tab"},
-                h = {":split ", "Open File in Horizontal Split"},
-                v = {":vsplit ", "Open File in Vertical Split"},
-                n = {"<cmd> NvimTreeToggle <cr>", "File Tree"},
+                f = {"<cmd> Telescope file_browser <cr>", "File Browser"},
+                d = {"<cmd> Telescope find_files <cr>", "Search Files in Directory"},
+                g = {"<cmd> Telescope git_files <cr>", "Git Files"},
+                r = {"<cmd> Telescope oldfiles <cr>", "Recent Files"},
+                t = {"<cmd> NvimTreeToggle <cr>", "Toggle File Tree"},
                 s = {"<cmd> w <cr>", "Save File"},
         }
 }, {prefix="<leader>"})
@@ -33,7 +33,8 @@ whichkey.register
 ({
         g = {
                 name = "Git",
-                g = {"<cmd> Neogit <cr>", "NeoGit Status"}
+                g = {"<cmd> Neogit <cr>", "NeoGit Status"},
+                f = {"<cmd> Telescope git_files <cr>", "Search Files in Git Repo"}
         }
 }, {prefix="<leader>"})
 
@@ -125,13 +126,13 @@ function! s:in_context(check_started) abort
   return wilder#in_context()
 endfunction
 cnoremap <expr> <Tab> <SID>in_context(0) ? <SID>start_wilder() : '<Tab>'
-cnoremap <expr> <Up> <SID>in_context(1) ? wilder#previous() : '<Up>'
-cnoremap <expr> <Down> <SID>in_context(1) ? wilder#next() : '<Down>'
+cnoremap <expr> <Left> <SID>in_context(1) ? wilder#previous() : '<Left>'
+cnoremap <expr> <Right> <SID>in_context(1) ? wilder#next() : '<Right>'
 
 
-" registers keybindings
-nnoremap <C-p> :Registers<CR>
-inoremap <C-p> <esc>:Registers<CR>
+" telescope neoclip keybindings
+nnoremap <C-p> :Telescope neoclip<CR>
+inoremap <C-p> <esc>:Telescope neoclip<CR>
 
 ]],
 true) 

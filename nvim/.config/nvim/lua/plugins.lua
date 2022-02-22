@@ -25,9 +25,10 @@ return require('packer').startup(function(use)
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
     use {'romgrk/fzy-lua-native', run="make"}
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins', requires='kyazdani42/nvim-web-devicons'}
-    use "tversteeg/registers.nvim"
     use 'folke/which-key.nvim'
-
+    use {'nvim-telescope/telescope.nvim', requires='nvim-lua/plenary.nvim'}
+    use "nvim-telescope/telescope-file-browser.nvim"
+    use {"AckslD/nvim-neoclip.lua", requires='nvim-telescope/telescope.nvim'}
 
 -- Auto install plugins if not installed already
 if packer_bootstrap then
@@ -80,43 +81,63 @@ call wilder#set_option('pipeline', [
       \     wilder#vim_search_pipeline(),
       \   ),
       \ ])
-call wilder#set_option('renderer', wilder#popupmenu_renderer(
-      \   wilder#popupmenu_border_theme({
-      \      'highlights': {
-      \      'border': 'Normal',
-      \   },
-      \   'border': 'rounded',
-      \   'highlighter': wilder#lua_fzy_highlighter(),
-      \   'left': [
-      \     ' ',
-      \     wilder#popupmenu_devicons(),
-      \   ],
-      \   'right': [
-      \     ' ',
-      \     wilder#popupmenu_scrollbar(),
-      \   ],
-      \   'min_width': '100%',
-      \   'max_height': '20%'
-      \ })))
 ]],
 true)
 
-
-
-vim.g['registers_show_empty_registers'] = 0
-vim.g['registers_hide_only_whitespace'] = 1
-vim.g['registers_window_border'] = 'single'
-vim.g['registers_show'] = '"123456789+'
-vim.g['registers_paste_in_normal_mode'] = 1
-
 require('which-key').setup{
-        window = {
-                border = 'single'
-        },
-        layout = {
-                align = 'center',
-                height = {min = 2, max = 25},
-        }}
+        window = {border = 'single'},
+        layout = {align = 'center',
+                  height = {min = 2, max = 25}}}
 
+require('telescope').setup{
+  defaults = {
+    -- Default configuration for telescope goes here:
+    -- config_key = value,
+    preview = false,
+    path_display = {"smart"},
+    color_devicons = true,
+    layout_config = {
+            width = 0.4,
+            height = 0.4
+    },
+    mappings = {
+      i = {
+        ["<esc>"] = "close",
+        ["<C-[>"] = "close",
+        ["<C-c>"] = "close",
+        ["<C-j>"] = "move_selection_next",
+        ["<C-k>"] = "move_selection_previous",
+        ["<C-t>"] = "select_tab",
+        ["<C-h>"] = "select_horizontal",
+        ["<C-v>"] = "select_vertical"
+      }
+    }
+  },
+  extensions = {
+  }
+}
+
+require("telescope").load_extension "file_browser"
+
+require("neoclip").setup({
+      preview = false,
+      default_register = {'"', '+', '*'},
+      keys = {
+        telescope = {
+          i = {
+            ["<esc>"] = "close",
+            ["<C-[>"] = "close",
+            ["<C-c>"] = "close",
+            ["<C-j>"] = "move_selection_next",
+            ["<C-k>"] = "move_selection_previous",
+            paste = '<cr>',
+            paste_behind = '<c-p>',
+            delete = '<c-d>',
+            select = '<c-y>'
+          },
+        },
+      }})
+
+require("telescope").load_extension "neoclip"
 
 end)
