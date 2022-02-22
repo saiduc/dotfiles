@@ -10,7 +10,7 @@ whichkey.register
                 name = "Terminal",
                 t = {"<cmd> ToggleTerm <cr>", "Toggle Terminal"},
                 v = {"<cmd> vsplit term://zsh <cr>", "Vertical Split Terminal"},
-                s = {"<cmd> split term://zsh <cr>", "Horizontal Split Terminal"}
+                h = {"<cmd> split term://zsh <cr>", "Horizontal Split Terminal"}
         }
 }, {prefix="<leader>"})
 
