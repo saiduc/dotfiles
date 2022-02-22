@@ -21,7 +21,6 @@ return require('packer').startup(function(use)
     use {'nvim-treesitter/nvim-treesitter', run=':TSUpdate'}
     use {'neoclide/coc.nvim', branch='release', run=':CocInstall coc-pyright coc-vimtex coc-ltex'}
     use {'kyazdani42/nvim-tree.lua', requires='kyazdani42/nvim-web-devicons'}
-    use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins', requires='kyazdani42/nvim-web-devicons'}
     use 'folke/which-key.nvim'
@@ -71,8 +70,6 @@ vim.g['coc_config_home'] = '~/.config/nvim/'
 vim.g['coc_filetype_map'] = '{"tex": "latex"}'
 
 require('nvim-tree').setup{}
-
-require('luatab').setup{}
 
 require('neogit').setup{}
 
