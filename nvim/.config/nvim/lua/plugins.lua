@@ -17,6 +17,7 @@ return require('packer').startup(function(use)
     use 'github/copilot.vim'
     use 'lervag/vimtex'
     use 'akinsho/toggleterm.nvim'
+    use "lukas-reineke/indent-blankline.nvim"
     use {'nvim-treesitter/nvim-treesitter', run=':TSUpdate'}
     use {'neoclide/coc.nvim', branch='release', run=':CocInstall coc-pyright coc-vimtex coc-ltex'}
     use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
@@ -42,6 +43,8 @@ vim.g['tex_flavor'] = 'latex'
 vim.g['vimtex_viewer_method'] = 'skim'
 
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
+
+require("indent_blankline").setup{space_char_blankline = " "}
 
 require'nvim-treesitter.configs'.setup{
         ensure_installed={"python", "latex", "lua"},
