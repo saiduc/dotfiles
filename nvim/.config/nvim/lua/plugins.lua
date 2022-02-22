@@ -68,9 +68,9 @@ call wilder#setup({
       \ 'modes': [':'],
       \ 'next_key': '<Tab>',
       \ 'previous_key': '<S-Tab>',
-      \ 'accept_key': '/',
       \ })
 call wilder#set_option('use_python_remote_plugin', 0)
+call wilder#set_option('pipeline', [wilder#branch(wilder#cmdline_pipeline({'fuzzy': 1}))])
 ]],
 true) 
 
