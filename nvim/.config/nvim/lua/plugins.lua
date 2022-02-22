@@ -25,6 +25,7 @@ return require('packer').startup(function(use)
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
     use "tversteeg/registers.nvim"
+    use 'folke/which-key.nvim'
 
 
 -- Auto install plugins if not installed already
@@ -79,7 +80,14 @@ vim.g['registers_window_border'] = 'single'
 vim.g['registers_show'] = '"123456789+'
 vim.g['registers_paste_in_normal_mode'] = 1
 
-
+require('which-key').setup{
+        window = {
+                border = 'single'
+        },
+        layout = {
+                align = 'center',
+                height = {min = 2, max = 25},
+        }}
 
 
 end)

@@ -1,8 +1,81 @@
+-- Fancy Which-Key Bindings
+local whichkey = require('which-key')
+
+vim.g.mapleader = ","
+
+-- Terminal keybindings
+whichkey.register
+({
+        t = {
+                name = "Terminal",
+                t = {"<cmd> ToggleTerm <cr>", "Toggle Terminal"},
+                v = {"<cmd> vsplit term://zsh <cr>", "Vertical Split Terminal"},
+                s = {"<cmd> split term://zsh <cr>", "Horizontal Split Terminal"}
+        }
+}, {prefix="<leader>"})
+
+-- File keybindings
+whichkey.register
+({
+        f = {
+                name = "File",
+                f = {":e ", "Open File in Window"},
+                t = {":tabnew ", "Open File in New Tab"},
+                h = {":split ", "Open File in Horizontal Split"},
+                v = {":vsplit ", "Open File in Vertical Split"},
+                n = {"<cmd> NvimTreeToggle <cr>", "File Tree"},
+                s = {"<cmd> w <cr>", "Save File"},
+        }
+}, {prefix="<leader>"})
+
+-- Git keybindings
+whichkey.register
+({
+        g = {
+                name = "Git",
+                g = {"<cmd> Neogit <cr>", "NeoGit Status"}
+        }
+}, {prefix="<leader>"})
+
+-- Window keybindings
+whichkey.register
+({
+        w = {
+                name = "Window",
+                v = {"<cmd> vsplit <cr>", "Vertical Split"},
+                h = {"<cmd> split <cr>", "Horizontal Split"},
+                T = {"<cmd> windo wincmd T <cr>", "Maximise Window"},
+                q = {"cmd quit <cr>", "Close Window"},
+                h = {"<cmd> windo wincmd h <cr>", "Focus Left"},
+                j = {"<cmd> windo wincmd j <cr>", "Focus Below"},
+                k = {"<cmd> windo wincmd k <cr>", "Focus Above"},
+                l = {"<cmd> windo wincmd l <cr>", "Focus Right"},
+                H = {"<cmd> windo wincmd H <cr>", "Move Left"},
+                J = {"<cmd> windo wincmd J <cr>", "Move Below"},
+                K = {"<cmd> windo wincmd K <cr>", "Move Above"},
+                L = {"<cmd> windo wincmd L <cr>", "Move Right"},
+
+        }
+}, {prefix="<leader>"})
+
+-- Programming bindings
+whichkey.register
+({
+        p = {
+                name = "Programming",
+                r = {"<plug>(coc-rename)", "Rename Object"},
+                d = {"<plug>(coc-definition)", "Go to Definition"},
+                i = {"<plug>(coc-references)", "List References"},
+                a = {"<plug>(coc-codeaction)", "Apply Action"},
+                b = {"<cmd> VimtexCompile <cr>", "LaTeX Compile"}
+        }
+}, {prefix="<leader>"})
+
+-- Generic Vimscript Bindings
 vim.api.nvim_exec(
 [[
 " BASE KEYBINDINGS
 " -----------------------------
-let mapleader = ","
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -14,19 +87,11 @@ inoremap <C-H> <C-W><C-H>
 tnoremap <Esc> <C-\><C-n>
 vnoremap > >gv
 vnoremap < <gv
-nnoremap <leader>t :vsplit term://zsh<CR>
 
 " PLUGIN-SPECIFIC KEYBINDINGS
 " -----------------------------
 
 " coc keybindings
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> <leader>rn <Plug>(coc-rename)
-nmap <silent> <leader>ac <Plug>(coc-codeaction)
-
 " allow tab to autocomplete
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -41,11 +106,10 @@ inoremap <silent><expr> <Tab>
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
+
 " file tree keybindings
 nnoremap <C-n> :NvimTreeToggle<CR>
 
-" neogit
-nnoremap <leader>gg :Neogit<CR>
 
 " wilder keybindings
 let s:wilder_started = 0
@@ -64,9 +128,11 @@ cnoremap <expr> <Tab> <SID>in_context(0) ? <SID>start_wilder() : '<Tab>'
 cnoremap <expr> <Right> <SID>in_context(1) ? wilder#next() : '<Right>'
 cnoremap <expr> <Left> <SID>in_context(1) ? wilder#previous() : '<Left>'
 
+
 " registers keybindings
 nnoremap <C-p> :Registers<CR>
 inoremap <C-p> <esc>:Registers<CR>
 
 ]],
 true) 
+
