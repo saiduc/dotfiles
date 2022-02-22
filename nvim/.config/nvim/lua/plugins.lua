@@ -40,7 +40,18 @@ end
 -- Plugin configurations
 require('nvim-web-devicons').setup{default=true;}
 
-require('lualine').setup{}
+
+require('lualine').setup{
+        options={
+                theme='dracula'
+        },
+        tabline={
+                lualine_a = {{
+                        'tabs',
+                        mode = 1
+                }},
+        }
+}
 
 require('nvim-autopairs').setup{}
 
