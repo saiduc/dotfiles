@@ -20,10 +20,11 @@ return require('packer').startup(function(use)
     use "lukas-reineke/indent-blankline.nvim"
     use {'nvim-treesitter/nvim-treesitter', run=':TSUpdate'}
     use {'neoclide/coc.nvim', branch='release', run=':CocInstall coc-pyright coc-vimtex coc-ltex'}
-    use {'kyazdani42/nvim-tree.lua', requires={'kyazdani42/nvim-web-devicons'}}
+    use {'kyazdani42/nvim-tree.lua', requires='kyazdani42/nvim-web-devicons'}
     use {'alvarosevilla95/luatab.nvim', requires='kyazdani42/nvim-web-devicons'}
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins'}
+    use "tversteeg/registers.nvim"
 
 
 -- Auto install plugins if not installed already
@@ -71,5 +72,14 @@ call wilder#setup({
 call wilder#set_option('use_python_remote_plugin', 0)
 ]],
 true) 
+
+vim.g['registers_show_empty_registers'] = 0
+vim.g['registers_hide_only_whitespace'] = 1
+vim.g['registers_window_border'] = 'single'
+vim.g['registers_show'] = '"123456789+'
+vim.g['registers_paste_in_normal_mode'] = 1
+
+
+
 
 end)

@@ -42,7 +42,7 @@ inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " file tree keybindings
-noremap <C-n> :NvimTreeToggle<CR>
+nnoremap <C-n> :NvimTreeToggle<CR>
 
 " neogit
 nnoremap <leader>gg :Neogit<CR>
@@ -63,6 +63,10 @@ endfunction
 cnoremap <expr> <Tab> <SID>in_context(0) ? <SID>start_wilder() : '<Tab>'
 cnoremap <expr> <Right> <SID>in_context(1) ? wilder#next() : '<Right>'
 cnoremap <expr> <Left> <SID>in_context(1) ? wilder#previous() : '<Left>'
+
+" registers keybindings
+nnoremap <C-p> :Registers<CR>
+inoremap <C-p> <esc>:Registers<CR>
 
 ]],
 true) 
