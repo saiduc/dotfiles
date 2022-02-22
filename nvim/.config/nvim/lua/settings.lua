@@ -21,7 +21,6 @@ set.autochdir = true               -- sets cwd to file directory
 set.conceallevel = 2               -- allows tex characters to show properly
 set.hidden = true                  -- allows switching buffers without saving
 set.expandtab = true               -- replace tabs with spaces
-vim.g['python3_host_prog'] = '~/miniconda3/envs/neovim/bin/python'
 
 vim.api.nvim_exec(
 [[
