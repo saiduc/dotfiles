@@ -40,9 +40,6 @@ end
 require('nvim-web-devicons').setup{default=true;}
 
 require('lualine').setup{
-        options={
-                theme='dracula'
-        },
         tabline={
                 lualine_a = {{
                         'tabs',
@@ -70,7 +67,13 @@ vim.g['coc_filetype_map'] = '{"tex": "latex"}'
 
 require('nvim-tree').setup{
         auto_close = true,
-        open_on_tab = true
+        open_on_tab = true,
+        update_cwd = true,
+        update_focused_file = {
+                enable      = true, 
+                update_cwd  = true,
+                ignore_list = {}
+          }
 }
 
 require('neogit').setup{}
@@ -123,7 +126,7 @@ require('telescope').setup{
         ["<C-v>"] = "select_vertical",
         ["<tab>"] = "select_default"
       }
-    }
+    },
   },
   extensions = {
   }

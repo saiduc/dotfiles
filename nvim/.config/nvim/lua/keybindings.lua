@@ -19,9 +19,9 @@ whichkey.register
 ({
         f = {
                 name = "File",
-                f = {"<cmd> Telescope file_browser <cr>", "File Browser"},
-                d = {"<cmd> Telescope find_files <cr>", "Search Files in Directory"},
-                g = {"<cmd> Telescope git_files <cr>", "Git Files"},
+                f = {"<cmd> Telescope file_browser hidden=true<cr>", "File Browser"},
+                d = {"<cmd> Telescope find_files hidden=true<cr>", "Search Files in Directory"},
+                g = {"<cmd> Telescope git_files hidden=true<cr>", "Git Files"},
                 r = {"<cmd> Telescope oldfiles <cr>", "Recent Files"},
                 s = {"<cmd> Telescope current_buffer_fuzzy_find <cr>", "Search in File"},
                 t = {"<cmd> NvimTreeToggle <cr>", "Toggle File Tree"},
@@ -70,6 +70,18 @@ whichkey.register
                 i = {"<plug>(coc-references)", "List References"},
                 a = {"<plug>(coc-codeaction)", "Apply Action"},
                 b = {"<cmd> VimtexCompile <cr>", "LaTeX Compile"}
+        }
+}, {prefix="<leader>"})
+
+-- Neovim bindings
+whichkey.register
+({
+        n = {
+                name = "Neovim",
+                t = {"<cmd> Telescope colorscheme <cr>", "Change Theme"},
+                q = {"<cmd> quitall <cr>", "Quit Neovim"},
+                p = {"<cmd> PackerSync <cr>", "Update Plugins"},
+                h = {"<cmd> Telescope help_tags <cr>", "Help" }
         }
 }, {prefix="<leader>"})
 
