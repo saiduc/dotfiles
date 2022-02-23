@@ -10,18 +10,30 @@ vim.cmd[[packadd packer.nvim]]
 -- Vim Plugins list
 return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
+
+    -- colour schemes
     use 'Mofiqul/dracula.nvim'
-    use 'b3nj5m1n/kommentary'
+    use 'marko-cerovac/material.nvim'
+    use 'folke/tokyonight.nvim'
+    use 'navarasu/onedark.nvim'
+    use 'rmehri01/onenord.nvim'
+
+    -- eye candy
     use 'nvim-lualine/lualine.nvim'
+    use "lukas-reineke/indent-blankline.nvim"
+
+    -- programming
+    use 'b3nj5m1n/kommentary'
     use 'windwp/nvim-autopairs'
     use 'github/copilot.vim'
     use 'lervag/vimtex'
     use 'akinsho/toggleterm.nvim'
-    use "lukas-reineke/indent-blankline.nvim"
     use {'nvim-treesitter/nvim-treesitter', run=':TSUpdate'}
     use {'neoclide/coc.nvim', branch='release', run=':CocInstall coc-pyright coc-vimtex coc-ltex'}
-    use {'kyazdani42/nvim-tree.lua', requires='kyazdani42/nvim-web-devicons'}
     use {'TimUntersberger/neogit', requires='nvim-lua/plenary.nvim'}
+    use {'kyazdani42/nvim-tree.lua', requires='kyazdani42/nvim-web-devicons'}
+
+    -- fuzzy finding
     use {'gelguy/wilder.nvim', run=':UpdateRemotePlugins', requires='kyazdani42/nvim-web-devicons'}
     use 'folke/which-key.nvim'
     use {'nvim-telescope/telescope.nvim', requires='nvim-lua/plenary.nvim'}
