@@ -5,6 +5,7 @@
 -- GENERAL SETTINGS
 local set = vim.opt
 set.number = true                  -- line number	
+set.shortmess = "I"                -- hide startup message
 set.fileencoding = 'utf-8'         -- required
 set.mouse = 'a'                    -- mouse use in all modes
 set.wildmenu = true                -- turn wildmenu on
