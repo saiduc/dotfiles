@@ -612,15 +612,6 @@ I use company for all my autocompletion needs
   :config
   (company-mode 1)
   (company-tng-mode)
-  ;; remove some company files which pollute completions when having pdf open
-  (push ".fbd_latexmk" company-files-exclusions)
-  (push ".aux" company-files-exclusions)
-  (push ".log" company-files-exclusions)
-  (push ".pdf" company-files-exclusions)
-  (push ".bcf" company-files-exclusions)
-  (push ".gz" company-files-exclusions)
-  (push ".blg" company-files-exclusions)
-  (push ".fls" company-files-exclusions)
   (delete 'company-dabbrev company-backends))
 #+end_src
 
@@ -636,7 +627,7 @@ I am replacing flycheck with the built-in flymake
   (setq flymake-no-changes-timeout 0.5)
   :config
   (general-define-key
-   :keymaps 'lsp-mode-map
+   :keymaps 'prog-mode-map
    :prefix lsp-keymap-prefix
    "e" '(:ignore t :which-key "errors")
    "en" '(flymake-goto-next-error :which-key "next error")
@@ -646,20 +637,24 @@ I am replacing flycheck with the built-in flymake
    "eb" '(flymake-running-backends :which-key "list running backends")))
 #+end_src
 
-** Treemacs
-Provides tree view and other goodies (mainly just dependency for dap mode)
+** Neotree
+Provides tree view
 #+begin_src emacs-lisp
-(use-package treemacs
+(use-package neotree
   :straight t
   :defer t
-  :after lsp-mode
-  :commands treemacs)
-
-(use-package treemacs-all-the-icons
-  :straight t
-  :after treemacs
+  :bind ("C-x t" . neotree-toggle)
+  :init
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-show-hidden-files t)
   :config
-  (treemacs-load-theme "all-the-icons"))
+  (general-define-key
+   :keymaps '(prog-mode-map neotree-mode-map)
+   :prefix lsp-keymap-prefix
+   "t" '(:ignore t :which-key "tree")
+   "tt" '(neotree-toggle :which-key "toggle filetree")
+   "td" '(neotree-dir :which-key "change tree root directory")
+   "tr" '(neotree-refresh :which-key "refresh filetree")))
 #+end_src
 
 ** LSP Mode
@@ -689,22 +684,6 @@ Language servers handle most of my languages
 			      ("M-[" . xref-pop-marker-stack))))
 #+end_src
 
-I also set up integration with treemacs
-#+begin_src emacs-lisp
-(use-package lsp-treemacs
-  :straight t
-  :after lsp-mode
-  :config
-  (general-define-key
-   :keymaps 'lsp-mode-map
-   :prefix lsp-keymap-prefix
-   "t" '(:ignore t :which-key "tree")
-   "tt" '(treemacs :which-key "toggle treemacs")
-   "ts" '(lsp-treemacs-symbols :which-key "show lsp-treemacs symbols")
-   "te" '(lsp-treemacs-errors-list :which-key "show lsp-treemacs errors"))
-  (lsp-treemacs-sync-mode 1))
-#+end_src
-
 Posframe is necesary to show signatures in a popup
 #+begin_src emacs-lisp
 (use-package posframe
@@ -724,7 +703,7 @@ DAP Mode is used for debugging
   (setq dap-auto-configure-features '(locals expressions))
   :config
   (general-define-key
-   :keymaps 'lsp-mode-map
+   :keymaps 'prog-mode-map
    :prefix lsp-keymap-prefix
    "d" '(:ignore t :which-key "debug")
    "dt" '(dap-breakpoint-toggle :which-key "toggle breakpoint")
