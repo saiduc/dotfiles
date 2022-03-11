@@ -211,6 +211,7 @@ More information in Vertico buffers
   :after vertico
   :init
   (setq marginalia-align 'right)
+  (setq marginalia-max-relative-age 0)
   :config
   (marginalia-mode))
 #+end_src
@@ -750,8 +751,6 @@ To use dap mode with python, you need to run: pip install debugpy
 	   (python-mode . (lambda () (require 'dap-python))))
   :config
   (setq dap-python-debugger 'debugpy)
-  ;; these hooks can't go in the :hook section since lsp-restart-workspace
-  ;; is not available if lsp isn't active, so it messes up jupyter
   (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
   (add-hook 'conda-postdeactivate-hook (lambda () (lsp-restart-workspace))))
 #+end_src
