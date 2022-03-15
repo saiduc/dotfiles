@@ -271,14 +271,15 @@ I am an ex-vim user so I use evil for my editing
   (setq evil-want-C-i-jump nil)
   (define-key key-translation-map (kbd "ESC") (kbd "C-g")) ;; make esc all-powerful
   :bind (("C-c h" . evil-window-left)
-	   ("C-c j" . evil-window-down)
-	   ("C-c k" . evil-window-up)
-	   ("C-c l" . evil-window-right)
-	   ("C-c H" . evil-window-move-far-left)
-	   ("C-c J" . evil-window-move-very-bottom)
-	   ("C-c K" . evil-window-move-very-top)
-	   ("C-c L" . evil-window-move-far-right)
-	   ("M-p"   . (lambda () (interactive) (yank-pop))))
+	     ("C-c j" . evil-window-down)
+	     ("C-c k" . evil-window-up)
+	     ("C-c l" . evil-window-right)
+	     ("C-c H" . evil-window-move-far-left)
+	     ("C-c J" . evil-window-move-very-bottom)
+	     ("C-c K" . evil-window-move-very-top)
+	     ("C-c L" . evil-window-move-far-right)
+	     ("M-p"   . (lambda () (interactive) (yank-pop)))
+	     (:map evil-insert-state-map ("C-k" . nil)))
   :config
   (evil-set-undo-system 'undo-redo)
   (evil-mode 1))
@@ -576,10 +577,9 @@ Magit is a wonderful git frontend for emacs
     (let ((magit-diff-buffer-in-current-repo
            (magit-mode-get-buffer 'magit-diff-mode)))
       (kill-buffer magit-diff-buffer-in-current-repo)))
-  :hook (git-commit-setup . (lambda ()
-			      (add-hook 'with-editor-post-finish-hook
-					#'kill-magit-diff-buffer-in-current-repo
-					nil t))))
+  :hook (git-commit-setup . (lambda () (add-hook 'with-editor-post-finish-hook
+						 #'kill-magit-diff-buffer-in-current-repo
+						 nil t))))
 #+end_src
 
 ** Treesitter
@@ -595,25 +595,38 @@ I use treesitter for syntax highlighting
 #+end_src
 
 ** Auto-Completion
-I use company for all my autocompletion needs
+I use corfu for all my autocompletion needs
 #+begin_src emacs-lisp
-(use-package company
+(use-package corfu
   :straight t
   :defer t
   :diminish
   :init
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1)
-  (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 8)
+  (setq corfu-cycle t)
+  (setq corfu-auto t)
+  (setq corfu-quit-no-match t)
+  (setq corfu-quit-at-boundary t)
+  (setq corfu-preselect-first nil)
   (setq tab-always-indent t)
-  :hook ((prog-mode . company-mode)
-	     (tex-mode  . company-mode)
-	     (org-mode  . company-mode))
-  :config
-  (company-mode 1)
-  (company-tng-mode)
-  (delete 'company-dabbrev company-backends))
+  (setq corfu-auto-delay 0)
+  (setq corfu-auto-prefix 1)
+  (setq corfu-bar-width 0)
+  (setq lsp-completion-provider :none)
+  (defun corfu-lsp-setup ()
+    (setq-local completion-styles '(orderless)
+		completion-category-defaults nil))
+  :hook ((prog-mode . corfu-mode)
+	     (tex-mode  . corfu-mode)
+	     (org-mode  . corfu-mode)
+	     (lsp-completion-mode . corfu-lsp-setup))
+  :bind
+  (:map corfu-map
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous)
+	    ("C-j" . corfu-next)
+	    ("C-k" . corfu-previous)))
 #+end_src
 
 ** Syntax Checking
@@ -625,7 +638,7 @@ I am replacing flycheck with the built-in flymake
   :diminish flymake-mode
   :init
   (setq flymake-start-on-flymake-mode t)
-  (setq flymake-no-changes-timeout 0.5)
+  (setq flymake-no-changes-timeout 1)
   :config
   (general-define-key
    :keymaps 'prog-mode-map
@@ -669,48 +682,15 @@ Language servers handle most of my languages
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-l")
-  (setq lsp-prefer-capf t)
   (setq lsp-modeline-diagnostics-enable nil)
   (setq lsp-prefer-flymake t)
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
-  (setq lsp-signature-posframe-params '(:height 2 :width 60 :min-width 30))
-  (setq lsp-signature-function 'lsp-signature-posframe)
   (setq read-process-output-max (* 1024 1024))
-  ;; (setq lsp-modeline-code-actions-enable nil)
-  ;; (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-headerline-breadcrumb-icons-enable nil)
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
-			      ("M-[" . xref-pop-marker-stack))))
-#+end_src
-
-Posframe is necesary to show signatures in a popup
-#+begin_src emacs-lisp
-(use-package posframe
-  :straight t
-  :defer t)
-#+end_src
-
-** DAP Mode
-DAP Mode is used for debugging
-#+begin_src emacs-lisp
-(use-package dap-mode
-  :straight t
-  :defer t
-  :hook ((lsp-mode . dap-mode)
-	   (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra))))
-  :init
-  (setq dap-auto-configure-features '(locals expressions))
-  :config
-  (general-define-key
-   :keymaps 'prog-mode-map
-   :prefix lsp-keymap-prefix
-   "d" '(:ignore t :which-key "debug")
-   "dt" '(dap-breakpoint-toggle :which-key "toggle breakpoint")
-   "dd" '(dap-debug :which-key "start debugger")
-   "dh" '(dap-hydra :which-key "open hydra")
-   "dq" '(dap-delete-all-sessions :which-key "quit all dap sessions")))
+			        ("M-[" . xref-pop-marker-stack))))
 #+end_src
 
 ** Highlight Indent Guides
@@ -746,11 +726,8 @@ To use dap mode with python, you need to run: pip install debugpy
   :straight t
   :defer t
   :diminish eldoc-mode
-  :hook ((python-mode . (lambda () (require 'lsp-pyright)))
-	   (python-mode . lsp-deferred)
-	   (python-mode . (lambda () (require 'dap-python))))
+  :hook (python-mode . lsp-deferred)
   :config
-  (setq dap-python-debugger 'debugpy)
   (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
   (add-hook 'conda-postdeactivate-hook (lambda () (lsp-restart-workspace))))
 #+end_src
@@ -792,10 +769,10 @@ pd.set_option('expand_frame_repr', False)
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1)))
+			       (corfu-mode -1)))
 	     (poly-ein-mode .  (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1))))
+			       (corfu-mode -1))))
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
   (setq ein:output-area-inlined-images t) ;; allow inline images
@@ -831,25 +808,6 @@ pd.set_option('expand_frame_repr', False)
 	       ("M-u" . ein:worksheet-toggle-cell-type-km)
 	       ("C-c q" . ein:notebook-kernel-interrupt-command)
 	       ("C-<return>" . ein:worksheet-execute-cell-km))))
-#+end_src
-
-Elpy provides autocompletion in ein cells. I remove everything other than
-completion, since I don't use Elpy for any of its IDE features. This package is
-disabled temporarily, since I currently don't need completion in Jupyter.
-#+begin_src emacs-lisp
-;; (use-package elpy
-;;   :straight t
-;;   :defer t
-;;   :hook ((ein:ipynb-mode . elpy-enable)
-;; 	     (poly-ein-mode . elpy-enable))
-;;   :init
-;;   (setq elpy-rpc-error-timeout 30)
-;;   :config
-;;   (remove-hook 'elpy-modules 'elpy-module-flymake)
-;;   (remove-hook 'elpy-modules 'elpy-module-pyvenv)
-;;   (remove-hook 'elpy-modules 'elpy-module-django)
-;;   (remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
-;;   (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 #+end_src
 
 ** LaTeX
