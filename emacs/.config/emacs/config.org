@@ -764,24 +764,28 @@ Jupyter notebook support in Emacs. For dataframes, do:
 pd.set_option('expand_frame_repr', False)
 #+begin_src emacs-lisp
 (use-package ein-notebook
-  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
+  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook" :build (:not native-compile))
   :defer t
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (corfu-mode -1)))
+			       (corfu-mode -1)
+			       (solaire-mode -1)))
 	     (poly-ein-mode .  (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (corfu-mode -1))))
+			       (corfu-mode -1)
+			       (solaire-mode -1))))
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
   (setq ein:output-area-inlined-images t) ;; allow inline images
   (setq ein:markdown-header-scaling t) ;; disable different sized headings
   (setq ein:markdown-enable-math t) ;; allow latex math in markdown cells
   (custom-set-faces  ;; make background of cells darker and change font colour
-   '(ein-codecell-input-area ((t (:foreground "#23242F"))))
-   '(ein:codecell-input-area ((t (:extend t :background "#23242F")))))
-
+   '(ein-codecell-input-area-face ((t (:foreground "#23242f"))))
+   '(ein:codecell-input-area-face ((t (:extend t :background "#23242f"))))
+   '(ein-markdowncell-input-area-face ((t (:foreground "#23242f"))))
+   '(ein:markdowncell-input-area-face ((t (:extend t :background "#23242f")))))
+  
   ;; suppress all warnings
   (setq warning-suppress-log-types '((ein) (ein)))
   (setq warning-suppress-types '((ein)))
@@ -807,7 +811,8 @@ pd.set_option('expand_frame_repr', False)
 	       ("M-s" . ein:worksheet-split-cell-at-point-km)
 	       ("M-u" . ein:worksheet-toggle-cell-type-km)
 	       ("C-c q" . ein:notebook-kernel-interrupt-command)
-	       ("C-<return>" . ein:worksheet-execute-cell-km))))
+	       ("C-<return>" . ein:worksheet-execute-cell-km)
+	       ("S-<return>" . ein:worksheet-execute-cell-and-goto-next-km))))
 #+end_src
 
 ** LaTeX
