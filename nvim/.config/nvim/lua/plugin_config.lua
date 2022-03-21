@@ -19,11 +19,6 @@ require("toggleterm").setup{open_mapping = [[<C-t>]]}
 
 require("indent_blankline").setup{space_char_blankline = " "}
 
-require'nvim-treesitter.configs'.setup{
-        ensure_installed={"python", "latex", "lua"},
-        sync_install = true,
-        highlight = {enable=true, additional_vim_regex_highlighting=true}}
-
 vim.g['coc_config_home'] = '~/.config/nvim/'
 vim.g['coc_filetype_map'] = '{"tex": "latex"}'
 
