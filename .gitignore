@@ -3,6 +3,7 @@
 !/emacs/.config/emacs/early-init.el
 !/emacs/.config/emacs/config.org
 !/emacs/.config/emacs/init-org.org
+!/emacs/.config/emacs/compiled-config/.gitkeep
 /nvim/.config/nvim/plugin
 /*/.DS_Store
 .DS_Store
