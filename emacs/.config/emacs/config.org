@@ -151,8 +151,9 @@ This gives a nice startup page when Emacs first runs
   :init
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-startup-banner 'logo)
-  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
+  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
+  (setq dashboard-banner-logo-title "Sorry I didn't save the world, my friend; I was too busy building mine again")
   (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 25)))
@@ -462,18 +463,18 @@ I use org mode extensively so this is quite a long section...
           (search . "%-20c"))))
 
   ;; evil bindings for org-agenda
-  (eval-after-load 'org-agenda
-    '(progn
-       (evil-set-initial-state 'org-agenda-mode 'normal)
-       (evil-define-key 'normal org-agenda-mode-map
-	 (kbd "<RET>") 'org-agenda-switch-to
-	 (kbd "\t") 'org-agenda-goto
-	 "q" 'org-agenda-quit
-	 "r" 'org-agenda-redo
-	 "gr" 'org-agenda-redo
-	 "f" 'org-agenda-later
-	 "b" 'org-agenda-earlier
-	 )))
+  ;; (eval-after-load 'org-agenda
+  ;;   '(progn
+  ;;      (evil-set-initial-state 'org-agenda-mode 'normal)
+  ;;      (evil-define-key 'normal org-agenda-mode-map
+  ;; 	 (kbd "<RET>") 'org-agenda-switch-to
+  ;; 	 (kbd "\t") 'org-agenda-goto
+  ;; 	 "q" 'org-agenda-quit
+  ;; 	 "r" 'org-agenda-redo
+  ;; 	 "gr" 'org-agenda-redo
+  ;; 	 "f" 'org-agenda-later
+  ;; 	 "b" 'org-agenda-earlier
+  ;; 	 )))
 
   ;; org babel stuff
   (org-babel-do-load-languages 
@@ -526,7 +527,7 @@ for this to work. On MacOS: brew install aspell
   :defer t
   :diminish flyspell-mode
   :init
-  (setq ispell-program-name "/usr/local/bin/aspell") 
+  (setq ispell-program-name "/usr/bin/aspell")
   (setq ispell-dictionary "british"))
 #+end_src
 
