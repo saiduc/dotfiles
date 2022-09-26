@@ -245,6 +245,7 @@ I use this for managing workspaces inside Emacs
    ("C-x x C-s" . persp-state-save))
   :init
   ;; (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
+  (setq persp-mode-prefix-key "C-x x")
   :config
   (use-package ibuffer :straight (:type built-in))
   (persp-mode 1))
@@ -596,38 +597,25 @@ I use treesitter for syntax highlighting
 #+end_src
 
 ** Auto-Completion
-I use corfu for all my autocompletion needs
+I use company-mode for a modern-looking auto-completion setup
 #+begin_src emacs-lisp
-(use-package corfu
+(use-package company
   :straight t
   :defer t
   :diminish
   :init
-  (setq corfu-cycle t)
-  (setq corfu-auto t)
-  (setq corfu-quit-no-match t)
-  (setq corfu-quit-at-boundary t)
-  (setq corfu-preselect-first nil)
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-tooltip-align-annotations t)
+  (setq company-tooltip-limit 8)
   (setq tab-always-indent t)
-  (setq corfu-auto-delay 0)
-  (setq corfu-auto-prefix 1)
-  (setq corfu-bar-width 0)
-  (setq lsp-completion-provider :none)
-  (defun corfu-lsp-setup ()
-    (setq-local completion-styles '(orderless)
-		completion-category-defaults nil))
-  :hook ((prog-mode . corfu-mode)
-	     (tex-mode  . corfu-mode)
-	     (org-mode  . corfu-mode)
-	     (lsp-completion-mode . corfu-lsp-setup))
-  :bind
-  (:map corfu-map
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous)
-	    ("C-j" . corfu-next)
-	    ("C-k" . corfu-previous)))
+  :hook ((prog-mode . company-mode)
+	     (tex-mode  . company-mode)
+	     (org-mode  . company-mode))
+  :config
+  (company-mode 1)
+  (company-tng-mode)
+  (delete 'company-dabbrev company-backends))
 #+end_src
 
 ** Syntax Checking
