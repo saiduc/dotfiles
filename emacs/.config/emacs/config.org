@@ -49,7 +49,7 @@ These are some minor tweaks to the default look and behaviour of Emacs
   (global-auto-revert-mode 1)
 
   ;; highlight current line
-  (global-hl-line-mode 1)
+  (global-hl-line-mode -1)
 
   ;; turn off bell
   (setq ring-bell-function 'ignore)
@@ -90,14 +90,6 @@ This makes dired work as expected
 #+end_src
 
 * User Interface
-** Diminish
-Diminish allows the hiding of minor modes in modeline
-#+begin_src emacs-lisp
-(use-package diminish
-  :straight t
-  :defer t)
-#+end_src
-
 ** Themes
 A nice collection of themes
 #+begin_src emacs-lisp
@@ -108,13 +100,12 @@ A nice collection of themes
   (load-theme 'doom-dracula t))
 #+end_src
 
-** Solaire Mode
-Makes themes look better
+** Diminish
+Diminish allows the hiding of minor modes in modeline
 #+begin_src emacs-lisp
-(use-package solaire-mode
+(use-package diminish
   :straight t
-  :config
-  (solaire-global-mode 1))
+  :defer t)
 #+end_src
 
 ** Mode Line
@@ -140,6 +131,15 @@ I use doom modeline since it is lightweight and pretty
   (setq doom-modeline-buffer-encoding nil)
   :config
   (doom-modeline-mode 1))
+#+end_src
+
+** Solaire Mode
+Makes themes look better
+#+begin_src emacs-lisp
+(use-package solaire-mode
+  :straight t
+  :config
+  (solaire-global-mode 1))
 #+end_src
 
 ** Dashboard
@@ -820,37 +820,37 @@ pd.set_option('expand_frame_repr', False)
 I use the TexLab language server for LaTeX
 Install using: brew install texlab
 #+begin_src emacs-lisp
-(use-package lsp-latex
-  :straight t
-  :defer t
-  :hook ((tex-mode . lsp-deferred)
-	   (tex-mode . (lambda () (require 'lsp-latex)))
-	   (latex-mode . lsp-deferred)
-	   (bibtex-mode . lsp-deferred)
-	   (latex-mode . (lambda () 
-			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
-			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
-	   (latex-mode . auto-fill-mode)
-	   (latex-mode . visual-line-mode)
-	   (latex-mode . display-fill-column-indicator-mode)
-	   (latex-mode . display-line-numbers-mode)
-	   (bibtex-mode . display-line-numbers-mode))
-  :init
-  (setq lsp-latex-lint-on-change t)
-  (setq lsp-latex-lint-on-save t)
+;; (use-package lsp-latex
+;;   :straight t
+;;   :defer t
+;;   :hook ((tex-mode . lsp-deferred)
+;; 	   (tex-mode . (lambda () (require 'lsp-latex)))
+;; 	   (latex-mode . lsp-deferred)
+;; 	   (bibtex-mode . lsp-deferred)
+;; 	   (latex-mode . (lambda () 
+;; 			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
+;; 			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
+;; 	   (latex-mode . auto-fill-mode)
+;; 	   (latex-mode . visual-line-mode)
+;; 	   (latex-mode . display-fill-column-indicator-mode)
+;; 	   (latex-mode . display-line-numbers-mode)
+;; 	   (bibtex-mode . display-line-numbers-mode))
+;;   :init
+;;   (setq lsp-latex-lint-on-change t)
+;;   (setq lsp-latex-lint-on-save t)
 
-  ;; function to open pdf associated with tex file
-  (defun my/open-pdf ()
-    (interactive)
-    (buffer-file-name (other-buffer))
-    ;; can do find-file instead of browse-url to open inside emacs
-    (browse-url (replace-regexp-in-string ".tex" ".pdf" buffer-file-name)))
+;;   ;; function to open pdf associated with tex file
+;;   (defun my/open-pdf ()
+;;     (interactive)
+;;     (buffer-file-name (other-buffer))
+;;     ;; can do find-file instead of browse-url to open inside emacs
+;;     (browse-url (replace-regexp-in-string ".tex" ".pdf" buffer-file-name)))
   
-  ;; function to save and build latex file
-  (defun my/latex-build ()
-    (interactive)
-    (save-buffer)
-    (lsp-latex-build)))
+;;   ;; function to save and build latex file
+;;   (defun my/latex-build ()
+;;     (interactive)
+;;     (save-buffer)
+;;     (lsp-latex-build)))
 #+end_src
 
 ** C/C++
@@ -858,10 +858,10 @@ I use the clangd server for C++.
 Install using: brew install llvm
 Make sure llvm is on your path.
 #+begin_src emacs-lisp
-(use-package cc-mode
-  :straight (:type built-in)
-  :defer t
-  :hook (c++-mode . lsp-deferred)
-  :init
-  (setq c-default-style "linux"))
+;; (use-package cc-mode
+;;   :straight (:type built-in)
+;;   :defer t
+;;   :hook (c++-mode . lsp-deferred)
+;;   :init
+;;   (setq c-default-style "linux"))
 #+end_src
