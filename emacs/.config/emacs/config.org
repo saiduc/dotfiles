@@ -66,7 +66,8 @@ These are some minor tweaks to the default look and behaviour of Emacs
   
   ;; disable *Messages* buffer that is present on startup
   (setq-default message-log-max nil)
-  (kill-buffer "*Messages*")
+  (when (get-buffer "*Messages*")
+    (kill-buffer "*Messages*"))
 
   ;; set default wrap length
   (setq-default fill-column 80))
@@ -97,7 +98,7 @@ A nice collection of themes
   :straight t
   :defer t
   :init
-  (load-theme 'doom-dracula t))
+  (load-theme 'doom-one t))
 #+end_src
 
 ** Diminish
@@ -245,7 +246,7 @@ I use this for managing workspaces inside Emacs
    ("C-x x C-s" . persp-state-save))
   :init
   ;; (custom-set-faces '(persp-selected-face ((t (:foreground "#FD7CC5")))))
-  (setq persp-mode-prefix-key "C-x x")
+  (setq persp-suppress-no-prefix-key-warning t)
   :config
   (use-package ibuffer :straight (:type built-in))
   (persp-mode 1))
@@ -387,43 +388,36 @@ I use org mode extensively so this is quite a long section...
   :hook ((org-mode . auto-fill-mode)
          (org-mode . visual-line-mode)
          (org-mode . display-line-numbers-mode)
-	     (org-mode . show-paren-mode)
-	     (org-mode . (lambda () (diminish 'org-indent-mode)))
-	     (org-mode . electric-pair-mode)
-	     (org-mode . (lambda ()
-	                   (setq-local electric-pair-inhibit-predicate
-	          		       `(lambda (c)
-	          			  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
+	 (org-mode . show-paren-mode)
+	 (org-mode . (lambda () (diminish 'org-indent-mode)))
+	 (org-mode . electric-pair-mode)
+	 (org-mode . (lambda ()
+	               (setq-local electric-pair-inhibit-predicate
+	          		   `(lambda (c)
+	          		      (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
   
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-         ("C-c f" . my/list-org-files))
+         ("C-c f f" . my/list-org-files))
   
   :init
 
   ;; agenda files, refile targets and drawer targets
-  (setq org-agenda-files (apply 'append
-				(list
-			         (directory-files-recursively "~/Dropbox/Org/Personal" "\\.org$")
-				 (directory-files-recursively "~/Dropbox/Org/Work" "\\.org$")
-				 '("~/Dropbox/Org/Inbox.org"))))
+  (setq org-agenda-files '("~/Dropbox/Org"))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
   (setq org-log-into-drawer "LOGBOOK")
 
   ;; make custom function that refreshes org files
   (defun my/refresh-org-files ()
     (interactive)
-    (setq org-agenda-files (apply 'append
-				  (list
-			           (directory-files-recursively "~/Dropbox/Org/Personal" "\\.org$")
-				   (directory-files-recursively "~/Dropbox/Org/Work" "\\.org$")
-				   '("~/Dropbox/Org/Inbox.org"))))
+    (setq org-agenda-files '("~/Dropbox/Org"))
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1))))
 
   ;; make custom function to list all org files 
   (defun my/list-org-files ()
     (interactive)
-    (project-switch-project "~/Dropbox/Org"))
+    (let ((default-directory "~/Dropbox/Org/"))
+      (call-interactively 'find-file)))
 
   ;; some general settings
   (setq org-outline-path-complete-in-steps nil)
@@ -448,7 +442,7 @@ I use org mode extensively so this is quite a long section...
 
   ;; better looking org-agenda
   (setq org-agenda-custom-commands
-	'(("n" "Custom agenda view"
+	'(("n" "All Agenda Items"
 	   (
 	    (agenda)
 	    (todo "TODO")
@@ -485,7 +479,6 @@ I use org mode extensively so this is quite a long section...
 
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
-
   (add-to-list 'org-modules 'org-tempo t)
   (add-to-list 'org-modules 'org-habit t))
 #+end_src
@@ -758,11 +751,11 @@ pd.set_option('expand_frame_repr', False)
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (corfu-mode -1)
+			       (company-mode -1)
 			       (solaire-mode -1)))
 	     (poly-ein-mode .  (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (corfu-mode -1)
+			       (company-mode -1)
 			       (solaire-mode -1))))
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
@@ -808,37 +801,37 @@ pd.set_option('expand_frame_repr', False)
 I use the TexLab language server for LaTeX
 Install using: brew install texlab
 #+begin_src emacs-lisp
-;; (use-package lsp-latex
-;;   :straight t
-;;   :defer t
-;;   :hook ((tex-mode . lsp-deferred)
-;; 	   (tex-mode . (lambda () (require 'lsp-latex)))
-;; 	   (latex-mode . lsp-deferred)
-;; 	   (bibtex-mode . lsp-deferred)
-;; 	   (latex-mode . (lambda () 
-;; 			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
-;; 			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
-;; 	   (latex-mode . auto-fill-mode)
-;; 	   (latex-mode . visual-line-mode)
-;; 	   (latex-mode . display-fill-column-indicator-mode)
-;; 	   (latex-mode . display-line-numbers-mode)
-;; 	   (bibtex-mode . display-line-numbers-mode))
-;;   :init
-;;   (setq lsp-latex-lint-on-change t)
-;;   (setq lsp-latex-lint-on-save t)
+(use-package lsp-latex
+  :straight t
+  :defer t
+  :hook ((tex-mode . lsp-deferred)
+	   (tex-mode . (lambda () (require 'lsp-latex)))
+	   (latex-mode . lsp-deferred)
+	   (bibtex-mode . lsp-deferred)
+	   (latex-mode . (lambda () 
+			 (define-key tex-mode-map (kbd "C-c C-c") 'my/latex-build)
+			 (define-key tex-mode-map (kbd "C-c C-v") 'my/open-pdf)))
+	   (latex-mode . auto-fill-mode)
+	   (latex-mode . visual-line-mode)
+	   (latex-mode . display-fill-column-indicator-mode)
+	   (latex-mode . display-line-numbers-mode)
+	   (bibtex-mode . display-line-numbers-mode))
+  :init
+  (setq lsp-latex-lint-on-change t)
+  (setq lsp-latex-lint-on-save t)
+  (setq lsp-latex-texlab-executable "~/.cargo/bin/texlab")
 
-;;   ;; function to open pdf associated with tex file
-;;   (defun my/open-pdf ()
-;;     (interactive)
-;;     (buffer-file-name (other-buffer))
-;;     ;; can do find-file instead of browse-url to open inside emacs
-;;     (browse-url (replace-regexp-in-string ".tex" ".pdf" buffer-file-name)))
+  ;; function to open pdf associated with tex file
+  (defun my/open-pdf ()
+    (interactive)
+    ;; can do find-file instead of browse-url to open inside emacs
+    (browse-url (replace-regexp-in-string ".tex" ".pdf" (buffer-name))))
   
-;;   ;; function to save and build latex file
-;;   (defun my/latex-build ()
-;;     (interactive)
-;;     (save-buffer)
-;;     (lsp-latex-build)))
+  ;; function to save and build latex file
+  (defun my/latex-build ()
+    (interactive)
+    (save-buffer)
+    (lsp-latex-build)))
 #+end_src
 
 ** C/C++
@@ -853,3 +846,4 @@ Make sure llvm is on your path.
 ;;   :init
 ;;   (setq c-default-style "linux"))
 #+end_src
+
