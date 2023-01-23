@@ -23,7 +23,6 @@ vim.g['coc_config_home'] = '~/.config/nvim/'
 vim.g['coc_filetype_map'] = '{"tex": "latex"}'
 
 require('nvim-tree').setup{
-        auto_close = true,
         open_on_tab = true,
         update_cwd = true,
         update_focused_file = {
