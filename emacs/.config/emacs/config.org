@@ -512,6 +512,72 @@ Some capture templates that suit my workflow
 	))
 #+end_src
 
+** Org Roam
+Org Roam is a great package akin to something like Obsidian.md and is very
+useful for building a personal Wiki
+#+begin_src emacs-lisp
+(use-package org-roam
+  :straight t
+  :defer t
+  :init
+
+  (setq org-roam-v2-ack t)
+  (setq org-roam-directory "~/Dropbox/Org/Wiki")
+
+  ;; org-roam links buffer config
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
+
+  ;; allows creating of new note without emacs then opening the note
+  (defun org-roam-node-insert-immediate (arg &rest args)
+    (interactive "P")
+    (let ((args (cons arg args))
+          (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                    '(:immediate-finish t)))))
+      (apply #'org-roam-node-insert args)))
+
+  ;; change default capture template
+  (setq org-roam-capture-templates
+	'(("d" "default" plain
+	   "%?"
+	   :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+STARTUP: overview\n#+FILETAGS: \n")
+	   :unnarrowed t)))
+  
+  ;; make org links open in main window
+  :hook (org-roam-mode . (lambda ()
+			   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
+			   (setq-local display-buffer--same-window-action
+				       '(display-buffer-use-some-window
+					 (main)))))
+  :bind
+  (("C-c n b" . org-roam-buffer-toggle)
+   ("C-c n f" . org-roam-node-find)
+   ("C-c n i" . org-roam-node-insert-immediate)
+   ("C-c n I" . org-roam-node-insert)
+   :map org-roam-mode-map
+   ([mouse-1] . org-roam-preview-visit))
+  :config
+  (org-roam-setup))
+#+end_src
+
+Org Roam UI constructs a visual graph of my notes
+#+begin_src emacs-lisp
+(use-package org-roam-ui
+  :straight t
+  :defer t
+  :diminish org-roam-ui-mode org-roam-ui-follow-mode
+  :after org-roam
+  :init
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t
+        org-roam-ui-open-on-start t))
+#+end_src
+
 ** Flyspell
 On the go spell-checking in Emacs You will need to install aspell on your system
 for this to work. On MacOS: brew install aspell
