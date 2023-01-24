@@ -242,6 +242,7 @@ I use this for managing workspaces inside Emacs
    ("C-x x s" . persp-switch)
    ("C-x x i" . persp-import)
    ("C-x x r" . persp-rename)
+   ("C-x x c" . persp-kill)
    ("C-x x C-l" . persp-state-load)
    ("C-x x C-s" . persp-state-save))
   :init
@@ -524,6 +525,7 @@ useful for building a personal Wiki
 
   (setq org-roam-v2-ack t)
   (setq org-roam-directory "~/Dropbox/Org/Wiki")
+  (setq org-roam-node-display-template "${title:*} ${tags:50}")
 
   ;; org-roam links buffer config
   (add-to-list 'display-buffer-alist
@@ -545,7 +547,7 @@ useful for building a personal Wiki
   (setq org-roam-capture-templates
 	'(("d" "default" plain
 	   "%?"
-	   :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+STARTUP: overview\n#+FILETAGS: \n")
+	   :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+FILETAGS:\n")
 	   :unnarrowed t)))
   
   ;; make org links open in main window
@@ -571,12 +573,39 @@ Org Roam UI constructs a visual graph of my notes
   :straight t
   :defer t
   :diminish org-roam-ui-mode org-roam-ui-follow-mode
-  :after org-roam
+  :bind (("C-c n U" . my/org-roam-ui-open-xwidget)
+	     ("C-c n u" . my/org-roam-ui-open-browser))
+	 
   :init
   (setq org-roam-ui-sync-theme t
         org-roam-ui-follow t
         org-roam-ui-update-on-save t
-        org-roam-ui-open-on-start nil))
+        org-roam-ui-open-on-start nil)
+
+
+  (defun my/open-org-roam-ui-xwidget (url)
+    (split-window-right)
+    (xwidget-webkit-browse-url url t))
+
+  (defun my/org-roam-ui-open-xwidget ()
+    (interactive)
+    (setq org-roam-ui-browser-function #'my/open-org-roam-ui-xwidget)
+    (org-roam-ui-open))
+
+  (defun my/org-roam-ui-open-browser ()
+    (interactive)
+    (setq org-roam-ui-browser-function #'browse-url)
+    (org-roam-ui-open))
+
+  (add-to-list 'display-buffer-alist
+               '("\\*xwidget-webkit: ORUI\\*"
+                 (display-buffer-in-direction)
+                 (direction . left)
+                 (window-width . 0.25)
+                 (window-height . fit-window-to-buffer)))
+  
+  )
+
 #+end_src
 
 ** Flyspell
