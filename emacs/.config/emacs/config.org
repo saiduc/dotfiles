@@ -458,8 +458,9 @@ I use org mode extensively so this is quite a long section...
           (search . "%-20c"))))
 
   ;; evil bindings for org-agenda
-  (eval-after-load 'org-agenda
+  (eval-after-load 'evil
     '(progn
+       (use-package org-agenda :straight (:type built-in))
        (evil-set-initial-state 'org-agenda-mode 'normal)
        (evil-define-key 'normal org-agenda-mode-map
 	 (kbd "<RET>") 'org-agenda-switch-to
