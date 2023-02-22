@@ -68,7 +68,7 @@ whichkey.register
                 r = {"<plug>(coc-rename)", "Rename Object"},
                 d = {"<plug>(coc-definition)", "Go to Definition"},
                 i = {"<plug>(coc-references)", "List References"},
-                a = {"<plug>(coc-codeaction)", "Apply Action"},
+                a = {"<plug>(coc-codeaction-cursor)", "Apply Action"},
                 b = {"<cmd> VimtexCompile <cr>", "LaTeX Compile"}
         }
 }, {prefix="<leader>"})
