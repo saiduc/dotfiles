@@ -101,6 +101,12 @@ A nice collection of themes
   (load-theme 'doom-dracula t))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :straight t
+  :defer t)
+#+end_src
+
 ** Diminish
 Diminish allows the hiding of minor modes in modeline
 #+begin_src emacs-lisp
@@ -696,7 +702,7 @@ I use company-mode for a modern-looking auto-completion setup
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 8)
+  (setq company-tooltip-limit 15)
   (setq tab-always-indent t)
   :hook ((prog-mode . company-mode)
 	     (tex-mode  . company-mode)
@@ -729,26 +735,6 @@ I am replacing flycheck with the built-in flymake
    "eb" '(flymake-running-backends :which-key "list running backends")))
 #+end_src
 
-** Neotree
-Provides tree view
-#+begin_src emacs-lisp
-(use-package neotree
-  :straight t
-  :defer t
-  :bind ("C-x t" . neotree-toggle)
-  :init
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  (setq neo-show-hidden-files t)
-  :config
-  (general-define-key
-   :keymaps '(prog-mode-map neotree-mode-map)
-   :prefix lsp-keymap-prefix
-   "t" '(:ignore t :which-key "tree")
-   "tt" '(neotree-toggle :which-key "toggle filetree")
-   "td" '(neotree-dir :which-key "change tree root directory")
-   "tr" '(neotree-refresh :which-key "refresh filetree")))
-#+end_src
-
 ** LSP Mode
 Language servers handle most of my languages
 #+begin_src emacs-lisp
@@ -769,6 +755,61 @@ Language servers handle most of my languages
   (setq lsp-headerline-breadcrumb-icons-enable nil)
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
 			        ("M-[" . xref-pop-marker-stack))))
+#+end_src
+
+** DAP Mode
+DAP Mode is used for debugging
+#+begin_src emacs-lisp
+(use-package dap-mode
+  :straight t
+  :defer t
+  :hook ((lsp-mode . dap-mode)
+	     (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra))))
+  :init
+  (setq dap-auto-configure-features '(locals expressions))
+  :config
+  (general-define-key
+   :keymaps 'prog-mode-map
+   :prefix lsp-keymap-prefix
+   "d" '(:ignore t :which-key "debug")
+   "dt" '(dap-breakpoint-toggle :which-key "toggle breakpoint")
+   "dd" '(dap-debug :which-key "start debugger")
+   "dh" '(dap-hydra :which-key "open hydra")
+   "dq" '(dap-delete-all-sessions :which-key "quit all dap sessions")))
+#+end_src
+
+** Treemacs
+Provides tree view and other goodies (mainly just dependency for dap mode)
+#+begin_src emacs-lisp
+(use-package treemacs
+  :straight t
+  :defer t
+  :after lsp-mode
+  :commands treemacs)
+
+(use-package treemacs-all-the-icons
+  :straight t
+  :after treemacs
+  :config
+  (treemacs-load-theme "all-the-icons"))
+#+end_src
+
+I also set up integration with lsp-mode
+#+begin_src emacs-lisp
+(use-package lsp-treemacs
+  :straight t
+  :after lsp-mode
+  ;; hook to fix bad solaire mode, might break things
+  :hook (lsp-treemacs-generic-mode . solaire-mode-reset)
+  :config
+  (general-define-key
+   :keymaps 'lsp-mode-map
+   :prefix lsp-keymap-prefix
+   "t" '(:ignore t :which-key "tree")
+   "tt" '(treemacs :which-key "toggle treemacs")
+   "ts" '(lsp-treemacs-symbols :which-key "show lsp-treemacs symbols")
+   "te" '(lsp-treemacs-errors-list :which-key "show lsp-treemacs errors"))
+  (lsp-treemacs-sync-mode 1))
 #+end_src
 
 ** Highlight Indent Guides
@@ -798,14 +839,18 @@ I use this to format code (when the lsp-server can't do it by itself)
 
 ** Python
 I use the pyright server for Python which needs npm installed
-To use dap mode with python, you need to run: pip install debugpy 
+To use dap mode with python, you need to run:
+pip install debugpy 
+You need a debugpy version > 1.6.6
 #+begin_src emacs-lisp
 (use-package lsp-pyright
   :straight t
   :defer t
   :diminish eldoc-mode
-  :hook (python-mode . lsp-deferred)
+  :hook ((python-mode . lsp-deferred)
+	     (python-mode . (lambda () (require 'dap-python))))
   :config
+  (setq dap-python-debugger 'debugpy)
   (add-hook 'conda-postactivate-hook (lambda () (lsp-restart-workspace)))
   (add-hook 'conda-postdeactivate-hook (lambda () (lsp-restart-workspace))))
 #+end_src
