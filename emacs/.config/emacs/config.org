@@ -98,7 +98,7 @@ A nice collection of themes
   :straight t
   :defer t
   :init
-  (load-theme 'doom-one t))
+  (load-theme 'doom-dracula t))
 #+end_src
 
 ** Diminish
@@ -547,7 +547,7 @@ useful for building a personal Wiki
   (setq org-roam-capture-templates
 	'(("d" "default" plain
 	   "%?"
-	   :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+FILETAGS:\n")
+	   :if-new (file+head "${slug}.org" "#+TITLE: ${title}\n#+STARTUP: content\n#+FILETAGS:\n")
 	   :unnarrowed t)))
   
   ;; make org links open in main window
