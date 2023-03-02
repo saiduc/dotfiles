@@ -66,8 +66,8 @@ These are some minor tweaks to the default look and behaviour of Emacs
   
   ;; disable *Messages* buffer that is present on startup
   (setq-default message-log-max nil)
-  (when (get-buffer "*Messages*")
-    (kill-buffer "*Messages*"))
+  ;; (when (get-buffer "*Messages*")
+  ;;   (kill-buffer "*Messages*"))
 
   ;; set default wrap length
   (setq-default fill-column 80))
@@ -518,6 +518,18 @@ Some capture templates that suit my workflow
 	 "** %?" :kill-buffer t)
 	
 	))
+#+end_src
+
+** Org Download
+This is a great package to allow pasting images into org buffers
+#+begin_src emacs-lisp
+(use-package org-download
+  :straight t
+  :defer t
+  :bind (("C-c p" . org-download-clipboard)
+	     ("C-c P" . org-download-yank))
+  :init
+  (setq-default org-download-image-dir "./images"))
 #+end_src
 
 ** Org Roam
