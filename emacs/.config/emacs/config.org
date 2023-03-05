@@ -348,7 +348,7 @@ Which key is useful for discoverability
 
 * Shells
 ** Exec Path From Shell
-This simply gets the shell variable and path from default shell
+This simply gets the shell variable and path from default shell if on mac
 #+begin_src emacs-lisp
 (when (memq window-system '(mac ns x))
   (use-package exec-path-from-shell
@@ -621,6 +621,57 @@ Org Roam UI constructs a visual graph of my notes
   
   )
 
+#+end_src
+
+** Citing and Referencing
+I use the built-in org-cite functionality to cite. While org-ref now supports
+the built-in link format, it is heavy. So I use citar instead. [[https://kristofferbalintona.me/posts/202206141852/][This]] is a good
+resource to get started with citar
+
+To get citation output, you need to specify
+the bibliography using:  #+BIBLIOGRAPHY:
+and the bibstyle using:  #+LATEX_HEADER: \bibliographystyle{ieeetr}
+and print the bib using: #+PRINT_BIBLIOGRAPHY:
+
+#+begin_src emacs-lisp
+(use-package citar
+  :straight t
+  :defer t
+  :init
+
+  ;; I don't like following links using citar
+  (setq org-cite-follow-processor 'basic)
+  (setq org-cite-insert-processor 'citar)
+  (setq org-cite-activate-processor 'citar)
+
+  (setq org-cite-export-processors
+	'((latex bibtex) ;; latex
+	  (t csl)))      ;; fallback
+
+  (setq citar-templates
+	'((main . "${author editor:30}    ${title:120}    ${date year issued:7}    ")
+	  (suffix . "${=type=:12}    ${=key= id:15}")
+	  (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
+	  (note . "Notes on ${author editor}, ${title}")))
+
+  ;; disable pdf and notes icons
+  (setq citar-symbols
+	`((file ,(all-the-icons-faicon "file-pdf-o" :face 'all-the-icons-red :v-adjust -0.1) . "")
+      (note nil . "")
+      (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+  (setq citar-symbol-separator " ")
+
+  :bind
+  (:map org-mode-map :package org ("C-c ]" . #'org-cite-insert)))
+#+end_src
+
+For referencing, Org mode can use local links, but OXR gives nice completion
+#+begin_src emacs-lisp
+(use-package oxr
+  :straight (:type git :host github :repo "bdarcus/oxr")
+  :defer t
+  :bind
+  (:map org-mode-map :package org ("C-c [" . #'oxr-insert-ref)))
 #+end_src
 
 ** Flyspell
