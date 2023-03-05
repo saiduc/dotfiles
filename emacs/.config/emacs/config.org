@@ -205,10 +205,7 @@ Make vertico behave like ido in find-file (with return to enter folders)
   :load-path "straight/build/vertico/extensions"
   :defer t
   :after vertico
-  :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
+  :bind (:map vertico-map ("RET" . vertico-directory-enter))
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 #+end_src
 
