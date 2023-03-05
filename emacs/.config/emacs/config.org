@@ -288,7 +288,7 @@ I am an ex-vim user so I use evil for my editing
 	     ("C-c J" . evil-window-move-very-bottom)
 	     ("C-c K" . evil-window-move-very-top)
 	     ("C-c L" . evil-window-move-far-right)
-	     ("M-p"   . (lambda () (interactive) (yank-pop)))
+	     ("M-p"   . yank-from-kill-ring)
 	     (:map evil-insert-state-map ("C-k" . nil)))
   :config
   (evil-set-undo-system 'undo-redo)

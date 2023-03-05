@@ -1,3 +1,5 @@
 {
-	"ltex.language": "en-GB"
+    "ltex.language": "en-GB",
+    "coc.source.around.enable": false,
+    "coc.source.buffer.enable": false
 }
