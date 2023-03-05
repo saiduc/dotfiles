@@ -670,8 +670,15 @@ For referencing, Org mode can use local links, but OXR gives nice completion
 (use-package oxr
   :straight (:type git :host github :repo "bdarcus/oxr")
   :defer t
+  :init
+  (defun my/oxr-insert-section-reference-id ()
+    (interactive)
+    (let ((label (read-string "Label: ")))
+    (org-entry-put nil "CUSTOM_ID" (concat "sec:" label))))
+  
   :bind
-  (:map org-mode-map :package org ("C-c [" . #'oxr-insert-ref)))
+  (:map org-mode-map :package org (("C-c [" . #'oxr-insert-ref)
+				       ("C-c s" . my/oxr-insert-section-reference-id))))
 #+end_src
 
 ** Flyspell
