@@ -172,7 +172,7 @@ This gives a nice startup page when Emacs first runs
   (dashboard-setup-startup-hook))
 #+end_src
 
-** Vertico, Orderless, Consult & Embark
+** Vertico, Orderless, Consult
 Vertico is a good replacement for helm
 #+begin_src emacs-lisp
 (use-package vertico
@@ -258,20 +258,6 @@ Consult gives some nice goodies similar to ivy's counsel
   (consult-customize consult-project-buffer :preview-key nil)
   (consult-customize consult--source-buffer :hidden t :default nil)
   (add-to-list 'consult-buffer-sources persp-consult-source))
-#+end_src
-
-Embark provides similar functionality as Helm actions
-#+begin_src emacs-lisp
-(use-package embark
-  :straight t
-  :after vertico
-  :bind
-  ((:map vertico-map ("C-z" . embark-act))
-   (:map evil-motion-state-map ("C-z" . embark-act))
-   ("C-z" . embark-act))
-  :init
-  (setq embark-indicators '(embark-minimal-indicator))
-  (setq embark-prompter 'embark-completing-read-prompter))
 #+end_src
 
 ** Perspective Mode
@@ -703,15 +689,6 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
   :bind
   (:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
 				       ("C-c o" . #'citar-open))))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package citar-embark
-  :straight t
-  :after citar
-  :diminish
-  :config
-  (citar-embark-mode))
 #+end_src
 
 For referencing, Org mode can use local links, but OXR gives nice completion
