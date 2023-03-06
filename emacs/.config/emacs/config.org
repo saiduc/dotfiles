@@ -635,12 +635,20 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
 (use-package helm-bibtex
   :straight t
   :defer t
+  :bind (:map org-mode-map ("C-c ]" . helm-bibtex-with-local-bibliography))
   :init
   (setq org-cite-follow-processor 'helm-bibtex-org-cite-follow)
   (setq helm-bibtex-full-frame nil)
   (setq bibtex-completion-display-formats
 	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}")))
 
+  ;; make helm-bibtex default action inserting citation
+  (helm-delete-action-from-source "Insert Citation" helm-source-bibtex)
+  (helm-add-action-to-source "Insert Citation" 
+                             'helm-bibtex-insert-citation 
+                              helm-source-bibtex 0)
+
+  ;; make helm-bibtex use org-cite links
   (setq bibtex-completion-format-citation-functions
 	'((org-mode . bibtex-completion-format-citation-org-cite)
       (latex-mode . bibtex-completion-format-citation-cite)
