@@ -172,64 +172,61 @@ This gives a nice startup page when Emacs first runs
   (dashboard-setup-startup-hook))
 #+end_src
 
-** Vertico Completion
-Vertico is a good replacement for helm
+** Helm Completion
+I use helm for completion. I have tried more minimal solutions like vertico but
+I find that it requires much more configuration to set up to mimic helm
+functionality and require other packages (e.g. orderless, marginalia, embark).
 #+begin_src emacs-lisp
-(use-package vertico
+(use-package helm
   :straight t
-  :defer 0.01
-  :init
-  (setq vertico-cycle t)
-  (setq vertico-resize nil)
-  (setq enable-recursive-minibuffers t)
-  (setq read-extended-command-predicate
-        #'command-completion-default-include-p)
-  (setq completion-auto-help nil)
-  :bind
-  (("C-x C-b" . switch-to-buffer)
-   ("C-x C-k" . kill-buffer)
-   (:map vertico-map
-	("C-j" . vertico-next)
-	("C-k" . vertico-previous)
-	:map minibuffer-local-map
-	("C-h" . backward-kill-word)))
-  :config
-  (savehist-mode 1)
-  (vertico-mode 1))
-#+end_src
-
-Make vertico behave like ido in find-file (with return to enter folders)
-#+begin_src emacs-lisp
-(use-package vertico-directory
-  :straight nil
-  :load-path "straight/build/vertico/extensions"
+  :diminish
   :defer t
-  :after vertico
-  :bind (:map vertico-map ("RET" . vertico-directory-enter))
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-#+end_src
-
-More information in Vertico buffers
-#+begin_src emacs-lisp
-(use-package marginalia
-  :straight t
-  :after vertico
   :init
-  (setq marginalia-align 'right)
-  (setq marginalia-max-relative-age 0)
-  :config
-  (marginalia-mode))
+  (setq helm-buffers-fuzzy-matching t)
+  (setq helm-apropos-fuzzy-match nil)
+  (setq helm-split-window-inside-p nil)
+  (setq helm-move-to-line-cycle-in-source nil)
+  (setq helm-display-header-line nil)
+  (setq helm-echo-input-in-header-line nil)
+  (setq helm-input-idle-delay 0)
+  (setq helm-grep-input-idle-delay 0)
+  (setq helm-visible-mark-prefix "")
+  (setq  ido-ignore-buffers '("\\` " "^\*helm"))
+  :bind
+  (("C-x C-f" . helm-find-files)
+   ("M-p" . helm-show-kill-ring)
+   ("M-x" . helm-M-x)
+   ("C-x b" . helm-mini)
+   ("C-x C-b" . helm-mini)
+   ("C-s" . helm-occur)
+   ("C-x r b" . helm-bookmarks)
+   ("C-x C-r" . helm-recentf)
+   ("C-x p b" . helm-browse-project)
+   (:map helm-find-files-map
+	 ("C-h" . helm-find-files-up-one-level)
+	 ("C-l" . helm-execute-persistent-action))
+   (:map helm-map
+	 ("C-j" . helm-next-line)
+	 ("C-k" . helm-previous-line)
+	 ("<tab" . helm-execute-persistent-action)
+	 ("C-i" . helm-execute-persistent-action)
+	 ("C-z" . helm-select-action)))
+   :config
+   (require 'ibuf-ext)
+   (add-to-list 'ibuffer-never-show-predicates "^\*helm")
+   (add-to-list 'ibuffer-never-show-predicates "\\` ")
+   (helm-mode 1))
 #+end_src
 
-Allow spaces in vertico completion
+Binds helm to bottom 30% of screen
 #+begin_src emacs-lisp
-(use-package orderless
+(use-package shackle
   :straight t
-  :after vertico
+  :after helm
+  :init
+  (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.3)))
   :config
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles basic partial-completion)))))
+  (shackle-mode))
 #+end_src
 
 ** Perspective Mode
@@ -243,6 +240,8 @@ I use this for managing workspaces inside Emacs
    ("C-x x h" . persp-prev)
    ("C-x x l" . persp-next)
    ("C-x x s" . persp-switch)
+   ("C-x k" .   persp-kill-buffer*)
+   ("C-x C-k" . persp-kill-buffer*)
    ("C-x x i" . persp-import)
    ("C-x x r" . persp-rename)
    ("C-x x c" . persp-kill)
@@ -285,7 +284,6 @@ I am an ex-vim user so I use evil for my editing
 	     ("C-c J" . evil-window-move-very-bottom)
 	     ("C-c K" . evil-window-move-very-top)
 	     ("C-c L" . evil-window-move-far-right)
-	     ("M-p"   . yank-from-kill-ring)
 	     (:map evil-insert-state-map ("C-k" . nil)))
   :config
   (evil-set-undo-system 'undo-redo)
