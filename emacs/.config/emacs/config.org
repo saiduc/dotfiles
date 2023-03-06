@@ -172,67 +172,63 @@ This gives a nice startup page when Emacs first runs
   (dashboard-setup-startup-hook))
 #+end_src
 
-** Vertico, Orderless, Consult
-Vertico is a good replacement for helm
+<<<<<<< HEAD
+** Helm Completion
+I use helm for completion. I have tried more minimal solutions like vertico but
+I find that it requires much more configuration to set up to mimic helm
+functionality and require other packages (e.g. orderless, marginalia, embark).
 #+begin_src emacs-lisp
-(use-package vertico
+(use-package helm
   :straight t
-  :defer 0.01
-  :init
-  (setq vertico-cycle nil)
-  (setq vertico-count 15)
-  (setq vertico-resize nil)
-  (setq enable-recursive-minibuffers t)
-  (setq read-extended-command-predicate
-        #'command-completion-default-include-p)
-  (setq completion-auto-help nil)
-  :bind
-  (("C-x C-k" . kill-buffer)
-   (:map vertico-map
-	("C-j" . vertico-next)
-	("C-k" . vertico-previous)
-	:map minibuffer-local-map
-	("C-h" . backward-kill-word)))
-  :config
-  (savehist-mode 1)
-  (vertico-mode 1))
-#+end_src
-
-Make vertico behave like ido in find-file (with return to enter folders)
-#+begin_src emacs-lisp
-(use-package vertico-directory
-  :straight nil
-  :load-path "straight/build/vertico/extensions"
+  :diminish
   :defer t
-  :after vertico
-  :bind (:map vertico-map (("RET" . vertico-directory-enter)
-			       ("C-l" . vertico-directory-enter)
-			       ("C-h" . vertico-directory-delete-word)))
-	                       
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-#+end_src
-
-More information in Vertico buffers
-#+begin_src emacs-lisp
-(use-package marginalia
-  :straight t
-  :after vertico
   :init
-  (setq marginalia-align 'right)
-  (setq marginalia-max-relative-age 0)
-  :config
-  (marginalia-mode))
+  (setq helm-buffers-fuzzy-matching t)
+  (setq helm-apropos-fuzzy-match nil)
+  (setq helm-split-window-inside-p nil)
+  (setq helm-move-to-line-cycle-in-source nil)
+  (setq helm-display-header-line nil)
+  (setq helm-echo-input-in-header-line nil)
+  (setq helm-input-idle-delay 0)
+  (setq helm-grep-input-idle-delay 0)
+  (setq helm-visible-mark-prefix "")
+  (setq  ido-ignore-buffers '("\\` " "^\*helm"))
+  :bind
+  (("C-x C-f" . helm-find-files)
+   ("M-p" . helm-show-kill-ring)
+   ("M-x" . helm-M-x)
+   ("C-x b" . helm-mini)
+   ("C-x C-b" . helm-mini)
+   ("C-s" . helm-occur)
+   ("C-x r b" . helm-bookmarks)
+   ("C-x C-r" . helm-recentf)
+   ("C-x p b" . helm-browse-project)
+   (:map helm-find-files-map
+	 ("C-h" . helm-find-files-up-one-level)
+	 ("C-l" . helm-execute-persistent-action))
+   (:map helm-map
+	 ("C-j" . helm-next-line)
+	 ("C-k" . helm-previous-line)
+	 ("<tab" . helm-execute-persistent-action)
+	 ("C-i" . helm-execute-persistent-action)
+	 ("C-z" . helm-select-action)))
+   :config
+   (require 'ibuf-ext)
+   (add-to-list 'ibuffer-never-show-predicates "^\*helm")
+   (add-to-list 'ibuffer-never-show-predicates "\\` ")
+   (savehist-mode 1)
+   (helm-mode 1))
 #+end_src
 
-Allow spaces in vertico completion
+Binds helm to bottom 30% of screen
 #+begin_src emacs-lisp
-(use-package orderless
+(use-package shackle
   :straight t
-  :after vertico
+  :after helm
+  :init
+  (setq shackle-rules '(("\\`\\*helm.*?\\*\\'" :regexp t :align t :ratio 0.3)))
   :config
-  (setq completion-styles '(orderless)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles basic partial-completion)))))
+  (shackle-mode))
 #+end_src
 
 Consult gives some nice goodies similar to ivy's counsel
@@ -271,6 +267,8 @@ I use this for managing workspaces inside Emacs
    ("C-x x h" . persp-prev)
    ("C-x x l" . persp-next)
    ("C-x x s" . persp-switch)
+   ("C-x k" .   persp-kill-buffer*)
+   ("C-x C-k" . persp-kill-buffer*)
    ("C-x x i" . persp-import)
    ("C-x x r" . persp-rename)
    ("C-x x c" . persp-kill)
@@ -652,8 +650,8 @@ Org Roam UI constructs a visual graph of my notes
 
 ** Citing and Referencing
 I use the built-in org-cite functionality to cite. While org-ref now supports
-the built-in link format, it is heavy. So I use citar instead. [[https://kristofferbalintona.me/posts/202206141852/][This]] is a good
-resource to get started with citar
+the built-in link format, it is heavy. I just use the default org-cite-insert
+with helm-bibtex
 
 To get citation output, you need to specify
 the bibliography using:  #+BIBLIOGRAPHY:
@@ -661,34 +659,28 @@ and the bibstyle using:  #+LATEX_HEADER: \bibliographystyle{ieeetr}
 and print the bib using: #+PRINT_BIBLIOGRAPHY:
 
 #+begin_src emacs-lisp
-(use-package citar
+(use-package helm-bibtex
   :straight t
   :defer t
+  :bind (:map org-mode-map :package org ("C-c ]" . helm-bibtex-with-local-bibliography))
   :init
-  (setq org-cite-follow-processor 'citar)
-  (setq org-cite-insert-processor 'citar)
-  (setq org-cite-activate-processor 'citar)
+  (setq org-cite-follow-processor 'helm-bibtex-org-cite-follow)
+  (setq helm-bibtex-full-frame nil)
+  (setq bibtex-completion-display-formats
+	'((t . "${author:50} ${title:130} ${year:7} ${=type=:7}")))
 
-  (setq org-cite-export-processors
-	'((latex bibtex) ;; latex
-	  (t csl)))      ;; fallback
-
-  (setq citar-templates
-	'((main . "${author editor:30}    ${title:120}    ${date year issued:7}    ")
-	  (suffix . "${=type=:12}    ${=key= id:15}")
-	  (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
-	  (note . "Notes on ${author editor}, ${title}")))
-
-  ;; disable notes icons
-  (setq citar-symbols
-	`((file ,(all-the-icons-faicon "file-pdf-o" :face 'all-the-icons-red :v-adjust -0.1) . "")
-      (note nil . "")
-      (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
-  (setq citar-symbol-separator " ")
-
-  :bind
-  (:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
-				       ("C-c o" . #'citar-open))))
+  ;; make helm-bibtex use org-cite links
+  (setq bibtex-completion-format-citation-functions
+	'((org-mode . bibtex-completion-format-citation-org-cite)
+      (latex-mode . bibtex-completion-format-citation-cite)
+      (markdown-mode . bibtex-completion-format-citation-pandoc-citeproc)
+      (default . bibtex-completion-format-citation-default)))
+  :config
+  ;; make helm-bibtex default action inserting citation
+  (helm-delete-action-from-source "Insert Citation" helm-source-bibtex)
+  (helm-add-action-to-source "Insert Citation" 
+                             'helm-bibtex-insert-citation 
+                              helm-source-bibtex 0))
 #+end_src
 
 For referencing, Org mode can use local links, but OXR gives nice completion
