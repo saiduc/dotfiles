@@ -256,7 +256,10 @@ Consult gives some nice goodies similar to ivy's counsel
   (consult-customize consult-buffer :preview-key nil)
   (consult-customize consult-recent-file :preview-key nil)
   (consult-customize consult-project-buffer :preview-key nil)
+
+  ;; display only buffers from this perspective
   (consult-customize consult--source-buffer :hidden t :default nil)
+  (setf (nth 1 persp-consult-source) "Buffer in Perspective") ;; by default it is labelled Perspective
   (add-to-list 'consult-buffer-sources persp-consult-source))
 #+end_src
 
