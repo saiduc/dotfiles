@@ -662,7 +662,8 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
   (setq citar-symbol-separator " ")
 
   :bind
-  (:map org-mode-map :package org ("C-c ]" . #'org-cite-insert)))
+  (:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
+				       ("C-c o" . #'citar-open))))
 #+end_src
 
 For referencing, Org mode can use local links, but OXR gives nice completion
