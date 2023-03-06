@@ -172,22 +172,22 @@ This gives a nice startup page when Emacs first runs
   (dashboard-setup-startup-hook))
 #+end_src
 
-** Vertico Completion
+** Vertico, Orderless, Consult & Embark
 Vertico is a good replacement for helm
 #+begin_src emacs-lisp
 (use-package vertico
   :straight t
   :defer 0.01
   :init
-  (setq vertico-cycle t)
+  (setq vertico-cycle nil)
+  (setq vertico-count 15)
   (setq vertico-resize nil)
   (setq enable-recursive-minibuffers t)
   (setq read-extended-command-predicate
         #'command-completion-default-include-p)
   (setq completion-auto-help nil)
   :bind
-  (("C-x C-b" . switch-to-buffer)
-   ("C-x C-k" . kill-buffer)
+  (("C-x C-k" . kill-buffer)
    (:map vertico-map
 	("C-j" . vertico-next)
 	("C-k" . vertico-previous)
@@ -205,7 +205,10 @@ Make vertico behave like ido in find-file (with return to enter folders)
   :load-path "straight/build/vertico/extensions"
   :defer t
   :after vertico
-  :bind (:map vertico-map ("RET" . vertico-directory-enter))
+  :bind (:map vertico-map (("RET" . vertico-directory-enter)
+			       ("C-l" . vertico-directory-enter)
+			       ("C-h" . vertico-directory-delete-word)))
+	                       
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 #+end_src
 
@@ -230,6 +233,45 @@ Allow spaces in vertico completion
   (setq completion-styles '(orderless)
         completion-category-defaults nil
         completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+Consult gives some nice goodies similar to ivy's counsel
+#+begin_src emacs-lisp
+(use-package consult
+  :straight t
+  :after perspective
+  :bind (("C-s" . consult-line)
+	     ("C-x r b" . consult-bookmark)
+	     ("C-x b" . consult-buffer)
+	     ("C-x C-b" . consult-buffer)
+	     ("C-x p b" . consult-project-buffer)
+	     ("C-x C-r" . consult-recent-file)
+	     ("M-p"   . consult-yank-from-kill-ring)
+	     ("C-'" . evil-collection-consult-mark)
+	     (:map org-mode-map :package org ("C-'" . evil-collection-consult-mark)))
+  :init
+  ;; disable previews universally
+  ;; (set consult-preview-key nil)
+  :config
+  (consult-customize consult-buffer :preview-key nil)
+  (consult-customize consult-recent-file :preview-key nil)
+  (consult-customize consult-project-buffer :preview-key nil)
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  (add-to-list 'consult-buffer-sources persp-consult-source))
+#+end_src
+
+Embark provides similar functionality as Helm actions
+#+begin_src emacs-lisp
+(use-package embark
+  :straight t
+  :after vertico
+  :bind
+  ((:map vertico-map ("C-z" . embark-act))
+   (:map evil-motion-state-map ("C-z" . embark-act))
+   ("C-z" . embark-act))
+  :init
+  (setq embark-indicators '(embark-minimal-indicator))
+  (setq embark-prompter 'embark-completing-read-prompter))
 #+end_src
 
 ** Perspective Mode
@@ -285,7 +327,6 @@ I am an ex-vim user so I use evil for my editing
 	     ("C-c J" . evil-window-move-very-bottom)
 	     ("C-c K" . evil-window-move-very-top)
 	     ("C-c L" . evil-window-move-far-right)
-	     ("M-p"   . yank-from-kill-ring)
 	     (:map evil-insert-state-map ("C-k" . nil)))
   :config
   (evil-set-undo-system 'undo-redo)
@@ -638,9 +679,7 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
   :straight t
   :defer t
   :init
-
-  ;; I don't like following links using citar
-  (setq org-cite-follow-processor 'basic)
+  (setq org-cite-follow-processor 'citar)
   (setq org-cite-insert-processor 'citar)
   (setq org-cite-activate-processor 'citar)
 
@@ -654,7 +693,7 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
 	  (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
 	  (note . "Notes on ${author editor}, ${title}")))
 
-  ;; disable pdf and notes icons
+  ;; disable notes icons
   (setq citar-symbols
 	`((file ,(all-the-icons-faicon "file-pdf-o" :face 'all-the-icons-red :v-adjust -0.1) . "")
       (note nil . "")
@@ -664,6 +703,15 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
   :bind
   (:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
 				       ("C-c o" . #'citar-open))))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package citar-embark
+  :straight t
+  :after citar
+  :diminish
+  :config
+  (citar-embark-mode))
 #+end_src
 
 For referencing, Org mode can use local links, but OXR gives nice completion
@@ -798,7 +846,8 @@ I am replacing flycheck with the built-in flymake
    "e" '(:ignore t :which-key "errors")
    "en" '(flymake-goto-next-error :which-key "next error")
    "ep" '(flymake-goto-prev-error :which-key "previous error")
-   "el" '(flymake-show-buffer-diagnostics :which-key "list all errors")
+   "el" '(consult-flymake :which-key "list all errors")
+   "eL" '(flymake-show-buffer-diagnostics :which-key "show error list")
    "et" '(flymake-mode :which-key "toggle linting")
    "eb" '(flymake-running-backends :which-key "list running backends")))
 #+end_src
