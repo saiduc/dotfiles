@@ -436,18 +436,17 @@ I use org mode extensively so this is quite a long section...
   :hook ((org-mode . auto-fill-mode)
          (org-mode . visual-line-mode)
          (org-mode . display-line-numbers-mode)
-	 (org-mode . show-paren-mode)
-	 (org-mode . (lambda () (diminish 'org-indent-mode)))
-	 (org-mode . electric-pair-mode)
-	 (org-mode . (lambda ()
-	               (setq-local electric-pair-inhibit-predicate
-	          		   `(lambda (c)
-	          		      (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
-  
+	     (org-mode . show-paren-mode)
+	     (org-mode . (lambda () (diminish 'org-indent-mode)))
+	     (org-mode . electric-pair-mode)
+	     (org-mode . (lambda ()
+	                   (setq-local electric-pair-inhibit-predicate
+	              		   `(lambda (c)
+	              		      (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
-         ("C-c f f" . my/list-org-files))
-  
+         ("C-c f f" . my/list-org-files)
+	     (:map org-mode-map ("C-c C-p" . org-priority-up)))
   :init
 
   ;; agenda files, refile targets and drawer targets
@@ -484,7 +483,11 @@ I use org mode extensively so this is quite a long section...
   (setq org-export-with-smart-quotes t)
 
   (setq org-todo-keywords
-        '((sequence "TODO" "WAIT" "SOMEDAY" "|" "DONE" "CANCELLED")))
+        '((sequence "TODO" "WAIT" "|" "DONE" "CANCELLED")))
+
+  (setq org-priority-start-cycle-with-default t)
+  (setq org-highest-priority ?A)
+  (setq org-lowest-priority  ?B)
 
   :config
 
@@ -493,10 +496,33 @@ I use org mode extensively so this is quite a long section...
 	'(("n" "All Agenda Items"
 	   (
 	    (agenda)
-	    (todo "TODO")
-	    (todo "WAIT")
-	    (todo "SOMEDAY")
-	    ))))
+
+	    ;; items with priority [#A]
+	    (todo ""
+		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "\\[#[A\\]"))
+               (org-agenda-overriding-header "High Priority")
+               (org-agenda-sorting-strategy '(priority-down category-keep))))
+
+	    ;; unprioritised TODO items
+	    (todo "TODO"
+		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#[A-Z\\]"))
+               (org-agenda-overriding-header "TODO")
+               (org-agenda-sorting-strategy '(priority-down category-keep))))
+
+	    ;; unprioritised WAIT items
+	    (todo "WAIT"
+		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#[A-Z\\]"))
+               (org-agenda-overriding-header "WAIT")
+               (org-agenda-sorting-strategy '(priority-down category-keep))))
+
+	    ;; items with priority [#B]
+	    (todo ""
+		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "\\[#[B\\]"))
+               (org-agenda-overriding-header "Low Priority")
+               (org-agenda-sorting-strategy '(priority-down category-keep))))
+
+        ))))
+
   (setq org-agenda-prefix-format
 	(quote
 	 ((agenda . "%-20c%?-13t% s")
@@ -512,6 +538,7 @@ I use org mode extensively so this is quite a long section...
        (evil-set-initial-state 'org-agenda-mode 'normal)
        (evil-define-key 'normal org-agenda-mode-map
 	 (kbd "<RET>") 'org-agenda-switch-to
+	 (kbd "C-c C-p") 'org-agenda-priority-up
 	 (kbd "\t") 'org-agenda-goto
 	 "q" 'org-agenda-quit
 	 "r" 'org-agenda-redo
@@ -530,6 +557,16 @@ I use org mode extensively so this is quite a long section...
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
   (add-to-list 'org-modules 'org-tempo t)
   (add-to-list 'org-modules 'org-habit t))
+#+end_src
+
+I use this package to make org priorities look nicer
+#+begin_src emacs-lisp
+(use-package org-fancy-priorities
+  :straight t
+  :defer t
+  :init
+  (setq org-fancy-priorities-list '("🚩" "🍏"))
+  :hook (org-mode . org-fancy-priorities-mode))
 #+end_src
 
 ** Org Superstar
@@ -705,7 +742,7 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
 
   :bind
   ((:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
-				       ("C-c o" . #'citar-open)))))
+				        ("C-c o" . #'citar-open)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -857,6 +894,7 @@ I am replacing flycheck with the built-in flymake
    "e" '(:ignore t :which-key "errors")
    "en" '(flymake-goto-next-error :which-key "next error")
    "ep" '(flymake-goto-prev-error :which-key "previous error")
+   "ec" '(consult-compile-error :which-key "list compilation error")
    "el" '(consult-flymake :which-key "list all errors")
    "eL" '(flymake-show-buffer-diagnostics :which-key "show error list")
    "et" '(flymake-mode :which-key "toggle linting")
