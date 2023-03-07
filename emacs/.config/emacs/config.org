@@ -66,8 +66,8 @@ These are some minor tweaks to the default look and behaviour of Emacs
   
   ;; disable *Messages* buffer that is present on startup
   (setq-default message-log-max nil)
-  ;; (when (get-buffer "*Messages*")
-  ;;   (kill-buffer "*Messages*"))
+  (when (get-buffer "*Messages*")
+    (kill-buffer "*Messages*"))
 
   ;; set default wrap length
   (setq-default fill-column 80))
@@ -563,6 +563,7 @@ I use this package to make org priorities look nicer
 #+begin_src emacs-lisp
 (use-package org-fancy-priorities
   :straight t
+  :diminish
   :defer t
   :init
   (setq org-fancy-priorities-list '("🚩" "🍏"))

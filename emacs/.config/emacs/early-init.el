@@ -1,3 +1,6 @@
+;; Author: Sai Pandian
+;; Email:  saipandian97@gmail.com
+
 ;; disable package.el
 (setq package-enable-at-startup nil)
 (advice-add 'package--ensure-init-file :override 'ignore)
