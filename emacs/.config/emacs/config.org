@@ -64,11 +64,6 @@ These are some minor tweaks to the default look and behaviour of Emacs
   (setf (cdr (assq 'continuation fringe-indicator-alist))
 	'(nil nil))
   
-  ;; disable *Messages* buffer that is present on startup
-  (setq-default message-log-max nil)
-  (when (get-buffer "*Messages*")
-    (kill-buffer "*Messages*"))
-
   ;; set default wrap length
   (setq-default fill-column 80))
 #+end_src
@@ -96,11 +91,22 @@ A nice collection of themes
 #+begin_src emacs-lisp
 (use-package doom-themes
   :straight t
-  :defer t
-  :init
-  (load-theme 'doom-dracula t))
+  :defer t)
 #+end_src
 
+The modus themes are also very nice
+#+begin_src emacs-lisp
+(use-package modus-themes
+  :straight t
+  :defer t)
+#+end_src
+
+Load chosen theme
+#+begin_src emacs-lisp
+(load-theme 'doom-one t)
+#+end_src
+
+This package provides icons for a few different packages
 #+begin_src emacs-lisp
 (use-package all-the-icons
   :straight t
@@ -172,7 +178,7 @@ This gives a nice startup page when Emacs first runs
   (dashboard-setup-startup-hook))
 #+end_src
 
-** Vertico, Orderless, Consult & Embark
+** Vertico, Marginalia, Consult & Embark
 Vertico is a good replacement for helm
 #+begin_src emacs-lisp
 (use-package vertico
@@ -231,7 +237,6 @@ Allow spaces in vertico completion
   :after vertico
   :config
   (setq completion-styles '(basic orderless)
-        completion-category-defaults nil
         completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
@@ -246,9 +251,11 @@ Consult gives some nice goodies similar to ivy's counsel
 	     ("C-x C-b" . consult-buffer)
 	     ("C-x p b" . consult-project-buffer)
 	     ("C-x C-r" . consult-recent-file)
+	     ("C-c C-f" . consult-org-agenda)
 	     ("M-p"   . consult-yank-from-kill-ring)
 	     ("C-'" . evil-collection-consult-mark)
-	     (:map org-mode-map :package org ("C-'" . evil-collection-consult-mark)))
+	     (:map org-mode-map :package org ("C-'" . evil-collection-consult-mark)
+		                             ("C-c C-f" . consult-org-agenda)))
   :init
   ;; disable previews universally
   ;; (set consult-preview-key nil)
@@ -256,6 +263,7 @@ Consult gives some nice goodies similar to ivy's counsel
   (consult-customize consult-buffer :preview-key nil)
   (consult-customize consult-recent-file :preview-key nil)
   (consult-customize consult-project-buffer :preview-key nil)
+  (consult-customize consult-org-agenda :preview-key nil)
 
   ;; display only buffers from this perspective
   (consult-customize consult--source-buffer :hidden t :default nil)
@@ -391,20 +399,7 @@ Which key is useful for discoverability
 #+end_src
 
 * Shells
-** Exec Path From Shell
-This simply gets the shell variable and path from default shell if on mac
-#+begin_src emacs-lisp
-(when (memq window-system '(mac ns x))
-  (use-package exec-path-from-shell
-    :straight t
-    :defer 0.01
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    :config
-    (exec-path-from-shell-initialize)))
-#+end_src
-
-** Terminals
+** Vterm
 I use vterm as my terminal because it is a lot better than ansi-term. You will
 need to have some dependencies installed for this, which can be done in mac with: 
 brew install cmake libtool libvterm
@@ -422,7 +417,7 @@ Multi-Vterm lets me manage multiple vterm buffers easily
   :init
   (setq multi-vterm-buffer-name "vterm")
   :bind (("C-c t t" . multi-vterm)
-	   ("C-c t e" . eshell)))
+	     ("C-c t e" . eshell)))
 #+end_src
 
 * Writing & Org
@@ -438,8 +433,8 @@ I use org mode extensively so this is quite a long section...
          (org-mode . display-line-numbers-mode)
 	     (org-mode . show-paren-mode)
 	     (org-mode . (lambda () (diminish 'org-indent-mode)))
-	     (org-mode . electric-pair-mode)
 	     (org-mode . (lambda ()
+			   (electric-pair-mode 1)
 	                   (setq-local electric-pair-inhibit-predicate
 	              		   `(lambda (c)
 	              		      (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
@@ -490,6 +485,9 @@ I use org mode extensively so this is quite a long section...
   (setq org-lowest-priority  ?B)
 
   :config
+
+  ;; allows syntax highlighting in org mode for latex sections
+  (setq org-highlight-latex-and-related '(native latex entities))
 
   ;; better looking org-agenda
   (setq org-agenda-custom-commands
@@ -608,6 +606,7 @@ This is a great package to allow pasting images into org buffers
   :bind (("C-c p" . org-download-clipboard)
 	     ("C-c P" . org-download-yank))
   :init
+  (setq org-image-actual-width 500) ;; by default the images tend to be big
   (setq-default org-download-image-dir "./images"))
 #+end_src
 
@@ -798,7 +797,6 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 (use-package pdf-tools
   :straight t
   :defer t
-  ;; :pin manual ;; don't reinstall when package updates
   :mode  ("\\.pdf\\'" . pdf-view-mode)
   :bind (:map pdf-view-mode-map ("C-s" . isearch-forward))
   :init
@@ -851,7 +849,8 @@ I use treesitter for syntax highlighting
   :defer t
   :straight t
   :diminish
-  :hook (python-mode . tree-sitter-hl-mode)
+  :hook ((python-mode . tree-sitter-hl-mode)
+	     (cc-mode . tree-sitter-hl-mode))
   :config
   (use-package tree-sitter-langs :straight t))
 #+end_src
@@ -875,6 +874,7 @@ I use company-mode for a modern-looking auto-completion setup
   :config
   (company-mode 1)
   (company-tng-mode)
+  (delete 'company-semantic company-backends)
   (delete 'company-dabbrev company-backends))
 #+end_src
 
@@ -912,6 +912,7 @@ Language servers handle most of my languages
   :hook (lsp-mode . lsp-enable-which-key-integration)
   :commands (lsp lsp-deferred)
   :init
+  (setq lsp-log-io nil)
   (setq lsp-keymap-prefix "C-l")
   (setq lsp-modeline-diagnostics-enable nil)
   (setq lsp-prefer-flymake t)

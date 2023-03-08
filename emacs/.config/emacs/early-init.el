@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Author: Sai Pandian
 ;; Email:  saipandian97@gmail.com
 

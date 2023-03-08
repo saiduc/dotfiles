@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Author: Sai Pandian
 ;; Email:  saipandian97@gmail.com
 
@@ -16,6 +17,7 @@
 
 ;; INSTALLING STRAIGHT & USE-PACKAGE
 ;; --------------------------------------
+
 (setq straight-check-for-modifications nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -39,7 +41,6 @@
 ;; --------------------------------------
 (defun my/tangle-dotfiles ()
   "If the current file is this file, the code blocks are tangled"
-  (interactive)
   (when (equal (buffer-file-name) (expand-file-name "~/dotfiles/emacs/.config/emacs/config.org"))
     (org-babel-tangle nil "~/dotfiles/emacs/.config/emacs/compiled-config/config.el")
     (byte-compile-file "~/dotfiles/emacs/.config/emacs/compiled-config/config.el")))
@@ -54,5 +55,19 @@
 		   "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+
+
+;; AFTER INIT CLEANUP
+;; --------------------------------------
+
+;; delete native-compile-log buffer if it exists
+(add-hook 'native-comp-async-all-done-hook
+	  (lambda () (when (get-buffer "*Async-native-compile-log*")
+		       (kill-buffer "*Async-native-compile-log*"))))
+
+;; disable *Messages* buffer that is present on startup
+(setq-default message-log-max nil)
+(when (get-buffer "*Messages*")
+  (kill-buffer "*Messages*"))
 
 )
