@@ -37,6 +37,7 @@
 (require 'use-package)
 (setq straight-use-package-by-default t)
 
+
 ;; LOAD ORG FILE
 ;; --------------------------------------
 (defun my/tangle-dotfiles ()
@@ -60,6 +61,9 @@
 ;; AFTER INIT CLEANUP
 ;; --------------------------------------
 
+;; disable startup message
+(setq inhibit-startup-echo-area-message "saipandian")
+
 ;; delete native-compile-log buffer if it exists
 (add-hook 'native-comp-async-all-done-hook
 	  (lambda () (when (get-buffer "*Async-native-compile-log*")
@@ -69,5 +73,6 @@
 (setq-default message-log-max nil)
 (when (get-buffer "*Messages*")
   (kill-buffer "*Messages*"))
+
 
 )
