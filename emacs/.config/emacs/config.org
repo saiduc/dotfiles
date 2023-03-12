@@ -7,6 +7,7 @@
 ** Better Defaults
 These are some minor tweaks to the default look and behaviour of Emacs
 #+begin_src emacs-lisp
+;; -*- lexical-binding: t; -*-
 (use-package emacs
   :straight nil
   :init
@@ -169,11 +170,12 @@ This gives a nice startup page when Emacs first runs
   (setq dashboard-banner-logo-title "Sorry I didn't save the world, my friend; I was too busy building mine again")
   (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info nil)
-  (setq dashboard-items '((recents  . 25)))
-  (setq dashboard-set-heading-icons nil)
-  (setq dashboard-set-file-icons nil)
+  (setq dashboard-items '((recents  . 15)))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
-  :hook (dashboard-mode . (lambda () (diminish 'page-break-lines-mode)))
+  :hook ((dashboard-mode . (lambda () (diminish 'page-break-lines-mode)))
+	     (dashboard-mode . (lambda () (message "Welcome to GNU Emacs!"))))
   :config
   (dashboard-setup-startup-hook))
 #+end_src
@@ -276,13 +278,38 @@ Embark provides similar functionality as Helm actions
 (use-package embark
   :straight t
   :after vertico
-  :bind
-  ((:map vertico-map ("C-z" . embark-act))
-   (:map evil-motion-state-map ("C-z" . embark-act))
-   ("C-z" . embark-act))
+  :bind ((:map evil-motion-state-map ("C-z" . embark-act))
+	     ("C-z" . embark-act))
   :init
   (setq embark-indicators '(embark-minimal-indicator))
-  (setq embark-prompter 'embark-completing-read-prompter))
+  (setq embark-prompter 'embark-completing-read-prompter)
+  :config
+
+  ;; sets up embark to work like Helm (keybinding toggles action)
+  
+  (defun with-minibuffer-keymap (keymap)
+    (lambda (fn &rest args)
+      (minibuffer-with-setup-hook
+          (lambda ()
+            (use-local-map
+             (make-composed-keymap keymap (current-local-map))))
+	(apply fn args))))
+
+  (defvar embark-completing-read-prompter-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-z") 'abort-recursive-edit)
+      map))
+  
+  (advice-add 'embark-completing-read-prompter :around
+              (with-minibuffer-keymap embark-completing-read-prompter-map))
+  (define-key vertico-map (kbd "C-z") 'embark-act-with-completing-read)
+
+  (defun embark-act-with-completing-read (&optional arg)
+    (interactive "P")
+    (let* ((embark-prompter 'embark-completing-read-prompter)
+           (act (propertize "Act" 'face 'highlight))
+           (embark-indicator (lambda (_keymap targets) nil)))
+      (embark-act arg))))
 #+end_src
 
 ** Perspective Mode
@@ -693,12 +720,12 @@ Org Roam UI constructs a visual graph of my notes
     (setq org-roam-ui-browser-function #'browse-url)
     (org-roam-ui-open))
 
-  (add-to-list 'display-buffer-alist
-               '("\\*xwidget-webkit: ORUI\\*"
-                 (display-buffer-in-direction)
-                 (direction . left)
-                 (window-width . 0.25)
-                 (window-height . fit-window-to-buffer)))
+  ;; (add-to-list 'display-buffer-alist
+  ;;              '("\\*xwidget-webkit: ORUI\\*"
+  ;;                (display-buffer-in-direction)
+  ;;                (direction . left)
+  ;;                (window-width . 0.25)
+  ;;                (window-height . fit-window-to-buffer)))
   
   )
 
