@@ -95,16 +95,9 @@ A nice collection of themes
   :defer t)
 #+end_src
 
-The modus themes are also very nice
-#+begin_src emacs-lisp
-(use-package modus-themes
-  :straight t
-  :defer t)
-#+end_src
-
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'doom-one t)
+(load-theme 'doom-dracula t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -513,7 +506,7 @@ I use org mode extensively so this is quite a long section...
 	    ;; unprioritised WAIT items
 	    (todo "WAIT"
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#[A-Z\\]"))
-               (org-agenda-overriding-header "WAIT")
+               (org-agenda-overriding-header "BLOCKED")
                (org-agenda-sorting-strategy '(priority-down category-keep))))
 
 	    ;; items with priority [#B]
