@@ -97,7 +97,7 @@ A nice collection of themes
 
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'doom-dracula t)
+(load-theme 'doom-one t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -156,7 +156,7 @@ This gives a nice startup page when Emacs first runs
   :straight t
   :diminish page-break-lines-mode
   :init
-  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  ;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-startup-banner 'logo)
   ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
@@ -231,7 +231,7 @@ Allow spaces in vertico completion
   :straight t
   :after vertico
   :config
-  (setq completion-styles '(basic orderless)
+  (setq completion-styles '(orderless basic)
         completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
@@ -239,6 +239,7 @@ Consult gives some nice goodies similar to ivy's counsel
 #+begin_src emacs-lisp
 (use-package consult
   :straight t
+  :defer t
   :after perspective
   :bind (("C-s" . consult-line)
 	     ("C-x r b" . consult-bookmark)
@@ -347,9 +348,9 @@ Evil collection fixes evil-mode in a lot of places
   :after evil
   :diminish evil-collection-unimpaired-mode
   :config
-  (evil-collection-init)
+  (evil-collection-init))
   ;; need to refresh dashboard so evil bindings work in it
-  (dashboard-refresh-buffer))
+  ;; (dashboard-refresh-buffer))
 #+end_src
 
 Port of vim commentary plugin
@@ -456,6 +457,19 @@ I use org mode extensively so this is quite a long section...
     (interactive)
     (let ((default-directory "~/Dropbox/Org/"))
       (call-interactively 'find-file)))
+
+  ;; function to open only org-agenda
+  (defun my/open-org-agenda ()
+    (interactive)
+    (org-agenda nil "n")
+    (delete-other-windows)
+    (eval-after-load 'evil
+      '(progn (require 'evil) (evil-normal-state)))
+    )
+
+    ;; (require 'evil-collection)
+    ;; (evil-mode 1)
+    ;; (evil-normal-state))
 
   ;; some general settings
   (setq org-outline-path-complete-in-steps nil)
@@ -738,6 +752,7 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
 
   :bind
   ((:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
+				        ("C-c )" . #'org-footnote-action)
 				        ("C-c o" . #'citar-open)))))
 #+end_src
 
@@ -874,6 +889,29 @@ I use company-mode for a modern-looking auto-completion setup
   (delete 'company-dabbrev company-backends))
 #+end_src
 
+** LSP Mode
+Language servers handle most of my languages
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :straight t
+  :defer t
+  :diminish lsp-mode
+  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-log-io nil)
+  (setq lsp-keymap-prefix "C-l")
+  (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-prefer-flymake t)
+  (setq lsp-signature-auto-activate t)
+  (setq lsp-signature-doc-lines 1)
+  (setq lsp-signature-render-documentation nil)
+  (setq read-process-output-max (* 1024 1024))
+  (setq lsp-headerline-breadcrumb-icons-enable nil)
+  :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
+			        ("M-[" . xref-pop-marker-stack))))
+#+end_src
+
 ** Syntax Checking
 I am replacing flycheck with the built-in flymake
 #+begin_src emacs-lisp
@@ -896,29 +934,6 @@ I am replacing flycheck with the built-in flymake
    "eL" '(flymake-show-buffer-diagnostics :which-key "show error list")
    "et" '(flymake-mode :which-key "toggle linting")
    "eb" '(flymake-running-backends :which-key "list running backends")))
-#+end_src
-
-** LSP Mode
-Language servers handle most of my languages
-#+begin_src emacs-lisp
-(use-package lsp-mode
-  :straight t
-  :defer t
-  :diminish lsp-mode
-  :hook (lsp-mode . lsp-enable-which-key-integration)
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-log-io nil)
-  (setq lsp-keymap-prefix "C-l")
-  (setq lsp-modeline-diagnostics-enable nil)
-  (setq lsp-prefer-flymake t)
-  (setq lsp-signature-auto-activate t)
-  (setq lsp-signature-doc-lines 1)
-  (setq lsp-signature-render-documentation nil)
-  (setq read-process-output-max (* 1024 1024))
-  (setq lsp-headerline-breadcrumb-icons-enable nil)
-  :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
-			        ("M-[" . xref-pop-marker-stack))))
 #+end_src
 
 ** DAP Mode
