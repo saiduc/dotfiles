@@ -167,8 +167,7 @@ This gives a nice startup page when Emacs first runs
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
-  :hook ((dashboard-mode . (lambda () (diminish 'page-break-lines-mode)))
-	     (dashboard-mode . (lambda () (message "Welcome to GNU Emacs!"))))
+  :hook ((dashboard-mode . (lambda () (diminish 'page-break-lines-mode))))
   :config
   (dashboard-setup-startup-hook))
 #+end_src
@@ -1144,8 +1143,8 @@ Install using: brew install texlab
   ;; function to open pdf associated with tex file
   (defun my/open-pdf ()
     (interactive)
-    ;; can do find-file instead of browse-url to open inside emacs
-    (browse-url (replace-regexp-in-string ".tex" ".pdf" (buffer-name))))
+    ;; can do find-file-other-window instead of browse-url to open inside emacs
+    (find-file-other-window (replace-regexp-in-string ".tex" ".pdf" (buffer-name))))
   
   ;; function to save and build latex file
   (defun my/latex-build ()
