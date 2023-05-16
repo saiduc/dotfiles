@@ -44,7 +44,7 @@ These are some minor tweaks to the default look and behaviour of Emacs
   (setq scroll-conservatively 101)
   (setq mouse-wheel-scroll-amount '(1))
   (setq mouse-wheel-progressive-speed nil)
-  ;; (pixel-scroll-precision-mode 1)
+  (pixel-scroll-precision-mode 1)
 
   ;; refresh buffers if they are changed outside of emacs
   (global-auto-revert-mode 1)
@@ -271,14 +271,39 @@ Embark provides similar functionality as Helm actions
 (use-package embark
   :straight t
   :after vertico
-  :bind
-  ((:map vertico-map ("C-z" . embark-act))
-   (:map evil-motion-state-map ("C-z" . embark-act))
-   ("C-z" . embark-act))
+  ;; :bind
+  ;; ((:map vertico-map ("C-z" . embark-act))
+  ;;  (:map evil-motion-state-map ("C-z" . embark-act))
+  ;;  ("C-z" . embark-act))
   :init
   (setq embark-indicators '(embark-minimal-indicator))
   (setq embark-prompter 'embark-completing-read-prompter)
-  :config)
+  :config
+  
+  ;; Use C-z to toggle actions like Helm
+  (defun with-minibuffer-keymap (keymap)
+    (lambda (fn &rest args)
+      (minibuffer-with-setup-hook
+          (lambda ()
+            (use-local-map
+             (make-composed-keymap keymap (current-local-map))))
+	(apply fn args))))
+
+  (defvar embark-completing-read-prompter-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-z") 'abort-recursive-edit)
+      map))
+  
+  (advice-add 'embark-completing-read-prompter :around
+              (with-minibuffer-keymap embark-completing-read-prompter-map))
+  (define-key vertico-map (kbd "C-z") 'embark-act-with-completing-read)
+  
+  (defun embark-act-with-completing-read (&optional arg)
+    (interactive "P")
+    (let* ((embark-prompter 'embark-completing-read-prompter)
+           (act (propertize "Act" 'face 'highlight))
+           (embark-indicator (lambda (_keymap targets) nil)))
+      (embark-act arg))))
 #+end_src
 
 ** Perspective Mode
@@ -347,9 +372,9 @@ Evil collection fixes evil-mode in a lot of places
   :after evil
   :diminish evil-collection-unimpaired-mode
   :config
-  (evil-collection-init))
+  (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
-  ;; (dashboard-refresh-buffer))
+  (dashboard-refresh-buffer))
 #+end_src
 
 Port of vim commentary plugin
