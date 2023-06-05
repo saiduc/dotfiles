@@ -271,10 +271,10 @@ Embark provides similar functionality as Helm actions
 (use-package embark
   :straight t
   :after vertico
-  ;; :bind
-  ;; ((:map vertico-map ("C-z" . embark-act))
-  ;;  (:map evil-motion-state-map ("C-z" . embark-act))
-  ;;  ("C-z" . embark-act))
+  :bind
+  ((:map vertico-map ("C-z" . embark-act))
+   (:map evil-motion-state-map ("C-z" . embark-act))
+   ("C-z" . embark-act))
   :init
   (setq embark-indicators '(embark-minimal-indicator))
   (setq embark-prompter 'embark-completing-read-prompter)
