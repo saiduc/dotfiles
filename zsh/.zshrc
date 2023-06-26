@@ -12,23 +12,7 @@ ZSH_THEME="robbyrussell"
 plugins=()
 source $ZSH/oh-my-zsh.sh
 
-
 export PATH="$HOME/.local/bin:$PATH:$HOME/.cargo/bin"
-
-
-# =============================================================================
-#                                 ALIASES
-# =============================================================================
-
-alias ca="conda activate"
-alias cde="conda deactivate"
-alias ec='emacsclient -n'
-alias ex='emacsclient -n'
-alias vim='nvim'
-alias dropbox='/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/dropbox-app com.dropbox.Client &'
-
-
-
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -45,3 +29,14 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+# =============================================================================
+#                                 ALIASES
+# =============================================================================
+
+alias ca="conda activate"
+alias cde="conda deactivate"
+alias ec='emacsclient -n'
+alias ex='emacsclient -n'
+alias vim='nvim'
+alias dropbox='/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/dropbox-app com.dropbox.Client &'
