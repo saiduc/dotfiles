@@ -266,6 +266,7 @@ Consult gives some nice goodies similar to ivy's counsel
   (consult-customize consult-recent-file :preview-key nil)
   (consult-customize consult-project-buffer :preview-key nil)
   (consult-customize consult-org-agenda :preview-key nil)
+  (consult-customize consult-bookmark :preview-key nil)
 
   ;; display only buffers from this perspective
   (consult-customize consult--source-buffer :hidden t :default nil)
@@ -777,11 +778,6 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
 	  (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
 	  (note . "Notes on ${author editor}, ${title}")))
 
-  ;; disable notes icons
-  (setq citar-symbols
-	`((file ,(all-the-icons-faicon "file-pdf-o" :face 'all-the-icons-red :v-adjust -0.1) . "")
-      (note nil . "")
-      (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
   (setq citar-symbol-separator " ")
 
   :bind
@@ -1193,10 +1189,10 @@ I use the clangd server for C++.
 Install using: brew install llvm
 Make sure llvm is on your path.
 #+begin_src emacs-lisp
-;; (use-package cc-mode
-;;   :straight (:type built-in)
-;;   :defer t
-;;   :hook (c++-mode . lsp-deferred)
-;;   :init
-;;   (setq c-default-style "linux"))
+(use-package cc-mode
+  :straight (:type built-in)
+  :defer t
+  :hook (c++-mode . lsp-deferred)
+  :init
+  (setq c-default-style "linux"))
 #+end_src
