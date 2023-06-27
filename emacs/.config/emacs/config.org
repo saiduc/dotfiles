@@ -519,7 +519,6 @@ I use org mode extensively so this is quite a long section...
   (setq org-log-done 'time)
   (setq org-ellipsis " ⌄")
   (setq org-export-with-smart-quotes t)
-  (setq org-pretty-entities t)
   (setq org-startup-with-inline-images t)
 
   (setq org-todo-keywords
@@ -1116,11 +1115,13 @@ pd.set_option('expand_frame_repr', False)
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1)
+			       (tree-sitter-hl-mode -1)
+			       (company-mode 1)
 			       (solaire-mode -1)))
 	     (poly-ein-mode .  (lambda ()
 			       (display-fill-column-indicator-mode -1)
-			       (company-mode -1)
+			       (tree-sitter-hl-mode -1)
+			       (company-mode 1)
 			       (solaire-mode -1))))
   :init
   (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
@@ -1160,6 +1161,25 @@ pd.set_option('expand_frame_repr', False)
 	       ("C-c q" . ein:notebook-kernel-interrupt-command)
 	       ("C-<return>" . ein:worksheet-execute-cell-km)
 	       ("S-<return>" . ein:worksheet-execute-cell-and-goto-next-km))))
+#+end_src
+
+Elpy provides autocompletion in ein cells. I remove everything other than
+completion, since I don't use Elpy for any of its IDE features. This package is
+disabled temporarily, since I currently don't need completion in Jupyter.
+#+begin_src emacs-lisp
+(use-package elpy
+  :straight t
+  :defer t
+  :hook ((ein:ipynb-mode . elpy-enable)
+	     (poly-ein-mode . elpy-enable))
+  :init
+  (setq elpy-rpc-error-timeout 30)
+  :config
+  (remove-hook 'elpy-modules 'elpy-module-flymake)
+  (remove-hook 'elpy-modules 'elpy-module-pyvenv)
+  (remove-hook 'elpy-modules 'elpy-module-django)
+  (remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
+  (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 #+end_src
 
 ** LaTeX
