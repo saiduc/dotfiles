@@ -171,8 +171,8 @@ This gives a nice startup page when Emacs first runs
   (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info nil)
   (setq dashboard-items '((recents  . 15)))
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-heading-icons nil)
+  (setq dashboard-set-file-icons nil)
   (setq dashboard-center-content t)
   :hook ((dashboard-mode . (lambda () (diminish 'page-break-lines-mode))))
   :config
@@ -461,7 +461,6 @@ I use org mode extensively so this is quite a long section...
          (org-mode . visual-line-mode)
          (org-mode . display-line-numbers-mode)
 	     (org-mode . show-paren-mode)
-	     (org-mode . org-redisplay-inline-images)
 	     (org-mode . my/org-faces)
 	     (org-mode . (lambda () (diminish 'org-indent-mode)))
 	     (org-mode . (lambda ()
@@ -520,6 +519,8 @@ I use org mode extensively so this is quite a long section...
   (setq org-log-done 'time)
   (setq org-ellipsis " ⌄")
   (setq org-export-with-smart-quotes t)
+  (setq org-pretty-entities t)
+  (setq org-startup-with-inline-images t)
 
   (setq org-todo-keywords
         '((sequence "TODO" "WAIT" "|" "DONE" "CANCELLED")))
@@ -919,6 +920,18 @@ I use company-mode for a modern-looking auto-completion setup
   (delete 'company-dabbrev company-backends))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package company-posframe
+  :straight t
+  :diminish
+  :defer t
+  :after company
+  :init
+  (setq company-posframe-quickhelp-delay nil)
+  :config
+  (company-posframe-mode 1))
+#+end_src
+
 ** LSP Mode
 Language servers handle most of my languages
 #+begin_src emacs-lisp
@@ -938,6 +951,7 @@ Language servers handle most of my languages
   (setq lsp-signature-render-documentation nil)
   (setq read-process-output-max (* 1024 1024))
   (setq lsp-headerline-breadcrumb-icons-enable nil)
+
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
 			        ("M-[" . xref-pop-marker-stack))))
 #+end_src
@@ -962,6 +976,7 @@ I am replacing flycheck with the built-in flymake
    "ec" '(consult-compile-error :which-key "list compilation error")
    "el" '(consult-flymake :which-key "list all errors")
    "eL" '(flymake-show-buffer-diagnostics :which-key "show error list")
+   "eT" '(lsp-treemacs-errors-list :which-key "show error tree")
    "et" '(flymake-mode :which-key "toggle linting")
    "eb" '(flymake-running-backends :which-key "list running backends")))
 #+end_src
