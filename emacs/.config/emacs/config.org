@@ -164,15 +164,16 @@ This gives a nice startup page when Emacs first runs
   :diminish page-break-lines-mode
   :init
   ;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq dashboard-icon-type 'all-the-icons)
   (setq dashboard-startup-banner 'logo)
   ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
   (setq dashboard-banner-logo-title "Sorry I didn't save the world, my friend; I was too busy building mine again")
   (setq dashboard-footer-messages '("Sai Pandian"))
-  (setq dashboard-set-init-info nil)
+  (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 15)))
-  (setq dashboard-set-heading-icons nil)
-  (setq dashboard-set-file-icons nil)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
   (setq dashboard-center-content t)
   :hook ((dashboard-mode . (lambda () (diminish 'page-break-lines-mode))))
   :config
@@ -923,7 +924,6 @@ I use company-mode for a modern-looking auto-completion setup
 (use-package company-posframe
   :straight t
   :diminish
-  :defer t
   :after company
   :init
   (setq company-posframe-quickhelp-delay nil)
