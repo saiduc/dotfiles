@@ -247,7 +247,7 @@ Consult gives some nice goodies similar to ivy's counsel
 (use-package consult
   :straight t
   :defer t
-  :after perspective
+  :after (perspective vertico)
   :bind (("C-s" . consult-line)
 	     ("C-x r b" . consult-bookmark)
 	     ("C-x b" . consult-buffer)
@@ -774,17 +774,19 @@ and print the bib using: #+PRINT_BIBLIOGRAPHY:
 	  (t csl)))      ;; fallback
 
   (setq citar-templates
-	'((main . "${author editor:30}    ${title:120}    ${date year issued:7}    ")
+	'((main . "  ${author editor:35}    ${title:120}    ${date year issued:7}    ")
 	  (suffix . "${=type=:12}    ${=key= id:15}")
 	  (preview . "${author editor} (${year issued date}) ${title}, ${journal journaltitle publisher container-title collection-title}.\n")
 	  (note . "Notes on ${author editor}, ${title}")))
+
+  (setq citar-indicators nil)
 
   (setq citar-symbol-separator " ")
 
   :bind
   ((:map org-mode-map :package org (("C-c ]" . #'org-cite-insert)
-				        ("C-c )" . #'org-footnote-action)
-				        ("C-c o" . #'citar-open)))))
+				    ("C-c )" . #'org-footnote-action)
+				    ("C-c o" . #'citar-open)))))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1044,6 +1046,7 @@ This displays indent guides
   :defer t
   :init
   (setq highlight-indent-guides-method 'bitmap)
+  (setq highlight-indent-guides-bitmap-function 'highlight-indent-guides--bitmap-line)
   :hook (prog-mode . highlight-indent-guides-mode))
 #+end_src
 
