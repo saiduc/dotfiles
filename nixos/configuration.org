@@ -18,6 +18,7 @@
 * System
 ** General
 #+begin_src nix
+
 { config, pkgs, ... }:
 
 {
