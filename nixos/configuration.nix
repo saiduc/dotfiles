@@ -10,6 +10,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # pretty boot
+  boot.plymouth.enable = true;
+
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -69,55 +72,73 @@ users.users.saipandian = {
   isNormalUser = true;
   description = "Sai Pandian";
   extraGroups = [ "networkmanager" "wheel" ];
-  packages = with pkgs; [ ];
 };
 
 # Enable the X11 windowing system.
-services.xserver.enable = true;
+  services.xserver.enable = true;
 
-# Enable the KDE Plasma Desktop Environment.
-services.xserver.displayManager.sddm.enable = true;
-services.xserver.desktopManager.plasma5.enable = true;
-services.xserver.displayManager.defaultSession = "plasmawayland";
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
-# Configure keymap in X11
-services.xserver = {
-  layout = "gb";
-  xkbVariant = "";
-};
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [
+   pkgs.xdg-desktop-portal-gnome
+ ];
 
-environment.plasma5.excludePackages = with pkgs.libsForQt5; [
-  elisa
-  oxygen
-  khelpcenter
-  kwalletmanager
-];
+  # Configure keymap in X11
+  services.xserver = {
+    layout = "gb";
+    xkbVariant = "";
+  };
 
-# allows gtk themes properly
-programs.dconf.enable = true;
+environment.gnome.excludePackages = (with pkgs; [
+  gnome-photos
+  gnome-tour
+  gnome-connections
+  epiphany
+]) ++ (with pkgs.gnome; [
+  cheese
+  gnome-music
+  geary
+  gnome-maps
+  yelp
+  seahorse
+  gnome-clocks
+]);
 
-environment.sessionVariables = {
-  NIX_PROFILES = "${pkgs.lib.concatStringsSep " " (pkgs.lib.reverseList config.environment.profiles)}";
-};
+services.xserver.excludePackages = [pkgs.xterm];
 
 # Allow unfree packages
-nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = true;
 
-# List packages installed in system profile. To search, run:
-# $ nix search wget
-environment.systemPackages = with pkgs; [
-   firefox
-   emacs29-pgtk
-   git
-   stow
-   gnumake
-   cmake
-   libtool
-   gcc13
-   libsForQt5.kmail
-   libsForQt5.kalendar
-   latte-dock
+  users.users.saipandian.packages = with pkgs; [
+  emacs29-pgtk
+  firefox
+  gnome.gnome-tweaks
+  gnome.gnome-software
+
+  gnomeExtensions.appindicator
+  gnomeExtensions.alphabetical-app-grid
+  gnomeExtensions.favourites-in-appgrid
+  gnomeExtensions.firefox-pip-always-on-top
+  gnomeExtensions.just-perfection
 ];
+
+# List packages installed in system profile. To search, run: $ nix 
+# search wget
+environment.systemPackages = with pkgs; [
+adw-gtk3
+vim
+git
+stow
+gnumake
+cmake
+libtool
+gcc13
+];
+
+services.flatpak.enable = true;
 
 fonts.fonts = with pkgs; [
   jetbrains-mono
