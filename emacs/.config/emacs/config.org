@@ -436,7 +436,10 @@ brew install cmake libtool libvterm
 #+begin_src emacs-lisp
 (use-package vterm
   :straight t
-  :defer t)
+  :defer t
+  :init
+  (setq-default explicit-shell-file-name "/usr/bin/zsh")
+  (setq-default shell-file-name "/usr/bin/zsh"))
 #+end_src
 
 Multi-Vterm lets me manage multiple vterm buffers easily
