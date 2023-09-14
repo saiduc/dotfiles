@@ -30,11 +30,12 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  boot.initrd.verbose = false;
+  
   # pretty boot
   boot.plymouth.enable = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "sais-thinkpad"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -132,10 +133,8 @@ environment.gnome.excludePackages = (with pkgs; [
 ]) ++ (with pkgs.gnome; [
   cheese
   gnome-music
-  geary
   gnome-maps
   yelp
-  seahorse
   gnome-clocks
 ]);
 
@@ -152,7 +151,7 @@ services.xserver.excludePackages = [pkgs.xterm];
   emacs29-pgtk
   firefox
   gnome.gnome-tweaks
-  gnome.gnome-software
+  dropbox
 
   gnomeExtensions.appindicator
   gnomeExtensions.alphabetical-app-grid
@@ -181,7 +180,7 @@ services.xserver.excludePackages = [pkgs.xterm];
 
 *** Flatpak
 #+begin_src nix
-services.flatpak.enable = true;
+services.flatpak.enable = false;
 #+end_src
 
 ** Fonts
