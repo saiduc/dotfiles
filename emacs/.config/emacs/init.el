@@ -74,6 +74,6 @@
 (when (get-buffer "*Messages*")
   (kill-buffer "*Messages*"))
 
-(message "Welcome to GNU Emacs!")
+;; (message "Welcome to GNU Emacs!")
 
 )

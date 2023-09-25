@@ -14,3 +14,20 @@ For example, for emacs:
 ```
 stow emacs
 ```
+
+## Emacs
+I compile emacs myself from scratch. I use the following options when doing so:
+```
+--with-pgtk
+--with-json
+--with-native-compilation=aot 
+--with-modules 
+--with-xwidgets 
+--with-tree-sitter 
+--without-mailutils 
+--without-pop 
+--with-rsvg 
+--with-png 
+--with-tiff 
+--with-jpeg
+```
