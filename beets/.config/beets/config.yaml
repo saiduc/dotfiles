@@ -1,4 +1,4 @@
-plugins: inline convert web embedart fetchart ftintitle
+plugins: inline convert web embedart fetchart ftintitle lastgenre
 fetchart:
     cautious: true
     sources: itunes *
