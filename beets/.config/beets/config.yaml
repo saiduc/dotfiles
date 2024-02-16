@@ -1,0 +1,7 @@
+plugins: inline convert web embedart fetchart ftintitle
+fetchart:
+    cautious: true
+    sources: itunes *
+ftintitle:
+    auto: yes
+    drop: no
