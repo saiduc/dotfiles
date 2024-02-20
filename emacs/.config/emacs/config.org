@@ -855,6 +855,46 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   (require 'pdf-occur))
 #+end_src
 
+* Miscellaneous
+** Elfeed
+#+begin_src emacs-lisp
+(use-package elfeed
+  :straight t
+  :defer t
+  :bind (("C-x w" . elfeed))
+  :custom
+  (elfeed-db-directory (locate-user-emacs-file "elfeed")))
+
+(use-package elfeed-goodies
+  :straight t
+  :after elfeed
+  :config
+  (elfeed-goodies/setup))
+
+(use-package elfeed-protocol
+  :straight t
+  :after elfeed
+  :init
+  (elfeed-set-timeout 36000)
+  (setq elfeed-use-curl t)
+  (setq elfeed-curl-extra-arguments '("--insecure")) ;necessary for https without a trust certificate
+
+  (setq elfeed-protocol-newsblur-maxpages 20)
+  (setq elfeed-protocol-newsblur-fetch-tags t)
+  (setq elfeed-protocol-newsblur-fetch-category-as-tag t)
+  (setq elfeed-protocol-newsblur-sub-category-separator "/")
+  (setq elfeed-curl-extra-arguments '("--cookie-jar" "/tmp/newsblur-cookie"
+                                      "--cookie" "/tmp/newsblur-cookie"))
+
+  (setq elfeed-protocol-feeds '(("newsblur+https://saipandian@newsblur.com"
+                               :password "changeme")))
+  
+  :config
+  (setq elfeed-protocol-enabled-protocols '(newsblur))
+  (elfeed-protocol-enable))
+
+#+end_src
+
 * Programming
 ** General
 Some general hooks and settings for programming
