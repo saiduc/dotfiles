@@ -479,20 +479,20 @@ I use org mode extensively so this is quite a long section...
   :init
 
   ;; agenda files, refile targets and drawer targets
-  (setq org-agenda-files '("~/Dropbox/Org"))
+  (setq org-agenda-files '("~/Syncthing/Org"))
   (setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
   (setq org-log-into-drawer "LOGBOOK")
 
   ;; make custom function that refreshes org files
   (defun my/refresh-org-files ()
     (interactive)
-    (setq org-agenda-files '("~/Dropbox/Org"))
+    (setq org-agenda-files '("~/Syncthing/Org"))
     (setq org-refile-targets '((org-agenda-files :maxlevel . 1))))
 
   ;; make custom function to list all org files 
   (defun my/list-org-files ()
     (interactive)
-    (let ((default-directory "~/Dropbox/Org/"))
+    (let ((default-directory "~/Syncthing/Org/"))
       (call-interactively 'find-file)))
 
   ;; function to open only org-agenda
@@ -639,13 +639,13 @@ Some capture templates that suit my workflow
 (setq org-capture-templates
       '(
 	
-	("t" "Task" entry (file+headline "~/Dropbox/Org/Inbox.org" "Tasks")
+	("t" "Task" entry (file+headline "~/Syncthing/Org/Inbox.org" "Tasks")
 	 "** TODO %?" :kill-buffer t)
 	
-	("e" "Event" entry (file+headline "~/Dropbox/Org/Inbox.org" "Events")
+	("e" "Event" entry (file+headline "~/Syncthing/Org/Inbox.org" "Events")
 	 "** %?\n%^T" :kill-buffer t)
 	
-	("n" "Note" entry (file+headline "~/Dropbox/Org/Inbox.org" "Notes")
+	("n" "Note" entry (file+headline "~/Syncthing/Org/Inbox.org" "Notes")
 	 "** %?" :kill-buffer t)
 	
 	))
@@ -676,7 +676,7 @@ useful for building a personal Wiki
   :init
 
   (setq org-roam-v2-ack t)
-  (setq org-roam-directory "~/Dropbox/Org/Wiki")
+  (setq org-roam-directory "~/Syncthing/Org/Wiki")
   (setq org-roam-node-display-template "${title:*} ${tags:50}")
 
   ;; org-roam links buffer config
