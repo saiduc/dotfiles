@@ -5,3 +5,7 @@ fetchart:
 ftintitle:
     auto: yes
     drop: no
+convert:
+    copy_album_art: yes
+    embed: yes
+    format: alac
