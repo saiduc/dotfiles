@@ -17,7 +17,7 @@ vim.g['vimtex_viewer_method'] = 'skim'
 
 require("toggleterm").setup{open_mapping = [[<C-t>]]}
 
-require("indent_blankline").setup{space_char_blankline = " "}
+require("ibl").setup{}
 
 vim.g['coc_config_home'] = '~/.config/nvim/'
 vim.g['coc_filetype_map'] = '{"tex": "latex"}'

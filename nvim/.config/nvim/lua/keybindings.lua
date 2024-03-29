@@ -4,8 +4,7 @@ local whichkey = require('which-key')
 vim.g.mapleader = ","
 
 -- Terminal keybindings
-whichkey.register
-({
+whichkey.register ({
         t = {
                 name = "Terminal",
                 t = {"<cmd> ToggleTerm <cr>", "Toggle Terminal"},
@@ -15,8 +14,7 @@ whichkey.register
 }, {prefix="<leader>"})
 
 -- File keybindings
-whichkey.register
-({
+whichkey.register ({
         f = {
                 name = "File",
                 f = {"<cmd> Telescope file_browser hidden=true<cr>", "File Browser"},
@@ -30,8 +28,7 @@ whichkey.register
 }, {prefix="<leader>"})
 
 -- Git keybindings
-whichkey.register
-({
+whichkey.register ({
         g = {
                 name = "Git",
                 g = {"<cmd> Neogit <cr>", "NeoGit Status"},
@@ -40,8 +37,7 @@ whichkey.register
 }, {prefix="<leader>"})
 
 -- Window keybindings
-whichkey.register
-({
+whichkey.register ({
         w = {
                 name = "Window",
                 v = {"<cmd> vsplit <cr>", "Vertical Split"},
@@ -61,8 +57,7 @@ whichkey.register
 }, {prefix="<leader>"})
 
 -- Programming bindings
-whichkey.register
-({
+whichkey.register ({
         p = {
                 name = "Programming",
                 r = {"<plug>(coc-rename)", "Rename Object"},
@@ -74,8 +69,7 @@ whichkey.register
 }, {prefix="<leader>"})
 
 -- Neovim bindings
-whichkey.register
-({
+whichkey.register ({
         n = {
                 name = "Neovim",
                 t = {"<cmd> Telescope colorscheme <cr>", "Change Theme"},
