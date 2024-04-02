@@ -21,6 +21,7 @@ return require('packer').startup(function(use)
     -- eye candy
     use 'nvim-lualine/lualine.nvim'
     use "lukas-reineke/indent-blankline.nvim"
+    use "folke/zen-mode.nvim"
 
     -- programming
     use 'b3nj5m1n/kommentary'

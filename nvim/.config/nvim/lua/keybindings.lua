@@ -56,6 +56,19 @@ whichkey.register ({
         }
 }, {prefix="<leader>"})
 
+-- writing keybindings
+whichkey.register ({
+        l = {
+                name = "Writing",
+                z = {"<cmd> ZenMode <cr>", "Zen Mode"},
+                f = {"<plug>(coc-codeaction-cursor)", "Fix Grammar/Spelling"},
+                d = {'<cmd> CocDisable "coc-ltex" <cr>', "Disable Spellcheck"},
+                e = {'<cmd> CocEnable "coc-ltex" <cr>', "Enable Spellcheck"},
+                l = {'<cmd> CocDiagnostics <cr>', "List errors"},
+
+        }
+}, {prefix="<leader>"})
+
 -- Programming bindings
 whichkey.register ({
         p = {
