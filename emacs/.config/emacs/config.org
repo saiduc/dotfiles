@@ -937,7 +937,7 @@ I use treesitter for syntax highlighting
   :straight t
   :diminish
   :hook ((python-mode . tree-sitter-hl-mode)
-	     (cc-mode . tree-sitter-hl-mode))
+	 (cc-mode . tree-sitter-hl-mode))
   :config
   (use-package tree-sitter-langs :straight t))
 #+end_src
@@ -956,8 +956,8 @@ I use company-mode for a modern-looking auto-completion setup
   (setq company-tooltip-limit 15)
   (setq tab-always-indent t)
   :hook ((prog-mode . company-mode)
-	     (tex-mode  . company-mode)
-	     (org-mode  . company-mode))
+	 (tex-mode  . company-mode)
+	 (org-mode  . company-mode))
   :config
   (company-mode 1)
   (company-tng-mode)
