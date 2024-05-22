@@ -863,13 +863,41 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   :defer t
   :bind (("C-x w" . elfeed))
   :custom
-  (elfeed-db-directory (locate-user-emacs-file "elfeed")))
+  (elfeed-db-directory (locate-user-emacs-file "elfeed"))
+  :config
+  
+  (defvar my/elfeed-tags '("All"
+			   "Technology"
+			   "Blogs"
+			   "Politics"
+			   "Subreddits"
+			   "Data Science")
+    "List of Elfeed tags for quick selection.")
+
+  (defun my/elfeed-choose-category ()
+    "Prompt to select an Elfeed tag using Vertico and filter Elfeed to that tag."
+    (interactive)
+    (require 'consult)
+    (let ((tag (consult--read my/elfeed-tags
+                              :prompt "Choose Elfeed tag: ")))
+      (if (string= tag "All")
+          (elfeed-search-set-filter "@6-months-ago +unread")
+	(elfeed-search-set-filter (concat "@6-months-ago +unread +" tag)))))
+
+  (define-key elfeed-show-mode-map (kbd "C-x C-t") 'my/elfeed-choose-category)
+  (define-key elfeed-search-mode-map (kbd "C-x C-t") 'my/elfeed-choose-category))
 
 (use-package elfeed-goodies
   :straight t
   :after elfeed
   :config
-  (elfeed-goodies/setup))
+  (elfeed-goodies/setup)
+  (evil-define-key 'normal elfeed-show-mode-map
+    (kbd "J") 'elfeed-goodies/split-show-next
+    (kbd "K") 'elfeed-goodies/split-show-prev)
+  (evil-define-key 'normal elfeed-search-mode-map
+    (kbd "J") 'elfeed-goodies/split-show-next
+    (kbd "K") 'elfeed-goodies/split-show-prev))
 
 (use-package elfeed-protocol
   :straight t
@@ -880,14 +908,14 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   (setq elfeed-curl-extra-arguments '("--insecure")) ;necessary for https without a trust certificate
 
   (setq elfeed-protocol-newsblur-maxpages 20)
-  (setq elfeed-protocol-newsblur-fetch-tags t)
+  (setq elfeed-protocol-newsblur-fetch-tags nil)
   (setq elfeed-protocol-newsblur-fetch-category-as-tag t)
   (setq elfeed-protocol-newsblur-sub-category-separator "/")
   (setq elfeed-curl-extra-arguments '("--cookie-jar" "/tmp/newsblur-cookie"
                                       "--cookie" "/tmp/newsblur-cookie"))
 
   (setq elfeed-protocol-feeds '(("newsblur+https://saipandian@newsblur.com"
-                               :password "changeme")))
+				 :password "changeme")))
   
   :config
   (setq elfeed-protocol-enabled-protocols '(newsblur))
@@ -1294,7 +1322,7 @@ Install using: brew install texlab
   :init
   (setq lsp-latex-lint-on-change t)
   (setq lsp-latex-lint-on-save t)
-  (setq lsp-latex-texlab-executable "~/.cargo/bin/texlab")
+  (setq lsp-latex-texlab-executable "/usr/bin/texlab")
 
   ;; function to open pdf associated with tex file
   (defun my/open-pdf ()
