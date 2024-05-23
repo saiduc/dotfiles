@@ -897,6 +897,8 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 (use-package elfeed-goodies
   :straight t
   :after elfeed
+  :init
+  (setq elfeed-goodies/entry-pane-size 0.5)
   :config
   (elfeed-goodies/setup)
   (evil-define-key 'normal elfeed-show-mode-map
