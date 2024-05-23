@@ -104,7 +104,7 @@ Another nice theme
 
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'spacemacs-dark t)
+(load-theme 'doom-tokyo-night t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -464,18 +464,18 @@ I use org mode extensively so this is quite a long section...
   :hook ((org-mode . auto-fill-mode)
          (org-mode . visual-line-mode)
          (org-mode . display-line-numbers-mode)
-	     (org-mode . show-paren-mode)
-	     (org-mode . my/org-faces)
-	     (org-mode . (lambda () (diminish 'org-indent-mode)))
-	     (org-mode . (lambda ()
-			   (electric-pair-mode 1)
-	                   (setq-local electric-pair-inhibit-predicate
+	 (org-mode . show-paren-mode)
+	 (org-mode . my/org-faces)
+	 (org-mode . (lambda () (diminish 'org-indent-mode)))
+	 (org-mode . (lambda ()
+		       (electric-pair-mode 1)
+	               (setq-local electric-pair-inhibit-predicate
 	              		   `(lambda (c)
 	              		      (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c f f" . my/list-org-files)
-	     (:map org-mode-map ("C-c C-p" . org-priority-up)))
+	 (:map org-mode-map ("C-c C-p" . org-priority-up)))
   :init
 
   ;; agenda files, refile targets and drawer targets
@@ -504,9 +504,16 @@ I use org mode extensively so this is quite a long section...
       '(progn (require 'evil) (evil-normal-state)))
     )
 
-    ;; (require 'evil-collection)
-    ;; (evil-mode 1)
-    ;; (evil-normal-state))
+  ;; function so sync google calendars
+  (defun my/sync-google-calendars ()
+    (interactive)
+    (call-process "~/dotfiles/scripts/sync_personal_gcal" nil 0 nil)
+    (call-process "~/dotfiles/scripts/sync_sasia_gcal" nil 0 nil)
+    (message "Synced Google calendars!"))
+
+  ;; (require 'evil-collection)
+  ;; (evil-mode 1)
+  ;; (evil-normal-state))
 
   ;; some general settings
   (setq org-outline-path-complete-in-steps nil)
@@ -533,10 +540,10 @@ I use org mode extensively so this is quite a long section...
   (setq org-lowest-priority  ?B)
 
   (defun my/org-faces ()
-      (set-face-attribute 'org-level-1 nil :height 1.3)
-      (set-face-attribute 'org-level-2 nil :height 1.0)
-      (set-face-attribute 'org-level-3 nil :height 1.0)
-      (set-face-attribute 'org-document-title nil :height 1.5))
+    (set-face-attribute 'org-level-1 nil :height 1.3)
+    (set-face-attribute 'org-level-2 nil :height 1.0)
+    (set-face-attribute 'org-level-3 nil :height 1.0)
+    (set-face-attribute 'org-document-title nil :height 1.5))
   
   :config
 
@@ -552,28 +559,28 @@ I use org mode extensively so this is quite a long section...
 	    ;; items with priority [#A]
 	    (todo ""
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "\\[#[A\\]"))
-               (org-agenda-overriding-header "High Priority")
-               (org-agenda-sorting-strategy '(priority-down category-keep))))
+		   (org-agenda-overriding-header "High Priority")
+		   (org-agenda-sorting-strategy '(priority-down category-keep))))
 
 	    ;; unprioritised TODO items
 	    (todo "TODO"
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#[A-Z\\]"))
-               (org-agenda-overriding-header "TODO")
-               (org-agenda-sorting-strategy '(priority-down category-keep))))
+		   (org-agenda-overriding-header "TODO")
+		   (org-agenda-sorting-strategy '(priority-down category-keep))))
 
 	    ;; unprioritised WAIT items
 	    (todo "WAIT"
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'regexp "\\[#[A-Z\\]"))
-               (org-agenda-overriding-header "BLOCKED")
-               (org-agenda-sorting-strategy '(priority-down category-keep))))
+		   (org-agenda-overriding-header "BLOCKED")
+		   (org-agenda-sorting-strategy '(priority-down category-keep))))
 
 	    ;; items with priority [#B]
 	    (todo ""
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "\\[#[B\\]"))
-               (org-agenda-overriding-header "Low Priority")
-               (org-agenda-sorting-strategy '(priority-down category-keep))))
+		   (org-agenda-overriding-header "Low Priority")
+		   (org-agenda-sorting-strategy '(priority-down category-keep))))
 
-        ))))
+            ))))
 
   (setq org-agenda-prefix-format
 	(quote
