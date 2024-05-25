@@ -44,6 +44,7 @@ These are some minor tweaks to the default look and behaviour of Emacs
   (setq scroll-conservatively 101)
   (setq mouse-wheel-scroll-amount '(1))
   (setq mouse-wheel-progressive-speed t)
+  (setq mouse-wheel-tilt-scroll t)
   (pixel-scroll-precision-mode 1)
 
   ;; refresh buffers if they are changed outside of emacs
@@ -104,7 +105,7 @@ Another nice theme
 
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'doom-tokyo-night t)
+  (load-theme 'spacemacs-dark t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -874,11 +875,12 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   :config
   
   (defvar my/elfeed-tags '("All"
+			   "Newsletters"
 			   "Technology"
 			   "Blogs"
 			   "Politics"
 			   "Subreddits"
-			   "Data Science")
+			   "Data-Science")
     "List of Elfeed tags for quick selection.")
 
   (defun my/elfeed-choose-category ()
@@ -898,7 +900,7 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   :straight t
   :after elfeed
   :init
-  (setq elfeed-goodies/entry-pane-size 0.5)
+  (setq elfeed-goodies/entry-pane-size 0.66)
   :config
   (elfeed-goodies/setup)
   (evil-define-key 'normal elfeed-show-mode-map
