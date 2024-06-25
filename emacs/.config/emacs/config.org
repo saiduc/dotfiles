@@ -105,7 +105,7 @@ Another nice theme
 
 Load chosen theme
 #+begin_src emacs-lisp
-  (load-theme 'spacemacs-dark t)
+(load-theme 'doom-one t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -164,7 +164,7 @@ This gives a nice startup page when Emacs first runs
   :straight t
   :diminish page-break-lines-mode
   :init
-  ;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-icon-type 'all-the-icons)
   (setq dashboard-startup-banner 'logo)
   ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
@@ -510,6 +510,7 @@ I use org mode extensively so this is quite a long section...
     (interactive)
     (call-process "~/dotfiles/scripts/sync_personal_gcal" nil 0 nil)
     (call-process "~/dotfiles/scripts/sync_sasia_gcal" nil 0 nil)
+    (call-process "~/dotfiles/scripts/sync_phd_work_plan" nil 0 nil)
     (message "Synced Google calendars!"))
 
   ;; (require 'evil-collection)
@@ -927,13 +928,30 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 
   (setq elfeed-protocol-feeds '(("newsblur+https://saipandian@newsblur.com"
 				 :password "changeme")))
-  
+
   :config
   (setq elfeed-protocol-enabled-protocols '(newsblur))
   (elfeed-protocol-enable))
 
 #+end_src
 
+** EMMS
+EMMS is a music player for Emacs
+#+begin_src emacs-lisp
+(use-package emms
+  :straight t
+  :defer t
+  :init
+  (setq emms-source-file-default-directory "~/Music"
+        emms-info-asynchronously t
+        emms-show-format "♪ %s")
+  :bind
+  (("C-x m" . emms-browser))
+  :config
+  (emms-all)
+  (setq emms-player-list '(emms-player-vlc emms-player-ogg123))
+  (setq emms-info-functions '(emms-info-native emms-info-ogginfo emms-info-exiftool)))
+#+end_src
 * Programming
 ** General
 Some general hooks and settings for programming
@@ -1151,7 +1169,8 @@ I also set up integration with lsp-mode
   :straight t
   :after lsp-mode
   ;; hook to fix bad solaire mode, might break things
-  :hook (lsp-treemacs-generic-mode . solaire-mode-reset)
+  :hook ((lsp-treemacs-generic-mode . solaire-mode-reset)
+	 (treemacs-mode . treemacs-project-follow-mode))
   :config
   (general-define-key
    :keymaps 'lsp-mode-map
@@ -1213,8 +1232,8 @@ Conda handles switching virtual environments
   :straight t
   :defer t
   :init
-  (setq conda-anaconda-home (expand-file-name "~/miniconda3"))
-  (setq conda-env-home-directory (expand-file-name "~/miniconda3"))
+  (setq conda-anaconda-home (expand-file-name "~/anaconda3"))
+  (setq conda-env-home-directory (expand-file-name "~/anaconda3"))
   :config
   (conda-env-initialize-interactive-shells)
   (conda-env-initialize-eshell))
