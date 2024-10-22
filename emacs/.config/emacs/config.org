@@ -502,15 +502,13 @@ I use org mode extensively so this is quite a long section...
     (org-agenda nil "n")
     (delete-other-windows)
     (eval-after-load 'evil
-      '(progn (require 'evil) (evil-normal-state)))
-    )
+      '(progn (require 'evil) (evil-normal-state))))
 
   ;; function so sync google calendars
   (defun my/sync-google-calendars ()
     (interactive)
     (call-process "~/dotfiles/scripts/sync_personal_gcal" nil 0 nil)
     (call-process "~/dotfiles/scripts/sync_sasia_gcal" nil 0 nil)
-    (call-process "~/dotfiles/scripts/sync_phd_work_plan" nil 0 nil)
     (message "Synced Google calendars!"))
 
   ;; (require 'evil-collection)
@@ -561,7 +559,7 @@ I use org mode extensively so this is quite a long section...
 	    ;; items with priority [#A]
 	    (todo ""
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "\\[#[A\\]"))
-		   (org-agenda-overriding-header "High Priority")
+		   (org-agenda-overriding-header "HIGH PRIORITY")
 		   (org-agenda-sorting-strategy '(priority-down category-keep))))
 
 	    ;; unprioritised TODO items
@@ -579,7 +577,7 @@ I use org mode extensively so this is quite a long section...
 	    ;; items with priority [#B]
 	    (todo ""
 		  ((org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "\\[#[B\\]"))
-		   (org-agenda-overriding-header "Low Priority")
+		   (org-agenda-overriding-header "LOW PRIORITY")
 		   (org-agenda-sorting-strategy '(priority-down category-keep))))
 
             ))))
@@ -617,7 +615,11 @@ I use org mode extensively so this is quite a long section...
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
   (add-to-list 'org-modules 'org-tempo t)
-  (add-to-list 'org-modules 'org-habit t))
+  (add-to-list 'org-modules 'org-habit t)
+
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes '("letter" "\\documentclass{letter}"))))
+
 #+end_src
 
 I use this package to make org priorities look nicer
@@ -876,6 +878,7 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   :config
   
   (defvar my/elfeed-tags '("All"
+			   "Starred"
 			   "Newsletters"
 			   "Technology"
 			   "Blogs"
@@ -892,10 +895,29 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
                               :prompt "Choose Elfeed tag: ")))
       (if (string= tag "All")
           (elfeed-search-set-filter "@6-months-ago +unread")
-	(elfeed-search-set-filter (concat "@6-months-ago +unread +" tag)))))
+	(if (string= tag "Starred")
+	  (elfeed-search-set-filter "+star")
+	(elfeed-search-set-filter (concat "@6-months-ago +unread +" tag))))))
 
+
+  (defun my/elfeed-toggle-star ()
+  "Toggle the 'star' tag on selected entries in Elfeed."
+  (interactive)
+  (save-excursion
+    (let ((entries (elfeed-search-selected)))
+      (message "Selected %d entries" (length entries))
+      (dolist (entry entries)
+        (if (member 'star (elfeed-entry-tags entry))
+            (elfeed-untag entry 'star)
+          (elfeed-tag entry 'star))
+        (elfeed-search-update-entry entry))
+      (message "Toggled star tag for %d entries" (length entries)))))
+  
   (define-key elfeed-show-mode-map (kbd "C-x C-t") 'my/elfeed-choose-category)
-  (define-key elfeed-search-mode-map (kbd "C-x C-t") 'my/elfeed-choose-category))
+  (define-key elfeed-search-mode-map (kbd "C-x C-t") 'my/elfeed-choose-category)
+  (define-key elfeed-search-mode-map (kbd "C-x C-s") 'my/elfeed-toggle-star)
+  (define-key elfeed-search-mode-map (kbd "C-x C-s") 'my/elfeed-toggle-star))
+
 
 (use-package elfeed-goodies
   :straight t
@@ -919,39 +941,21 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
   (setq elfeed-use-curl t)
   (setq elfeed-curl-extra-arguments '("--insecure")) ;necessary for https without a trust certificate
 
-  (setq elfeed-protocol-newsblur-maxpages 20)
-  (setq elfeed-protocol-newsblur-fetch-tags nil)
-  (setq elfeed-protocol-newsblur-fetch-category-as-tag t)
-  (setq elfeed-protocol-newsblur-sub-category-separator "/")
-  (setq elfeed-curl-extra-arguments '("--cookie-jar" "/tmp/newsblur-cookie"
-                                      "--cookie" "/tmp/newsblur-cookie"))
+  (setq elfeed-protocol-fever-update-unread-only t)
+  (setq elfeed-protocol-fever-fetch-category-as-tag t)
+  (setq elfeed-protocol-feeds '(("fever+http://saipandian@192.168.1.249:1008"
+				 :api-url "http://192.168.1.249:1008/api/fever.php"
+				 :password "ChangeMe")))
 
-  (setq elfeed-protocol-feeds '(("newsblur+https://saipandian@newsblur.com"
-				 :password "changeme")))
 
   :config
-  (setq elfeed-protocol-enabled-protocols '(newsblur))
+  ;; (setq elfeed-protocol-enabled-protocols '(newsblur))
+  (setq elfeed-protocol-enabled-protocols '(fever))
   (elfeed-protocol-enable))
 
+
 #+end_src
 
-** EMMS
-EMMS is a music player for Emacs
-#+begin_src emacs-lisp
-(use-package emms
-  :straight t
-  :defer t
-  :init
-  (setq emms-source-file-default-directory "~/Music"
-        emms-info-asynchronously t
-        emms-show-format "♪ %s")
-  :bind
-  (("C-x m" . emms-browser))
-  :config
-  (emms-all)
-  (setq emms-player-list '(emms-player-vlc emms-player-ogg123))
-  (setq emms-info-functions '(emms-info-native emms-info-ogginfo emms-info-exiftool)))
-#+end_src
 * Programming
 ** General
 Some general hooks and settings for programming
