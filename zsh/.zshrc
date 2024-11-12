@@ -39,4 +39,3 @@ alias cde="conda deactivate"
 alias ec='emacsclient -n'
 alias ex='emacsclient -n'
 alias vim='nvim'
-alias dropbox='/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=/app/bin/dropbox-app com.dropbox.Client &'
