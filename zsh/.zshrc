@@ -39,3 +39,4 @@ alias cde="conda deactivate"
 alias ec='emacsclient -n'
 alias ex='emacsclient -n'
 alias vim='nvim'
+alias update='sudo apt update && sudo apt upgrade'
