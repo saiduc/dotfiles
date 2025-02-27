@@ -105,7 +105,7 @@ Another nice theme
 
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'doom-one t)
+(load-theme 'doom-dracula t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -610,7 +610,8 @@ I use org mode extensively so this is quite a long section...
   (org-babel-do-load-languages 
    'org-babel-load-languages 
    '((emacs-lisp . t)
-     (python     . t)))
+     (python     . t)
+     (jupyter    . t)))
 
   ;; hook goes here since org-babel-after-execute-hook is not available prior to loading org mode package
   (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
@@ -1274,7 +1275,7 @@ Jupyter notebook support in Emacs. For dataframes, do:
 pd.set_option('expand_frame_repr', False)
 #+begin_src emacs-lisp
 (use-package ein-notebook
-  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook" :build (:not native-compile))
+  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
   :defer t
   ;; disable fill column and auto-complete
   :hook ((ein:ipynb-mode . (lambda ()
@@ -1306,16 +1307,16 @@ pd.set_option('expand_frame_repr', False)
   :bind (:map ein:notebook-mode-map
 	      (("M-d" . ein:worksheet-kill-cell-km)
 	       ("M-y" . ein:worksheet-copy-cell-km)
-           ("M-p" . ein:worksheet-yank-cell-km)
-           ("M-d" . ein:worksheet-kill-cell-km)
-           ("M-o" . ein:worksheet-insert-cell-below-km)
-           ("M-O" . ein:worksheet-insert-cell-above-km)
-           ("C-j" . ein:worksheet-goto-next-input-km)
-           ("C-k" . ein:worksheet-goto-prev-input-km)
-           ("M-h" . ein:notebook-worksheet-move-prev-km)
-           ("M-j" . ein:worksheet-move-cell-down-km)
-           ("M-k" . ein:worksheet-move-cell-up-km)
-           ("M-l" . ein:notebook-worksheet-move-next-km)
+               ("M-p" . ein:worksheet-yank-cell-km)
+               ("M-d" . ein:worksheet-kill-cell-km)
+               ("M-o" . ein:worksheet-insert-cell-below-km)
+               ("M-O" . ein:worksheet-insert-cell-above-km)
+               ("C-j" . ein:worksheet-goto-next-input-km)
+               ("C-k" . ein:worksheet-goto-prev-input-km)
+               ("M-h" . ein:notebook-worksheet-move-prev-km)
+               ("M-j" . ein:worksheet-move-cell-down-km)
+               ("M-k" . ein:worksheet-move-cell-up-km)
+               ("M-l" . ein:notebook-worksheet-move-next-km)
 	       ("M-t" . ein:worksheet-toggle-output-km)
 	       ("C-c x" . ein:worksheet-clear-output-km)
 	       ("C-c X" . ein:worksheet-clear-all-output-km)
@@ -1346,9 +1347,57 @@ disabled temporarily, since I currently don't need completion in Jupyter.
   (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 #+end_src
 
+** Jupyter
+I use Emacs Jupyter for jupyter notebooks when I can, as EIN can be a little buggy
+#+begin_src emacs-lisp
+(use-package jupyter
+  :straight t
+  :defer t
+  :after org
+  :init
+  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                       (:session . "py")
+                                                       (:kernel . "python3")
+						       (:pandoc . "t")))
+
+  ;; function to load jupyter package and get kernelspecs from current python env
+  (defun my/jupyter-refresh-kernelspecs ()
+    "Refresh Jupyter kernelspecs"
+    (interactive)
+    (require 'jupyter)
+    (jupyter-available-kernelspecs t))
+
+  (add-to-list 'org-structure-template-alist '("j" . "src jupyter-python"))
+
+  :bind (:map jupyter-org-interaction-mode-map ("C-c h" . nil))
+  :hook ((conda-postactivate . my/jupyter-refresh-kernelspecs)
+	   (conda-postdeactivate . my/jupyter-refresh-kernelspecs)))
+#+end_src
+
+Set up export to Jupyter notebooks
+#+begin_src emacs-lisp
+(use-package ox-ipynb
+  :straight (ox-ipynb :type git :host github :repo "jkitchin/ox-ipynb")
+  :defer t
+  :init
+  (defun my/load-ox-ipynb ()
+    "Loads ox ipynb"
+    (interactive)
+    (lambda () (require 'ox-ipynb))))
+#+end_src
+
+Function to run jupyter-lab command and open xwidget buffer with client
+#+begin_src emacs-lisp
+(defun my/jupyter-lab ()
+  (interactive)
+  (async-shell-command "bash ~/dotfiles/scripts/run_jupyter_in_emacs.sh")
+  (switch-to-buffer-other-window "*Async Shell Command*")
+  (delete-window))
+#+end_src
+
 ** LaTeX
 I use the TexLab language server for LaTeX
-Install using: brew install texlab
+Install using: brew install texlab or conda install conda-forge::texlab
 #+begin_src emacs-lisp
 (use-package lsp-latex
   :straight t
@@ -1368,7 +1417,7 @@ Install using: brew install texlab
   :init
   (setq lsp-latex-lint-on-change t)
   (setq lsp-latex-lint-on-save t)
-  (setq lsp-latex-texlab-executable "/usr/bin/texlab")
+  (setq lsp-latex-texlab-executable "/home/saipandian/miniconda3/bin/texlab")
 
   ;; function to open pdf associated with tex file
   (defun my/open-pdf ()

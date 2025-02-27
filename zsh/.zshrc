@@ -12,6 +12,8 @@ ZSH_THEME="robbyrussell"
 plugins=()
 source $ZSH/oh-my-zsh.sh
 
+PYDEVD_DISABLE_FILE_VALIDATION=1
+
 export PATH="$HOME/.local/bin:$PATH:$HOME/.cargo/bin"
 
 # >>> conda initialize >>>
@@ -39,4 +41,4 @@ alias cde="conda deactivate"
 alias ec='emacsclient -n'
 alias ex='emacsclient -n'
 alias vim='nvim'
-alias update='sudo apt update && sudo apt upgrade'
+alias update='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && flatpak update -y'
