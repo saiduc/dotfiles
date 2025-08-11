@@ -8,6 +8,7 @@
 # Path to your oh-my-zsh installation.
 export ZSH="/home/saipandian/.oh-my-zsh"
 
+DISABLE_AUTO_UPDATE=true
 ZSH_THEME="robbyrussell"
 plugins=()
 source $ZSH/oh-my-zsh.sh
@@ -41,4 +42,5 @@ alias cde="conda deactivate"
 alias ec='emacsclient -n'
 alias ex='emacsclient -n'
 alias vim='nvim'
-alias update='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && flatpak update -y'
+alias update='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && flatpak update -y && omz update -y'
+alias vpncheck='curl -sS https://am.i.mullvad.net/connected'

@@ -316,6 +316,12 @@ Embark provides similar functionality as Helm actions
       (embark-act arg))))
 #+end_src
 
+#+begin_src emacs-lisp
+(use-package embark-consult
+  :straight t
+  :defer t)
+#+end_src
+
 ** Perspective Mode
 I use this for managing workspaces inside Emacs
 #+begin_src emacs-lisp
@@ -618,8 +624,11 @@ I use org mode extensively so this is quite a long section...
   (add-to-list 'org-modules 'org-tempo t)
   (add-to-list 'org-modules 'org-habit t)
 
+  (setq org-latex-pdf-process (list "latexmk -shell-escape -synctex=1 -bibtex -f -pdf %f"))
+
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes '("letter" "\\documentclass{letter}"))))
+
 
 #+end_src
 
@@ -826,7 +835,7 @@ For referencing, Org mode can use local links, but OXR gives nice completion
   
   :bind
   (:map org-mode-map :package org (("C-c [" . #'oxr-insert-ref)
-				       ("C-c s" . my/oxr-insert-section-reference-id))))
+                                   ("C-c s" . my/oxr-insert-section-reference-id))))
 #+end_src
 
 ** Flyspell
@@ -868,7 +877,7 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 #+end_src
 
 * Miscellaneous
-** Elfeed
+** RSS Feeds
 #+begin_src emacs-lisp
 (use-package elfeed
   :straight t
@@ -1076,7 +1085,7 @@ Language servers handle most of my languages
   (setq lsp-signature-auto-activate t)
   (setq lsp-signature-doc-lines 1)
   (setq lsp-signature-render-documentation nil)
-  (setq read-process-output-max (* 1024 1024))
+  (setq read-process-output-max (* 2048 2048))
   (setq lsp-headerline-breadcrumb-icons-enable nil)
 
   :bind (:map lsp-mode-map (("M-]" . lsp-find-definition)
