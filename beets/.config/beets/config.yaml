@@ -8,4 +8,5 @@ ftintitle:
 convert:
     copy_album_art: yes
     embed: yes
-    format: alac
+    format: aac
+    max_bitrate: 256

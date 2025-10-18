@@ -44,3 +44,7 @@ alias ex='emacsclient -n'
 alias vim='nvim'
 alias update='sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y && flatpak update -y && omz update -y'
 alias vpncheck='curl -sS https://am.i.mullvad.net/connected'
+
+alias micon='pactl load-module module-loopback latency_msec=1'
+alias micoff='pactl unload-module module-loopback'
+alias fixpower='systemctl --user restart plasma-plasmashell.service && systemctl --user restart plasma-powerdevil.service'
