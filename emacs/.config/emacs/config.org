@@ -1414,7 +1414,8 @@ Magit is a wonderful git frontend for emacs
 #+begin_src emacs-lisp
 (use-package magit
   :straight t
-  :defer t
+  ;; deferring causes an error with transient
+  ;; :defer t
   :bind ("C-x g" . magit-status)
   :init
   ;; add some code to auto kill magit diff buffers after committing
