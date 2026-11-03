@@ -32,7 +32,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-export ANI_CLI_PLAYER="flatpak run org.videolan.VLC"
+export ANI_CLI_PLAYER="vlc"
 
 # =============================================================================
 #                                 ALIASES
