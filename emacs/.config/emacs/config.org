@@ -91,7 +91,15 @@ These are some minor tweaks to the default look and behaviour of Emacs
 	'(nil nil))
   
   ;; set default wrap length
-  (setq-default fill-column 80))
+  (setq-default fill-column 80)
+
+  ;; make sure some important things are in the path
+  (dolist (dir '("~/.local/bin" "~/.cargo/bin"))
+  (let ((path (expand-file-name dir)))
+    (add-to-list 'exec-path path)
+    (setenv "PATH"
+            (concat path path-separator (getenv "PATH")))))
+  )
 #+end_src
 
 ** No Littering
