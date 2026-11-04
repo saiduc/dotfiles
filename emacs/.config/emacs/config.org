@@ -129,7 +129,7 @@ Another nice theme
 
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'modus-vivendi t)
+(load-theme 'doom-one t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -1468,7 +1468,7 @@ Magit is a wonderful git frontend for emacs
 (use-package magit
   :straight t
   ;; deferring causes an error with transient
-  ;; :defer t
+  :defer t
   :bind ("C-x g" . magit-status)
   :init
   ;; add some code to auto kill magit diff buffers after committing
