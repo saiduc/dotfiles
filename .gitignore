@@ -4,6 +4,7 @@
 !/emacs/.config/emacs/config.org
 !/emacs/.config/emacs/init-org.org
 !/emacs/.config/emacs/compiled-config/.gitkeep
+!/emacs/.config/emacs/lisp
 /nvim/.config/nvim/plugin
 /*/.DS_Store
 .DS_Store
