@@ -220,12 +220,11 @@ Vertico is a good replacement for helm
         #'command-completion-default-include-p)
   (setq completion-auto-help nil)
   :bind
-  (("C-x C-k" . kill-buffer)
-   (:map vertico-map
-	("C-j" . vertico-next)
-	("C-k" . vertico-previous)
-	:map minibuffer-local-map
-	("C-h" . backward-kill-word)))
+  ((:map vertico-map
+	 ("C-j" . vertico-next)
+	 ("C-k" . vertico-previous)
+	 :map minibuffer-local-map
+	 ("C-h" . backward-kill-word)))
   :config
   (savehist-mode 1)
   (vertico-mode 1))
@@ -241,7 +240,7 @@ Make vertico behave like ido in find-file (with return to enter folders)
   :bind (:map vertico-map (("RET" . vertico-directory-enter)
 			       ("C-l" . vertico-directory-enter)
 			       ("C-h" . vertico-directory-delete-word)))
-	                       
+                             
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 #+end_src
 
@@ -275,8 +274,10 @@ Consult gives some nice goodies similar to ivy's counsel
   :after (perspective vertico)
   :bind (("C-s" . consult-line)
 	     ("C-x r b" . consult-bookmark)
-	     ("C-x b" . consult-buffer)
+	     ("C-x b"   . consult-buffer)
 	     ("C-x C-b" . consult-buffer)
+	     ("C-x k"   . my/consult-kill-buffer)
+	     ("C-x C-k" . my/consult-kill-buffer)
 	     ("C-x p b" . consult-project-buffer)
 	     ("C-x C-r" . consult-recent-file)
 	     ("C-c C-f" . consult-org-agenda)
@@ -287,12 +288,40 @@ Consult gives some nice goodies similar to ivy's counsel
   :init
   ;; disable previews universally
   ;; (set consult-preview-key nil)
+
   :config
+
+  (defun my/consult-mru-buffer-items (items)
+    "Sort ITEMS according to Emacs buffer-list order."
+    (let ((buffers (buffer-list)))
+      (sort (copy-sequence (funcall items))
+	    (lambda (a b)
+	      (< (cl-position (get-buffer a) buffers)
+		 (cl-position (get-buffer b) buffers))))))
+
+  ;; A prettier kill-buffer
+  (defun my/consult-kill-buffer ()
+    "Kill a buffer selected from the current perspective."
+    (interactive)
+    (let* ((source (copy-sequence persp-consult-source))
+	   (items (plist-get source :items)))
+      (plist-put source :items
+		 (apply-partially #'my/consult-mru-buffer-items items))
+      (let ((selected
+	     (consult--multi
+	      (list source)
+	      :prompt "Kill buffer: "
+	      :require-match t
+	      :sort nil)))
+	(when selected
+	  (kill-buffer (get-buffer (car selected)))))))
+
   (consult-customize consult-buffer :preview-key nil)
   (consult-customize consult-recent-file :preview-key nil)
   (consult-customize consult-project-buffer :preview-key nil)
   (consult-customize consult-org-agenda :preview-key nil)
   (consult-customize consult-bookmark :preview-key nil)
+  (consult-customize my/consult-kill-buffer :preview-key nil)
 
   ;; display only buffers from this perspective
   (consult-customize consult-source-buffer :hidden t :default nil)
@@ -313,7 +342,7 @@ Embark provides similar functionality as Helm actions
   (setq embark-indicators '(embark-minimal-indicator))
   (setq embark-prompter 'embark-completing-read-prompter)
   :config
-  
+
   ;; Use C-z to toggle actions like Helm
   (defun with-minibuffer-keymap (keymap)
     (lambda (fn &rest args)
@@ -327,11 +356,11 @@ Embark provides similar functionality as Helm actions
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "C-z") 'abort-recursive-edit)
       map))
-  
+
   (advice-add 'embark-completing-read-prompter :around
               (with-minibuffer-keymap embark-completing-read-prompter-map))
   (define-key vertico-map (kbd "C-z") 'embark-act-with-completing-read)
-  
+
   (defun embark-act-with-completing-read (&optional arg)
     (interactive "P")
     (let* ((embark-prompter 'embark-completing-read-prompter)
