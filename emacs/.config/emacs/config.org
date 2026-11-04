@@ -1461,17 +1461,6 @@ Some general hooks and settings for programming
 	     (prog-mode . (lambda () (diminish 'hs-minor-mode)))))
 #+end_src
 
-Sometimes we need this to get the path correctly
-#+begin_src emacs-lisp
-(when (memq window-system '(mac ns x))
-  (use-package exec-path-from-shell
-    :straight t
-    :defer 0.01
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    :config
-    (exec-path-from-shell-initialize)))
-#+end_src
 
 ** Magit
 Magit is a wonderful git frontend for emacs
