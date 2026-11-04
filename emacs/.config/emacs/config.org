@@ -1019,17 +1019,12 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 
   (setq elfeed-protocol-fever-update-unread-only t)
   (setq elfeed-protocol-fever-fetch-category-as-tag t)
-  (setq elfeed-protocol-feeds '(("fever+http://saipandian@192.168.0.249:1008"
-				 :api-url "http://192.168.0.249:1008/api/fever.php"
-				 :password "PLACEHOLDER")))
-
-
+  (setq elfeed-feeds '(("fever+http://saipandian@192.168.0.249:1008"
+			:api-url "http://192.168.0.249:1008/api/fever.php"
+			:password-file "~/.config/emacs/var/elfeed/elfeed-fever-password"))) ;; ensure this exists with the password in
   :config
-  ;; (setq elfeed-protocol-enabled-protocols '(newsblur))
   (setq elfeed-protocol-enabled-protocols '(fever))
   (elfeed-protocol-enable))
-
-
 #+end_src
 
 ** Music
