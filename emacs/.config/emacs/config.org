@@ -515,7 +515,6 @@ Sometimes we need this to get the path correctly
     (exec-path-from-shell-initialize)))
 #+end_src
 
-
 ** Ghostel
 I use ghostel as my terminal because it works faster than any of the emacs
 built-ins and faster than vterm.
@@ -1136,7 +1135,6 @@ Some general hooks and settings for programming
 	     (prog-mode . electric-pair-mode)
 	     (prog-mode . (lambda () (diminish 'hs-minor-mode)))))
 #+end_src
-
 
 ** Magit
 Magit is a wonderful git frontend for emacs
