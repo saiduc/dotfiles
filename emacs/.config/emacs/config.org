@@ -441,10 +441,13 @@ Evil collection fixes evil-mode in a lot of places
   :after evil
   :diminish evil-collection-unimpaired-mode
   :config
+  ;; fixes eshell, shell and python hanging
   (setq evil-collection-mode-list
 	(remove 'shell evil-collection-mode-list))
   (setq evil-collection-mode-list
 	(remove 'eshell evil-collection-mode-list))
+  (setq evil-collection-mode-list
+	(remove 'comint evil-collection-mode-list))
   (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
   (dashboard-refresh-buffer))
@@ -537,11 +540,13 @@ built-ins and faster than vterm.
 (use-package ghostel-compile
   :straight nil
   :load-path "straight/build/ghostel"
+  :diminish
   :defer t
   :hook (after-init . ghostel-compile-global-mode))
 
 (use-package ghostel-shell-command
   :straight nil
+  :diminish
   :load-path "straight/build/ghostel"
   :defer t
   :hook (after-init . ghostel-shell-command-global-mode))
@@ -549,6 +554,7 @@ built-ins and faster than vterm.
 (use-package ghostel-comint
   :straight nil
   :load-path "straight/build/ghostel"
+  :diminish
   :defer t
   :hook (after-init . ghostel-comint-global-mode))
 
