@@ -441,6 +441,10 @@ Evil collection fixes evil-mode in a lot of places
   :after evil
   :diminish evil-collection-unimpaired-mode
   :config
+  (setq evil-collection-mode-list
+	(remove 'shell evil-collection-mode-list))
+  (setq evil-collection-mode-list
+	(remove 'eshell evil-collection-mode-list))
   (evil-collection-init)
   ;; need to refresh dashboard so evil bindings work in it
   (dashboard-refresh-buffer))
