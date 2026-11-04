@@ -1035,13 +1035,34 @@ This lets me view PDFs in Emacs (better than simply with doc-view)
 ** Music
 I use this for playing music from Navidrome
 #+begin_src emacs-lisp
-(use-package empv
-  :straight (:host github :repo "isamert/empv.el")
+(use-package supersonic
+  :straight t
   :defer t
+  :commands supersonic
+  :bind (("C-c m" . supersonic)
+         (:map supersonic-artist-mode-map ("<return>" . supersonic-open-album))
+         (:map supersonic-album-mode-map ("<return>" . supersonic-open-tracks))
+         (:map supersonic-album-type-mode-map ("<return>" . supersonic-open-tracks))
+         (:map supersonic-search-mode-map ("<return>" . supersonic-open-search-result))
+         (:map supersonic-tracks-mode-map ("<return>" . supersonic-play-tracks)))
   :init
-  (setq empv-subsonic-url "http://192.168.0.249:4533")
-  (setq empv-subsonic-username "saipandian")
-  (setq empv-subsonic-password "PLACEHOLDER"))
+  (setq supersonic-host "http://192.168.0.249:4533") ;; see "Connecting to a Subsonic server"
+  (setq supersonic-enable-scrobbling t)
+  ;; Rows, top to bottom: art, waveform, label, buttons.
+  (setq supersonic-now-playing-layout-functions
+	(list #'supersonic-now-playing-layout-art
+	      #'supersonic-now-playing-layout-waveform
+	      #'supersonic-now-playing-layout-label
+	      #'supersonic-now-playing-layout-buttons))
+  :config
+  (add-to-list 'display-buffer-alist
+	       `(,supersonic-now-playing-buffer-name
+		 (display-buffer-in-side-window)
+		 (side . right)
+		 (window-width . 0.3)))
+  (setq supersonic-art-overlay-layers
+	(remove #'supersonic-art-overlay-layer-waveform supersonic-art-overlay-layers))
+  (supersonic-mpris-mode 1))
 #+end_src
 
 ** Anime
