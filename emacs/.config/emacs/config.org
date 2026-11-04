@@ -91,15 +91,7 @@ These are some minor tweaks to the default look and behaviour of Emacs
 	'(nil nil))
   
   ;; set default wrap length
-  (setq-default fill-column 80)
-
-  ;; make sure some important things are in the path
-  (dolist (dir '("~/.local/bin" "~/.cargo/bin"))
-  (let ((path (expand-file-name dir)))
-    (add-to-list 'exec-path path)
-    (setenv "PATH"
-            (concat path path-separator (getenv "PATH")))))
-  )
+  (setq-default fill-column 80))
 #+end_src
 
 ** No Littering
@@ -468,28 +460,71 @@ Which key is useful for discoverability
 #+end_src
 
 * Shells
-** Vterm
-I use vterm as my terminal because it is a lot better than ansi-term. You will
-need to have some dependencies installed for this, which can be done in mac with: 
-brew install cmake libtool libvterm
+** Paths
+I can ensure the path is set correctly here
 #+begin_src emacs-lisp
-(use-package vterm
+(dolist (dir '("~/.local/bin" "~/.cargo/bin"))
+  (let ((path (expand-file-name dir)))
+    (add-to-list 'exec-path path)
+    (setenv "PATH"
+	    (concat path path-separator (getenv "PATH")))))
+#+end_src
+
+Sometimes we need this to get the path correctly
+#+begin_src emacs-lisp
+(when (memq window-system '(mac ns x))
+  (use-package exec-path-from-shell
+    :straight t
+    :defer 0.01
+    :init
+    (setq exec-path-from-shell-check-startup-files nil)
+    :config
+    (exec-path-from-shell-initialize)))
+#+end_src
+
+
+** Ghostel
+I use ghostel as my terminal because it works faster than any of the emacs
+built-ins and faster than vterm.
+#+begin_src emacs-lisp
+(use-package ghostel
   :straight t
   :defer t
+  :bind (("C-c t t" . ghostel)
+	 ("C-c t e" . eshell))
   :init
   (setq-default explicit-shell-file-name "/usr/bin/zsh")
   (setq-default shell-file-name "/usr/bin/zsh"))
-#+end_src
 
-Multi-Vterm lets me manage multiple vterm buffers easily
-#+begin_src emacs-lisp
-(use-package multi-vterm
+(use-package ghostel-eshell
+  :straight nil
+  :load-path "straight/build/ghostel"
+  :defer t
+  :hook (eshell-load . ghostel-eshell-visual-command-mode))
+
+(use-package ghostel-compile
+  :straight nil
+  :load-path "straight/build/ghostel"
+  :defer t
+  :hook (after-init . ghostel-compile-global-mode))
+
+(use-package ghostel-shell-command
+  :straight nil
+  :load-path "straight/build/ghostel"
+  :defer t
+  :hook (after-init . ghostel-shell-command-global-mode))
+
+(use-package ghostel-comint
+  :straight nil
+  :load-path "straight/build/ghostel"
+  :defer t
+  :hook (after-init . ghostel-comint-global-mode))
+
+(use-package evil-ghostel
   :straight t
   :defer t
-  :init
-  (setq multi-vterm-buffer-name "vterm")
-  :bind (("C-c t t" . multi-vterm)
-	     ("C-c t e" . eshell)))
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
 #+end_src
 
 * Writing & Org
