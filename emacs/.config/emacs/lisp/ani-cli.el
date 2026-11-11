@@ -236,7 +236,7 @@ Strips trailing \"(13 episodes)\" suffix and extracts the count."
        (let* ((name (car entry))
               (plist (cdr entry))
               (parsed (ani-cli--parse-name name))
-              (last-ep (or (ani-cli--history-ep name history) "-"))
+	      (last-ep (or (ani-cli--history-ep (car parsed) history) "-"))
               (watched (not (string= last-ep "-")))
               (lang (upcase (or (plist-get plist :mode) "sub"))))
          (list name (vector

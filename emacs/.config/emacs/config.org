@@ -83,8 +83,6 @@ These are some minor tweaks to the default look and behaviour of Emacs
   ;; create eshell alias for find-file function
   (defalias 'ff 'find-file)
 
-  ;; enable emacs server
-  (server-mode 1)
 
   ;; turn off indicator for wrapping text
   (setf (cdr (assq 'continuation fringe-indicator-alist))
@@ -92,6 +90,17 @@ These are some minor tweaks to the default look and behaviour of Emacs
   
   ;; set default wrap length
   (setq-default fill-column 80))
+#+end_src
+
+I make sure the emacs server is started when I start emacs, but it shuts down
+when I close emacs. The reason for this is that I want the server to be running
+so I can run =ec= in ghostel inside emacs to open things in an emacs buffer, but I
+don't want emacs client to start if I try to open something from Desktop GUI and
+an Emacs GUI is not currently running.
+#+begin_src emacs-lisp
+;; enable emacs server
+(server-mode 1)
+(add-hook 'kill-emacs-hook #'server-force-delete)
 #+end_src
 
 ** No Littering
@@ -129,7 +138,7 @@ Another nice theme
 
 Load chosen theme
 #+begin_src emacs-lisp
-(load-theme 'doom-one t)
+(load-theme 'spacemacs-dark t)
 #+end_src
 
 This package provides icons for a few different packages
@@ -191,9 +200,7 @@ This gives a nice startup page when Emacs first runs
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (setq dashboard-icon-type 'all-the-icons)
   (setq dashboard-startup-banner 'logo)
-  ;; (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
-  ;; (setq dashboard-banner-logo-title "Everything will be okay in the end; if it's not okay, it's not the end")
-  (setq dashboard-banner-logo-title "Sorry I didn't save the world, my friend; I was too busy building mine again")
+  (setq dashboard-banner-logo-title "It is only with the heart that one can see rightly; what is essential is invisible to the eye.")
   (setq dashboard-footer-messages '("Sai Pandian"))
   (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 15)))
@@ -202,7 +209,17 @@ This gives a nice startup page when Emacs first runs
   (setq dashboard-center-content t)
   :hook ((dashboard-mode . (lambda () (diminish 'page-break-lines-mode))))
   :config
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+
+  ;; r doesn't go to recents with evil collection unless you reload dashboard
+  ;; so hard define it here
+  (eval-after-load 'evil
+    '(progn
+       (evil-set-initial-state 'dashboard-mode 'normal)
+       (evil-define-key 'normal dashboard-mode-map
+	 (kbd "r") 'dashboard-jump-to-recents
+	 )))
+  )
 #+end_src
 
 ** Vertico, Marginalia, Consult & Embark
@@ -448,9 +465,7 @@ Evil collection fixes evil-mode in a lot of places
 	(remove 'eshell evil-collection-mode-list))
   (setq evil-collection-mode-list
 	(remove 'comint evil-collection-mode-list))
-  (evil-collection-init)
-  ;; need to refresh dashboard so evil bindings work in it
-  (dashboard-refresh-buffer))
+  (evil-collection-init))
 #+end_src
 
 Port of vim commentary plugin
@@ -1101,7 +1116,7 @@ I use this for playing music from Navidrome
 ** Anime
 Elfeed-style Emacs frontend for [[https://github.com/pystardust/ani-cli][ani-cli]]. Completely agnostic of
 ani-cli internals — just manages a follow list and launches ani-cli in
-vterm where fzf works natively. Progress is read from ani-cli's own
+ghostel where fzf works natively. Progress is read from ani-cli's own
 history file.
 
 | Key    | Action                             |
@@ -1124,7 +1139,7 @@ history file.
   :defer t
   :commands (ani-cli)
   :init
-  (setq ani-cli-use-vlc t))
+  (setq ani-cli-use-vlc nil))
 #+end_src
 
 * Programming
@@ -1243,9 +1258,9 @@ Language servers handle most of my languages
 #+end_src
 
 Speeding up lsp mode with lsp-booster. To use this, you need to download the
-binary from [[https://github.com/blahgeek/emacs-lsp-booster][the repo]] and place it in =~/.local/bin=. This will also only work if
-the plist stuff is working for lsp-mode (which it should if this config still
-works).
+binary from [[https://github.com/blahgeek/emacs-lsp-booster][the repo]] and place it in =~/.local/bin=. Or install it with
+cargo. This will also only work if the plist stuff is working for lsp-mode
+(which it should if this config still works).
 #+begin_src emacs-lisp
 (defun lsp-booster--advice-json-parse (old-fn &rest args)
   "Try to parse bytecode instead of json."
@@ -1427,83 +1442,6 @@ Get nice sphinx doc generation
   :defer t
   :diminish sphinx-doc-mode
   :hook (python-mode . sphinx-doc-mode))
-#+end_src
-
-** Emacs IPython Notebook
-Jupyter notebook support in Emacs. For dataframes, do:
-pd.set_option('expand_frame_repr', False)
-#+begin_src emacs-lisp
-(use-package ein-notebook
-  :straight (ein :type git :host github :repo "millejoh/emacs-ipython-notebook")
-  :defer t
-  ;; disable fill column and auto-complete
-  :hook ((ein:ipynb-mode . (lambda ()
-			       (display-fill-column-indicator-mode -1)
-			       (tree-sitter-hl-mode -1)
-			       (company-mode 1)
-			       (solaire-mode -1)))
-	     (poly-ein-mode .  (lambda ()
-			       (display-fill-column-indicator-mode -1)
-			       (tree-sitter-hl-mode -1)
-			       (company-mode 1)
-			       (solaire-mode -1))))
-  :init
-  (setq ein:worksheet-enable-undo t) ;; enable undoing inside cells
-  (setq ein:output-area-inlined-images t) ;; allow inline images
-  (setq ein:markdown-header-scaling t) ;; disable different sized headings
-  (setq ein:markdown-enable-math t) ;; allow latex math in markdown cells
-  (custom-set-faces  ;; make background of cells darker and change font colour
-   '(ein-codecell-input-area-face ((t (:foreground "#23242f"))))
-   '(ein:codecell-input-area-face ((t (:extend t :background "#23242f"))))
-   '(ein-markdowncell-input-area-face ((t (:foreground "#23242f"))))
-   '(ein:markdowncell-input-area-face ((t (:extend t :background "#23242f")))))
-  
-  ;; suppress all warnings
-  (setq warning-suppress-log-types '((ein) (ein)))
-  (setq warning-suppress-types '((ein)))
-
-  ;; evil keybindings
-  :bind (:map ein:notebook-mode-map
-	      (("M-d" . ein:worksheet-kill-cell-km)
-	       ("M-y" . ein:worksheet-copy-cell-km)
-               ("M-p" . ein:worksheet-yank-cell-km)
-               ("M-d" . ein:worksheet-kill-cell-km)
-               ("M-o" . ein:worksheet-insert-cell-below-km)
-               ("M-O" . ein:worksheet-insert-cell-above-km)
-               ("C-j" . ein:worksheet-goto-next-input-km)
-               ("C-k" . ein:worksheet-goto-prev-input-km)
-               ("M-h" . ein:notebook-worksheet-move-prev-km)
-               ("M-j" . ein:worksheet-move-cell-down-km)
-               ("M-k" . ein:worksheet-move-cell-up-km)
-               ("M-l" . ein:notebook-worksheet-move-next-km)
-	       ("M-t" . ein:worksheet-toggle-output-km)
-	       ("C-c x" . ein:worksheet-clear-output-km)
-	       ("C-c X" . ein:worksheet-clear-all-output-km)
-	       ("C-o" . ein:console-open-km)
-	       ("M-s" . ein:worksheet-split-cell-at-point-km)
-	       ("M-u" . ein:worksheet-toggle-cell-type-km)
-	       ("C-c q" . ein:notebook-kernel-interrupt-command)
-	       ("C-<return>" . ein:worksheet-execute-cell-km)
-	       ("S-<return>" . ein:worksheet-execute-cell-and-goto-next-km))))
-#+end_src
-
-Elpy provides autocompletion in ein cells. I remove everything other than
-completion, since I don't use Elpy for any of its IDE features. This package is
-disabled temporarily, since I currently don't need completion in Jupyter.
-#+begin_src emacs-lisp
-(use-package elpy
-  :straight t
-  :defer t
-  :hook ((ein:ipynb-mode . elpy-enable)
-	     (poly-ein-mode . elpy-enable))
-  :init
-  (setq elpy-rpc-error-timeout 30)
-  :config
-  (remove-hook 'elpy-modules 'elpy-module-flymake)
-  (remove-hook 'elpy-modules 'elpy-module-pyvenv)
-  (remove-hook 'elpy-modules 'elpy-module-django)
-  (remove-hook 'elpy-modules 'elpy-module-highlight-indentation)
-  (remove-hook 'elpy-modules 'elpy-module-yasnippet))
 #+end_src
 
 ** Jupyter
